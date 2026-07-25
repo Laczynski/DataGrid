@@ -19,7 +19,7 @@
 | .NET unit (`QueryGrid.UnitTests`)               | Expression building, schema discovery, operator validation, JSON contract (`GridQueryContractTests`)                    | Browser, Angular, real HTTP servers                |
 | .NET integration (`QueryGrid.IntegrationTests`) | SQLite (in-memory), PostgreSQL, SQL Server via Testcontainers — shared `GridBehaviorScenarios` for provider-agnostic UX | Browser, Angular, real HTTP servers                |
 | npm unit (`@query-grid/core` Vitest)            | Model helpers, error codes, formatting                                                                                  | DOM, Angular change detection, JSON transport      |
-| npm unit (`@query-grid/primeng`)                | Lazy-load mapping, filter chips                                                                                         | Full browser E2E                                   |
+| npm unit (`@query-grid/primeng`)                | Lazy-load mapping, filter feed                                                                                          | Full browser E2E                                   |
 | Samples                                         | Full stack: API + grid UI + real lazy load                                                                              | Exhaustive operator matrix (covered by unit tests) |
 
 ## Anti-patterns

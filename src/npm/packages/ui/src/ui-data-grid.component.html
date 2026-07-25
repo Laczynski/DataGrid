@@ -62,17 +62,24 @@
       </div>
     }
 
-    @if (allChips().length > 0) {
-      <div class="qg-ui-grid__chips">
-        @for (chip of allChips(); track chip.id) {
-          <ui-tag
-            [text]="chip.label"
-            [size]="size()"
-            variant="secondary"
-            appearance="outline"
-            [dismissible]="true"
-            (dismiss)="removeChip(chip)"
-          />
+    @if (filterFeed().length > 0) {
+      <div class="qg-ui-grid__feed" role="list" [attr.aria-label]="activeFiltersLabel()">
+        @for (segment of filterFeed(); track segment.id) {
+          @if (segment.removable) {
+            <span class="qg-ui-grid__feed-token" role="listitem">
+              <span class="qg-ui-grid__feed-token-text">{{ segment.text }}</span>
+              <button
+                type="button"
+                class="qg-ui-grid__feed-remove"
+                [attr.aria-label]="removeFeedLabel(segment)"
+                (click)="removeFeedSegment(segment)"
+              >
+                ×
+              </button>
+            </span>
+          } @else {
+            <span class="qg-ui-grid__feed-logic">{{ segment.text }}</span>
+          }
         }
       </div>
     }

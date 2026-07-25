@@ -116,6 +116,80 @@ export function defaultPrimeMatchMode(column: GridColumn): string {
   }
 }
 
+/** Empty menu-mode constraint array so ColumnFilter operator/match-mode UI stays initialized. */
+export function emptyPrimeFieldFilter(column: GridColumn): FilterMetadata[] {
+  return [
+    {
+      value: null,
+      matchMode: defaultPrimeMatchMode(column),
+      operator: PrimeFilterOperator.AND,
+    },
+  ];
+}
+
+/**
+ * Writes target constraints into an existing menu-mode array when possible.
+ * Preserves object identity so open ColumnFilter inputs are not recreated/reset.
+ */
+export function ensurePrimeFieldFilters(
+  existing: FilterMetadata | FilterMetadata[] | undefined,
+  target: FilterMetadata[] | undefined,
+  column: GridColumn,
+): FilterMetadata[] {
+  if (target && target.length > 0) {
+    if (Array.isArray(existing)) {
+      existing.length = target.length;
+      for (let index = 0; index < target.length; index++) {
+        const next = target[index];
+        const current = existing[index];
+        if (current) {
+          current.value = next.value;
+          current.matchMode = next.matchMode;
+          current.operator = next.operator;
+        } else {
+          existing[index] = {
+            value: next.value,
+            matchMode: next.matchMode,
+            operator: next.operator,
+          };
+        }
+      }
+      return existing;
+    }
+
+    return target.map((meta) => ({
+      value: meta.value,
+      matchMode: meta.matchMode,
+      operator: meta.operator,
+    }));
+  }
+
+  if (Array.isArray(existing) && existing.length > 0) {
+    const first = existing[0];
+    first.value = null;
+    first.matchMode = defaultPrimeMatchMode(column);
+    first.operator = PrimeFilterOperator.AND;
+    existing.length = 1;
+    return existing;
+  }
+
+  return emptyPrimeFieldFilter(column);
+}
+
+function syncGlobalFilterMeta(
+  existing: FilterMetadata | FilterMetadata[] | undefined,
+  search: string,
+): FilterMetadata {
+  const current = Array.isArray(existing) ? existing[0] : existing;
+  if (current) {
+    current.value = search;
+    current.matchMode = current.matchMode ?? "contains";
+    return current;
+  }
+
+  return { value: search, matchMode: "contains" };
+}
+
 function isNullCheckMatchMode(matchMode?: string): boolean {
   return matchMode === "is" || matchMode === "isNot";
 }
@@ -154,7 +228,7 @@ function readFilterEntries(
 /** Maps PrimeNG lazy-load filter metadata to a QueryGrid filter tree. */
 export function mapPrimeFiltersToGridFilter(
   filters: Record<string, FilterMetadata | FilterMetadata[]> | undefined,
-  columns: GridColumn[],
+  columns: ReadonlyArray<GridColumn<any>>,
 ): FilterNode | null {
   const columnByField = new Map(columns.map((column) => [column.field, column]));
   const byField = new Map<string, { logic: FilterLogic; conditions: FilterCondition[] }>();
@@ -279,7 +353,7 @@ function reviveDateValue(value: unknown): unknown {
 /** Builds PrimeNG column filter metadata from a persisted {@link GridQuery} filter tree. */
 export function buildPrimeTableFilters(
   filter: FilterNode | null | undefined,
-  columns: GridColumn[],
+  columns: ReadonlyArray<GridColumn<any>>,
 ): Record<string, FilterMetadata[]> {
   const columnByField = new Map(columns.map((column) => [column.field, column]));
   const result: Record<string, FilterMetadata[]> = {};
@@ -359,35 +433,43 @@ export function syncPrimeTableFieldFilters(
   table: Table,
   field: string,
   filter: FilterNode | null | undefined,
-  columns: GridColumn[],
+  columns: ReadonlyArray<GridColumn<any>>,
 ): void {
   const rebuilt = buildPrimeTableFilters(filter, columns);
-  const nextFilters = {
-    ...((table.filters ?? {}) as Record<string, FilterMetadata | FilterMetadata[]>),
-  };
-
-  if (!rebuilt[field]?.length) {
-    delete nextFilters[field];
-  } else {
-    nextFilters[field] = rebuilt[field];
+  const existingFilters = (table.filters ?? {}) as Record<
+    string,
+    FilterMetadata | FilterMetadata[]
+  >;
+  const column = columns.find((entry) => entry.field === field);
+  if (!column) {
+    return;
   }
 
-  table.filters = nextFilters;
+  table.filters = {
+    ...existingFilters,
+    [field]: ensurePrimeFieldFilters(existingFilters[field], rebuilt[field], column),
+  };
 }
+
+export type ApplyGridQueryToPrimeTableOptions = {
+  /**
+   * When true (default), fields absent from `query.filter` are cleared to empty placeholders.
+   * Set false when syncing search/sort only so in-progress ColumnFilter drafts survive.
+   */
+  resetMissingFields?: boolean;
+};
 
 /** Applies persisted {@link GridQuery} constraints to a PrimeNG table instance. */
 export function applyGridQueryToPrimeTable(
   table: Table,
   query: Partial<GridQuery>,
-  columns: GridColumn[],
+  columns: ReadonlyArray<GridColumn<any>>,
+  options?: ApplyGridQueryToPrimeTableOptions,
 ): void {
-  const search = query.search?.trim();
-  table.filterGlobal(search ?? "", "contains");
-
+  const resetMissingFields = options?.resetMissingFields ?? true;
   const columnFilters = buildPrimeTableFilters(query.filter, columns);
-  const managedFields = new Set(
-    columns.filter((column) => column.filter).map((column) => column.field),
-  );
+  const filterableColumns = columns.filter((column) => column.filter);
+  const managedFields = new Set(filterableColumns.map((column) => column.field));
   const existingFilters = (table.filters ?? {}) as Record<
     string,
     FilterMetadata | FilterMetadata[]
@@ -395,15 +477,32 @@ export function applyGridQueryToPrimeTable(
   const nextFilters: Record<string, FilterMetadata | FilterMetadata[]> = {};
 
   for (const [field, metadata] of Object.entries(existingFilters)) {
-    if (!managedFields.has(field)) {
+    if (!managedFields.has(field) && field !== "global") {
       nextFilters[field] = metadata;
     }
   }
 
-  table.filters = {
-    ...nextFilters,
-    ...columnFilters,
-  };
+  // Write global search metadata directly — filterGlobal() schedules _filter() and resets drafts.
+  nextFilters.global = syncGlobalFilterMeta(existingFilters.global, query.search?.trim() ?? "");
+
+  for (const column of filterableColumns) {
+    const existing = existingFilters[column.field];
+    const target = columnFilters[column.field];
+
+    if (target?.length) {
+      nextFilters[column.field] = ensurePrimeFieldFilters(existing, target, column);
+      continue;
+    }
+
+    if (!resetMissingFields && Array.isArray(existing)) {
+      nextFilters[column.field] = existing;
+      continue;
+    }
+
+    nextFilters[column.field] = ensurePrimeFieldFilters(existing, undefined, column);
+  }
+
+  table.filters = nextFilters;
 
   syncPrimeTableSort(table, query.sort);
 }
@@ -421,7 +520,7 @@ function readPrimeTableSearch(table: Table): string {
 export function needsPrimeTableQuerySync(
   table: Table,
   query: GridQuery,
-  columns: GridColumn[],
+  columns: ReadonlyArray<GridColumn<any>>,
 ): boolean {
   const tableSort = mapLazyLoadSort({ multiSortMeta: table.multiSortMeta }, table);
   const tableFilter = mapPrimeFiltersToGridFilter(

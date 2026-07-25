@@ -9,11 +9,11 @@ export {
   type GridViewsConfig,
 } from "./create-grid-resource";
 export {
-  buildGridFilterChips,
-  removeFilterCondition,
-  type BuildGridFilterChipsOptions,
-  type GridFilterChip,
-} from "./filter-chips";
+  buildGridFilterFeed,
+  type BuildGridFilterFeedOptions,
+  type FilterFeedSegment,
+  type FilterFeedSegmentKind,
+} from "./filter-feed";
 export { QgGridColumnChooserComponent } from "./grid-column-chooser.component";
 export { hasColumnLayout, type GridResourceWithColumnLayout } from "./grid-column-layout-controls";
 export {

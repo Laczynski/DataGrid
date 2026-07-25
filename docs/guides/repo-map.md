@@ -46,11 +46,11 @@
 
 ### Package responsibilities
 
-| Package               | Owns                                                                                                                   |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `@query-grid/core`    | TypeScript models mirroring `GridQuery` / `GridResult`, `formatGridError`, `formatLocalDateTime`                       |
-| `@query-grid/primeng` | `createGridResource()`, `GridResourceFactory`, `<qg-prime-data-grid>`, `qgColumn` / `qgEmpty` directives, filter chips |
-| `@query-grid/ui`      | `createGridResource()`, `GridResourceFactory`, `<qg-ui-data-grid>`, `qgColumn` / `qgEmpty` directives, filter chips (laczynski/ui) |
+| Package               | Owns                                                                                                                              |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `@query-grid/core`    | TypeScript models mirroring `GridQuery` / `GridResult`, `formatGridError`, `formatLocalDateTime`                                  |
+| `@query-grid/primeng` | `createGridResource()`, `GridResourceFactory`, `<qg-prime-data-grid>`, `qgColumn` / `qgEmpty` directives, filter feed             |
+| `@query-grid/ui`      | `createGridResource()`, `GridResourceFactory`, `<qg-ui-data-grid>`, `qgColumn` / `qgEmpty` directives, filter feed (laczynski/ui) |
 
 ### PrimeNG package layout
 
@@ -58,12 +58,12 @@
 - `grid-state-storage.ts` — optional session / local persistence (`persistState`)
 - `table/` — `qgColumn`, `qgEmpty`, column filter component, column resolution
 - `sort-mapper.ts`, `filter-mapper.ts`, `match-mode-options.ts`, `lazy-load-mapper.ts` — PrimeNG lazy-load bridge (barrel re-exports from the first three)
-- `filter-chips.ts` — filter chip UX
+- `filter-feed.ts` — interactive filter query feed UX
 
 ### Tests
 
 - `@query-grid/core` — Vitest (`models.spec.ts`, `grid-error-codes.spec.ts`, `format-local-datetime.spec.ts`).
-- `@query-grid/primeng` — Vitest (`lazy-load-mapper.spec.ts`, `filter-chips.spec.ts`); integration via `samples/showcase-ui`.
+- `@query-grid/primeng` — Vitest (`lazy-load-mapper.spec.ts`, `filter-feed.spec.ts`); integration via `samples/showcase-ui`.
 
 ## Samples map
 

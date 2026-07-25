@@ -92,15 +92,24 @@
         </div>
       }
 
-      @if (allChips().length > 0) {
-        <div class="qg-caption-chips">
-          @for (chip of allChips(); track chip.id) {
-            <p-chip
-              [label]="chip.label"
-              removable
-              removeIcon="pi pi-times-circle"
-              (onRemove)="removeChip(chip, table, $event)"
-            />
+      @if (filterFeed().length > 0) {
+        <div class="qg-caption-feed" role="list" [attr.aria-label]="activeFiltersLabel()">
+          @for (segment of filterFeed(); track segment.id) {
+            @if (segment.removable) {
+              <span class="qg-caption-feed__token" role="listitem">
+                <span class="qg-caption-feed__token-text">{{ segment.text }}</span>
+                <button
+                  type="button"
+                  class="qg-caption-feed__remove"
+                  [attr.aria-label]="removeFeedLabel(segment)"
+                  (click)="removeFeedSegment(segment, table)"
+                >
+                  ×
+                </button>
+              </span>
+            } @else {
+              <span class="qg-caption-feed__logic">{{ segment.text }}</span>
+            }
           }
         </div>
       }
