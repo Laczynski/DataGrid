@@ -242,7 +242,7 @@ deleteSelected(): void {
 
 ### Server export (CSV and Excel)
 
-Export uses the **same filter, search, and sort** as the grid list, applied on the server. Configure `export` on `createGridResource` and add a matching API endpoint (see [grid-export-plan.md](guides/grid-export-plan.md)).
+Export uses the **same filter, search, and sort** as the grid list, applied on the server. Configure `export` on `createGridResource` and add a matching `POST` endpoint that accepts a `GridExportRequest` JSON body (paging in `query` is ignored).
 
 ```typescript
 readonly grid = this.gridFactory.create<IssueDto>({
@@ -279,7 +279,26 @@ if (hasExport(this.grid)) {
 await db.Issues.ProjectToDto().ExportToXlsxAsync(request, stream, cancellationToken: ct);
 ```
 
-Set `GridExportRequest.Format` to `GridExportFormat.Xlsx` or `Csv`. Showcase: `POST /rows/export` with `"format": "xlsx"` in the JSON body.
+Set `GridExportRequest.Format` to `GridExportFormat.Xlsx` or `Csv`. Return the file stream with an appropriate `Content-Type` and `Content-Disposition` filename.
+
+**Export request body** (same shape in TypeScript and .NET):
+
+```json
+{
+  "query": { "filter": {}, "search": "", "sort": [] },
+  "scope": "allMatching",
+  "format": "csv",
+  "dataKeyField": "id",
+  "columns": [
+    { "field": "Id", "header": "ID" },
+    { "field": "Title", "header": "Title" }
+  ]
+}
+```
+
+For selected rows, set `"scope": "selectedKeys"` and `"selectedKeys": ["1", "2"]`. Columns are a server-side whitelist — only listed fields are exported.
+
+Showcase: `POST /rows/export` in `samples/showcase-api/Program.cs` (binding in `GridExportBinding.cs`).
 
 ### Horizontal scroll (session)
 
