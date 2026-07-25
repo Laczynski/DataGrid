@@ -18,7 +18,7 @@ internal static class GridExportBinding
       var request = await JsonSerializer.DeserializeAsync<GridExportRequest>(
         body,
         GridQueryBinding.JsonOptions,
-        cancellationToken).ConfigureAwait(false);
+        cancellationToken);
 
       if (request is null)
       {

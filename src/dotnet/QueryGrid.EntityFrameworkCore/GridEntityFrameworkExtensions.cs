@@ -26,8 +26,8 @@ public static class GridEntityFrameworkExtensions
     options ??= GridOptions.Default;
 
     var plan = GridResultExecutor.Plan(source, query, options);
-    var totalCount = await plan.FilteredQuery.CountAsync(cancellationToken).ConfigureAwait(false);
-    var items = await plan.PageQuery.ToListAsync(cancellationToken).ConfigureAwait(false);
+    var totalCount = await plan.FilteredQuery.CountAsync(cancellationToken);
+    var items = await plan.PageQuery.ToListAsync(cancellationToken);
 
     return new GridResult<T>(items, totalCount, plan.Skip, plan.Take, plan.EffectiveSort);
   }
@@ -59,14 +59,14 @@ public static class GridEntityFrameworkExtensions
     }
 
     var plan = GridExportExecutor.Plan(source, request, gridOptions, exportOptions);
-    var totalMatchingCount = await plan.FilteredQuery.CountAsync(cancellationToken).ConfigureAwait(false);
+    var totalMatchingCount = await plan.FilteredQuery.CountAsync(cancellationToken);
     var exportedRowCount = await CsvGridExporter.WriteAsync(
       plan.ExportQuery.AsAsyncEnumerable(),
       request.Columns.ToList(),
       plan.ExportFields,
       output,
       exportOptions,
-      cancellationToken).ConfigureAwait(false);
+      cancellationToken);
 
     return new GridExportResult
     {

@@ -70,7 +70,7 @@ internal static class XlsxGridExporter
     using var buffer = new MemoryStream();
     var exportedRows = Write(rows, columns, fields, buffer, options);
     buffer.Position = 0;
-    await buffer.CopyToAsync(output, cancellationToken).ConfigureAwait(false);
+    await buffer.CopyToAsync(output, cancellationToken);
     return exportedRows;
   }
 

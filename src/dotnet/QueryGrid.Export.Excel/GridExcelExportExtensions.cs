@@ -38,15 +38,15 @@ public static class GridExcelExportExtensions
     }
 
     var plan = GridExportExecutor.Plan(source, request, gridOptions, exportOptions);
-    var totalMatchingCount = await plan.FilteredQuery.CountAsync(cancellationToken).ConfigureAwait(false);
-    var items = await plan.ExportQuery.ToListAsync(cancellationToken).ConfigureAwait(false);
+    var totalMatchingCount = await plan.FilteredQuery.CountAsync(cancellationToken);
+    var items = await plan.ExportQuery.ToListAsync(cancellationToken);
     var exportedRowCount = await XlsxGridExporter.WriteAsync(
       items,
       request.Columns.ToList(),
       plan.ExportFields,
       output,
       exportOptions,
-      cancellationToken).ConfigureAwait(false);
+      cancellationToken);
 
     return new GridExportResult
     {

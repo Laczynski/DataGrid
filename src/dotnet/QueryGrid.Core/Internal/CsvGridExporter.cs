@@ -23,18 +23,17 @@ internal static class CsvGridExporter
 
     if (options.IncludeUtf8Bom)
     {
-      await output.WriteAsync(Encoding.UTF8.GetPreamble(), cancellationToken).ConfigureAwait(false);
+      await output.WriteAsync(Encoding.UTF8.GetPreamble(), cancellationToken);
     }
 
     await using var writer = new StreamWriter(output, Utf8WithoutBom, leaveOpen: true);
     if (options.IncludeHeaders)
     {
-      await writer.WriteLineAsync(FormatCsvLine(columns.Select(column => column.Header), options.CsvDelimiter))
-        .ConfigureAwait(false);
+      await writer.WriteLineAsync(FormatCsvLine(columns.Select(column => column.Header), options.CsvDelimiter));
     }
 
     var rowCount = 0;
-    await foreach (var row in rows.WithCancellation(cancellationToken).ConfigureAwait(false))
+    await foreach (var row in rows.WithCancellation(cancellationToken))
     {
       var values = new string[fields.Count];
       for (var index = 0; index < fields.Count; index++)
@@ -43,11 +42,11 @@ internal static class CsvGridExporter
         values[index] = FormatExportValue(value);
       }
 
-      await writer.WriteLineAsync(FormatCsvLine(values, options.CsvDelimiter)).ConfigureAwait(false);
+      await writer.WriteLineAsync(FormatCsvLine(values, options.CsvDelimiter));
       rowCount++;
     }
 
-    await writer.FlushAsync(cancellationToken).ConfigureAwait(false);
+    await writer.FlushAsync(cancellationToken);
     return rowCount;
   }
 
