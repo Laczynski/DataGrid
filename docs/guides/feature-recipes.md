@@ -57,13 +57,12 @@ See [Change coupling checklist](../../AGENTS.md#change-coupling-checklist). Step
 
 Server-first CSV and Excel export is implemented. See [getting-started.md](../getting-started.md#server-export-csv-and-excel).
 
-1. **Abstractions** — `GridExportRequest`, `GridExportResult`, `GridExportFormat`, `GridExportScope` (transport contract).
-2. **Core** — `GridExportExecutor`, `ApplyGridExport`, `ExportToCsv` (sync); `CsvGridExporter` stays internal.
-3. **EF** — `ExportToCsvAsync` on `IQueryable<T>` (streaming; BCL only).
-4. **Excel (optional)** — new project `QueryGrid.Export.Excel`, `ExportToXlsxAsync`; do not move ClosedXML into Core. See [repo-map.md](repo-map.md#export-layout).
-5. **npm** — `buildGridExportBody`, `downloadGridExport` in `@query-grid/core`; `export` on `createGridResource`.
-6. **UI** — built-in Export toolbar buttons; Export selected in bulk toolbar when `rowSelection` is enabled.
-7. Showcase reference: `samples/showcase-api/Program.cs` (`POST /rows/export`, `GridExportBinding.cs`).
+1. **Abstractions** — `GridExportRequest`, `GridExportResult`, `GridExportFormats`, `GridExportContentTypes`.
+2. **Core** — `GridExportExecutor`, `CsvGridExporter`, `XlsxGridExporter`, `Export` / `ExportToCsv` / `ExportToXlsx`, nested `GridExportOptions`.
+3. **EF** — `ExportAsync` (facade), `ExportToCsvAsync`, `ExportToXlsxAsync`.
+4. **npm** — `buildGridExportBody`, `downloadGridExport` in `@query-grid/core`; `export` on `createGridResource`.
+5. **UI** — built-in Export toolbar buttons; Export selected in bulk toolbar when `rowSelection` is enabled.
+6. Showcase reference: `samples/showcase-api/Program.cs` (`POST /rows/export`, `GridExportBinding.cs`).
 
 ## Add a new NuGet integration package
 

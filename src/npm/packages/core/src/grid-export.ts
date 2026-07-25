@@ -3,7 +3,12 @@ import type { GridQuery } from "./models.js";
 
 export type GridExportScope = "allMatching" | "selectedKeys";
 
-export type GridExportFormat = "csv" | "xlsx";
+export type GridExportFormat = "csv" | "xlsx" | (string & {});
+
+export const GridExportFormats = {
+  Csv: "csv",
+  Xlsx: "xlsx",
+} as const;
 
 export interface GridExportColumn {
   field: string;
@@ -55,7 +60,12 @@ export function defaultExportFilename(base: string, format: GridExportFormat): s
     return base;
   }
 
-  return `${base}.${format}`;
+  const extension = format.startsWith(".") ? format.slice(1) : format;
+  if (base.toLowerCase().endsWith(`.${extension.toLowerCase()}`)) {
+    return base;
+  }
+
+  return `${base}.${extension}`;
 }
 
 export function buildGridExportBody(request: GridExportRequest): Record<string, unknown> {

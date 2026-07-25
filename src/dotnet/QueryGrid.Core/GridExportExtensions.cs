@@ -12,6 +12,9 @@ public static class GridExportExtensions
 
   private static GridExportOptions ResolveExportOptions(GridExportOptions? options) => options ?? GridExportOptions.Default;
 
+  private static GridExportWriterRegistry ResolveWriters(GridExportOptions exportOptions)
+    => exportOptions.Writers ?? GridExportWriterRegistry.Default;
+
   /// <summary>
   /// Applies filter, search, optional selected-key filter, sort and export row cap.
   /// Paging from <see cref="GridQuery.Skip"/> / <see cref="GridQuery.Take"/> is ignored.
@@ -38,34 +41,62 @@ public static class GridExportExtensions
     GridOptions? gridOptions = null,
     GridExportOptions? exportOptions = null)
   {
+    ValidateFormat(request, GridExportFormats.Csv, "CSV export");
+    return ExportCore(source, request, output, gridOptions, exportOptions);
+  }
+
+  /// <summary>
+  /// Exports rows to Excel synchronously (in-memory providers). For database-backed sources use
+  /// the Entity Framework Core <c>ExportToXlsxAsync</c> extension.
+  /// </summary>
+  public static GridExportResult ExportToXlsx<T>(
+    this IQueryable<T> source,
+    GridExportRequest request,
+    Stream output,
+    GridOptions? gridOptions = null,
+    GridExportOptions? exportOptions = null)
+  {
+    ValidateFormat(request, GridExportFormats.Xlsx, "Excel export");
+    return ExportCore(source, request, output, gridOptions, exportOptions);
+  }
+
+  /// <summary>
+  /// Exports rows using <see cref="GridExportRequest.Format"/> — built-in and registered writers are supported.
+  /// For database-backed sources use the Entity Framework Core <c>ExportAsync</c> extension.
+  /// </summary>
+  public static GridExportResult Export<T>(
+    this IQueryable<T> source,
+    GridExportRequest request,
+    Stream output,
+    GridOptions? gridOptions = null,
+    GridExportOptions? exportOptions = null)
+    => ExportCore(source, request, output, gridOptions, exportOptions);
+
+  private static GridExportResult ExportCore<T>(
+    IQueryable<T> source,
+    GridExportRequest request,
+    Stream output,
+    GridOptions? gridOptions,
+    GridExportOptions? exportOptions)
+  {
     ArgumentNullException.ThrowIfNull(source);
     ArgumentNullException.ThrowIfNull(request);
     ArgumentNullException.ThrowIfNull(output);
 
-    var grid = ResolveGridOptions(gridOptions);
     var export = ResolveExportOptions(exportOptions);
+    var writer = ResolveWriters(export).GetRequired(request.Format);
+    return writer.Write(source, request, output, ResolveGridOptions(gridOptions), export);
+  }
 
-    if (request.Format != GridExportFormat.Csv)
+  private static void ValidateFormat(GridExportRequest request, string expectedFormat, string operationName)
+  {
+    ArgumentNullException.ThrowIfNull(request);
+
+    if (!string.Equals(request.Format, expectedFormat, StringComparison.OrdinalIgnoreCase))
     {
       throw new GridValidationException(
         GridValidationCodes.ExportFormatNotSupported,
-        $"Export format '{request.Format}' is not supported by CSV export.");
+        $"Export format '{request.Format}' is not supported by {operationName}.");
     }
-
-    var plan = GridExportExecutor.Plan(source, request, grid, export);
-    var totalMatchingCount = plan.FilteredQuery.Count();
-    var exportedRowCount = CsvGridExporter.Write(
-      plan.ExportQuery,
-      request.Columns.ToList(),
-      plan.ExportFields,
-      output,
-      export);
-
-    return new GridExportResult
-    {
-      TotalMatchingCount = totalMatchingCount,
-      ExportedRowCount = exportedRowCount,
-      Truncated = totalMatchingCount > export.MaxExportRows
-    };
   }
 }

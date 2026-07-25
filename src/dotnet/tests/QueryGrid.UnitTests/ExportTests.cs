@@ -1,14 +1,37 @@
 using System.Text;
 using ClosedXML.Excel;
+using Microsoft.EntityFrameworkCore;
 using QueryGrid.Abstractions;
 using QueryGrid.Core;
-using QueryGrid.Export.Excel;
+using QueryGrid.EntityFrameworkCore;
 using static QueryGrid.UnitTests.TestFilters;
 
 namespace QueryGrid.UnitTests;
 
 public class ExportTests
 {
+  private sealed class TestDbContext(DbContextOptions<TestDbContext> options) : DbContext(options)
+  {
+    public DbSet<Person> People => Set<Person>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<Person>().Ignore(p => p.Tags);
+    }
+  }
+
+  private static TestDbContext NewInMemoryContext()
+  {
+    var options = new DbContextOptionsBuilder<TestDbContext>()
+      .UseInMemoryDatabase(Guid.NewGuid().ToString())
+      .Options;
+
+    var context = new TestDbContext(options);
+    context.People.AddRange(TestData.People());
+    context.SaveChanges();
+    return context;
+  }
+
   private static readonly GridExportColumn[] PersonColumns =
   [
     new GridExportColumn { Field = "Id", Header = "ID" },
@@ -37,7 +60,7 @@ public class ExportTests
   private static string ExportCsv<T>(IQueryable<T> source, GridExportRequest request)
   {
     using var stream = new MemoryStream();
-    source.ExportToCsv(request, stream, exportOptions: new GridExportOptions { IncludeUtf8Bom = false });
+    source.ExportToCsv(request, stream, exportOptions: new GridExportOptions { Csv = { IncludeUtf8Bom = false } });
     return Encoding.UTF8.GetString(stream.ToArray());
   }
 
@@ -101,7 +124,7 @@ public class ExportTests
     });
 
     using var stream = new MemoryStream();
-    var result = TestData.Query().ExportToCsv(request, stream, exportOptions: new GridExportOptions { IncludeUtf8Bom = false });
+    var result = TestData.Query().ExportToCsv(request, stream, exportOptions: new GridExportOptions { Csv = { IncludeUtf8Bom = false } });
 
     var csv = Encoding.UTF8.GetString(stream.ToArray());
     Assert.Equal(3, result.TotalMatchingCount);
@@ -119,7 +142,7 @@ public class ExportTests
     var request = PersonExportRequest(scope: GridExportScope.SelectedKeys, selectedKeys: ["1", "3"]);
 
     using var stream = new MemoryStream();
-    var result = TestData.Query().ExportToCsv(request, stream, exportOptions: new GridExportOptions { IncludeUtf8Bom = false });
+    var result = TestData.Query().ExportToCsv(request, stream, exportOptions: new GridExportOptions { Csv = { IncludeUtf8Bom = false } });
 
     var csv = Encoding.UTF8.GetString(stream.ToArray());
     Assert.Equal(2, result.TotalMatchingCount);
@@ -133,7 +156,7 @@ public class ExportTests
   public void ExportToCsv_truncates_when_over_max_export_rows()
   {
     var request = PersonExportRequest();
-    var options = new GridExportOptions { MaxExportRows = 2, IncludeUtf8Bom = false };
+    var options = new GridExportOptions { MaxExportRows = 2, Csv = { IncludeUtf8Bom = false } };
 
     using var stream = new MemoryStream();
     var result = TestData.Query().ExportToCsv(request, stream, exportOptions: options);
@@ -181,7 +204,7 @@ public class ExportTests
   {
     var request = new GridExportRequest
     {
-      Format = GridExportFormat.Xlsx,
+      Format = GridExportFormats.Xlsx,
       Query = new GridQuery
       {
         Filter = Cond("Age", FilterOperator.Gte, 30),
@@ -201,5 +224,161 @@ public class ExportTests
     Assert.Equal("ID", worksheet.Cell(1, 1).GetString());
     Assert.Equal("Bob", worksheet.Cell(2, 2).GetString());
     Assert.Equal(4, worksheet.LastRowUsed()!.RowNumber());
+  }
+
+  [Fact]
+  public async Task ExportAsync_writes_csv_when_format_is_csv()
+  {
+    var request = PersonExportRequest();
+    request.Format = GridExportFormats.Csv;
+
+    await using var context = NewInMemoryContext();
+    await using var stream = new MemoryStream();
+    var result = await context.People.ExportAsync(
+      request,
+      stream,
+      exportOptions: new GridExportOptions { Csv = { IncludeUtf8Bom = false } },
+      cancellationToken: TestContext.Current.CancellationToken);
+
+    var csv = Encoding.UTF8.GetString(stream.ToArray());
+    Assert.Equal(4, result.ExportedRowCount);
+    Assert.StartsWith("ID,Name,Email", csv, StringComparison.Ordinal);
+  }
+
+  [Fact]
+  public async Task ExportAsync_writes_xlsx_when_format_is_xlsx()
+  {
+    var request = PersonExportRequest();
+    request.Format = GridExportFormats.Xlsx;
+
+    await using var context = NewInMemoryContext();
+    await using var stream = new MemoryStream();
+    var result = await context.People.ExportAsync(
+      request,
+      stream,
+      cancellationToken: TestContext.Current.CancellationToken);
+
+    Assert.Equal(4, result.ExportedRowCount);
+
+    using var workbook = new XLWorkbook(stream);
+    Assert.Equal("Alice", workbook.Worksheet("Export").Cell(2, 2).GetString());
+  }
+
+  [Fact]
+  public void Export_dispatches_to_csv_and_xlsx()
+  {
+    var csvRequest = PersonExportRequest();
+    csvRequest.Format = GridExportFormats.Csv;
+
+    using var csvStream = new MemoryStream();
+    var csvResult = TestData.Query().Export(csvRequest, csvStream, exportOptions: new GridExportOptions { Csv = { IncludeUtf8Bom = false } });
+    Assert.Equal(4, csvResult.ExportedRowCount);
+
+    var xlsxRequest = PersonExportRequest();
+    xlsxRequest.Format = GridExportFormats.Xlsx;
+
+    using var xlsxStream = new MemoryStream();
+    var xlsxResult = TestData.Query().Export(xlsxRequest, xlsxStream);
+    Assert.Equal(4, xlsxResult.ExportedRowCount);
+  }
+
+  [Fact]
+  public void ExportValueFormatter_transforms_written_values()
+  {
+    var request = new GridExportRequest
+    {
+      Columns = [new GridExportColumn { Field = "Name", Header = "Name" }]
+    };
+
+    var rows = new[] { new CsvRow { Id = 1, Name = "raw" } }.AsQueryable();
+    using var stream = new MemoryStream();
+
+    rows.ExportToCsv(
+      request,
+      stream,
+      exportOptions: new GridExportOptions
+      {
+        Csv = { IncludeUtf8Bom = false },
+        ValueFormatter = (value, _) => $"fmt:{value}"
+      });
+
+    var csv = Encoding.UTF8.GetString(stream.ToArray());
+    Assert.Contains("fmt:raw", csv, StringComparison.Ordinal);
+  }
+
+  [Fact]
+  public void Export_uses_custom_writer_from_options_registry()
+  {
+    var registry = new GridExportWriterRegistry();
+    registry.Register(new PipeDelimitedWriter());
+
+    var request = new GridExportRequest
+    {
+      Format = "pipe",
+      Columns =
+      [
+        new GridExportColumn { Field = "Id", Header = "ID" },
+        new GridExportColumn { Field = "Name", Header = "Name" }
+      ]
+    };
+
+    var rows = new[] { new CsvRow { Id = 1, Name = "custom" } }.AsQueryable();
+    using var stream = new MemoryStream();
+
+    var result = rows.Export(
+      request,
+      stream,
+      exportOptions: new GridExportOptions { Writers = registry, Csv = { IncludeUtf8Bom = false } });
+
+    var text = Encoding.UTF8.GetString(stream.ToArray());
+    Assert.Equal(1, result.ExportedRowCount);
+    Assert.Contains("ID|Name", text, StringComparison.Ordinal);
+    Assert.Contains("1|custom", text, StringComparison.Ordinal);
+  }
+
+  private sealed class PipeDelimitedWriter : IGridExportWriter
+  {
+    public string Format => "pipe";
+    public string ContentType => "text/plain";
+    public string FileExtension => "txt";
+
+    public GridExportResult Write<T>(
+      IQueryable<T> source,
+      GridExportRequest request,
+      Stream output,
+      GridOptions? gridOptions,
+      GridExportOptions? exportOptions)
+    {
+      var planned = source.ApplyGridExport(request, gridOptions, exportOptions);
+      using var writer = new StreamWriter(output, leaveOpen: true);
+      writer.WriteLine(string.Join('|', request.Columns.Select(column => column.Header)));
+      var count = 0;
+      foreach (var row in planned)
+      {
+        var values = request.Columns
+          .Select(column => typeof(T).GetProperty(column.Field)!.GetValue(row)?.ToString() ?? "")
+          .ToArray();
+        writer.WriteLine(string.Join('|', values));
+        count++;
+      }
+
+      writer.Flush();
+      return new GridExportResult
+      {
+        TotalMatchingCount = count,
+        ExportedRowCount = count,
+        Truncated = false
+      };
+    }
+
+    public Task<GridExportResult> WriteAsync<T>(
+      IQueryable<T> source,
+      GridExportRequest request,
+      Stream output,
+      IGridExportAsyncCapabilities capabilities,
+      GridOptions? gridOptions,
+      GridExportOptions? exportOptions,
+      CancellationToken cancellationToken)
+      => Task.FromResult(Write(source, request, output, gridOptions, exportOptions));
   }
 }

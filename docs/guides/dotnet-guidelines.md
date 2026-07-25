@@ -42,12 +42,14 @@ For build, test, and pack commands, see [`AGENTS.md`](../../AGENTS.md).
 
 ## Export conventions
 
-- Shared contract: `GridExportRequest`, `GridExportResult`, `GridExportFormat` in `QueryGrid.Abstractions`.
+- Shared contract: `GridExportRequest`, `GridExportResult`, `GridExportFormats`, `GridExportContentTypes` in `QueryGrid.Abstractions`.
 - Shared planning (`GridExportExecutor`, `ApplyGridExport`) in `QueryGrid.Core` — filter, search, sort, scope, and row cap are format-agnostic.
-- **CSV** — `CsvGridExporter` in `QueryGrid.Core.Internal`; public entry points: `ExportToCsv` (Core, sync/in-memory) and `ExportToCsvAsync` (EF Core, streaming). No third-party dependencies.
-- **Excel** — `QueryGrid.Export.Excel` only. Depends on ClosedXML; references Core and reuses the same export plan. Do not add ClosedXML to Core.
-- New export formats that need heavy or optional dependencies should follow the Excel pattern: separate `QueryGrid.Export.<Format>` package, `InternalsVisibleTo` from Core if the writer needs `GridFieldInfo`, public `ExportTo*Async` on `IQueryable<T>`.
-- If `GridExportRequest` JSON shape changes, update `@query-grid/core` and contract tests (see [Change coupling checklist](../../AGENTS.md#change-coupling-checklist)).
+- **Facade** — `ExportAsync` (EF) and `Export` (Core, in-memory) dispatch through `IGridExportWriter`.
+- **Built-in writers** — `CsvGridExportWriter`, `XlsxGridExportWriter`; registered on `GridExportWriterRegistry.Default`.
+- **Options** — `GridExportOptions` with nested `Csv` / `Xlsx`, optional `ValueFormatter`, optional `Writers` registry override.
+- **Custom formats** — implement `IGridExportWriter` and register on `GridExportWriterRegistry.Default` or per-export via `GridExportOptions.Writers`.
+- **HTTP metadata** — `GridExportMetadata` resolves content type, extension, and filename from the writer registry.
+- **EF async capabilities** — `IGridExportAsyncCapabilities` enables streaming CSV from database providers.
 
 ## What does not belong here
 

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using QueryGrid.Abstractions;
+using QueryGrid.Core;
 using QueryGrid.EntityFrameworkCore;
-using QueryGrid.Export.Excel;
 using QueryGrid.Samples.ShowcaseApi;
 using QueryGrid.Samples.ShowcaseApi.Data;
 using QueryGrid.Samples.ShowcaseApi.Models;
@@ -78,28 +78,11 @@ app.MapPost("/rows/export", async (HttpContext http, ShowcaseDbContext db, Cance
   {
     var rows = ShowcaseQueries.Rows(db);
     var date = DateTime.UtcNow.ToString("yyyy-MM-dd");
-    var (contentType, extension) = request.Format switch
-    {
-      GridExportFormat.Xlsx => (
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "xlsx"),
-      _ => ("text/csv", "csv")
-    };
 
     return Results.Stream(
-      async stream =>
-      {
-        if (request.Format == GridExportFormat.Xlsx)
-        {
-          await rows.ExportToXlsxAsync(request, stream, cancellationToken: ct);
-        }
-        else
-        {
-          await rows.ExportToCsvAsync(request, stream, cancellationToken: ct);
-        }
-      },
-      contentType: contentType,
-      fileDownloadName: $"showcase-rows-{date}.{extension}");
+      stream => rows.ExportAsync(request, stream, cancellationToken: ct),
+      contentType: GridExportMetadata.GetContentType(request.Format),
+      fileDownloadName: GridExportMetadata.GetFilename($"showcase-rows-{date}", request.Format));
   }
   catch (GridValidationException ex)
   {

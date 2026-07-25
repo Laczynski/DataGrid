@@ -272,27 +272,35 @@ if (hasExport(this.grid)) {
 }
 ```
 
-**.NET** — shared `GridExportRequest` pipeline; CSV is built into Core/EF, Excel is an optional add-on package:
-
-| Format | NuGet package                                   | Extension           |
-| ------ | ----------------------------------------------- | ------------------- |
-| CSV    | `QueryGrid.EntityFrameworkCore` (includes Core) | `ExportToCsvAsync`  |
-| Excel  | `QueryGrid.Export.Excel` (ClosedXML)            | `ExportToXlsxAsync` |
-
-CSV uses only the BCL, so it ships with `QueryGrid.Core`. Excel depends on ClosedXML, so it stays in a separate package — apps that only export CSV do not pull that dependency. See [repo-map.md](guides/repo-map.md#export-layout) for the full split.
+**.NET** — one endpoint, format in `GridExportRequest.Format`:
 
 ```csharp
+using QueryGrid.Abstractions;
 using QueryGrid.EntityFrameworkCore;
 
-// CSV — no extra packages beyond EF integration
-await db.Issues.ProjectToDto().ExportToCsvAsync(request, stream, cancellationToken: ct);
+await db.Issues.ProjectToDto().ExportAsync(request, stream, cancellationToken: ct);
 
-// Excel — dotnet add package QueryGrid.Export.Excel
-using QueryGrid.Export.Excel;
-await db.Issues.ProjectToDto().ExportToXlsxAsync(request, stream, cancellationToken: ct);
+return Results.Stream(
+  stream => rows.ExportAsync(request, stream, cancellationToken: ct),
+  contentType: GridExportMetadata.GetContentType(request.Format),
+  fileDownloadName: GridExportMetadata.GetFilename("issues", request.Format));
 ```
 
-Set `GridExportRequest.Format` to `GridExportFormat.Csv` or `GridExportFormat.Xlsx`. Return the file stream with an appropriate `Content-Type` and `Content-Disposition` filename. If the endpoint does not reference `QueryGrid.Export.Excel`, return `400` for `format: "xlsx"` (or hide Excel in the UI).
+CSV and Excel export ship in `QueryGrid.Core` / `QueryGrid.EntityFrameworkCore` (Excel via ClosedXML). Use `ExportAsync` for database-backed sources or `Export` for in-memory `IQueryable`. Format-specific methods (`ExportToCsvAsync`, `ExportToXlsxAsync`, …) remain for explicit call sites. Custom formats implement `IGridExportWriter` and register via `GridExportWriterRegistry.Default` or `GridExportOptions.Writers`.
+
+**Performance** — CSV export streams rows from the database; Excel loads the capped result set into memory before writing the workbook. Respect `GridExportOptions.MaxExportRows` and check `GridExportResult.Truncated`.
+
+**Options** — shared limits on `GridExportOptions`; format-specific settings under `Csv` and `Xlsx`. Optional `ValueFormatter` transforms cell values before they are written:
+
+```csharp
+new GridExportOptions
+{
+  MaxExportRows = 10_000,
+  Csv = { Delimiter = ";", IncludeUtf8Bom = true },
+  Xlsx = { WorksheetName = "Issues" },
+  ValueFormatter = (value, field) => field.Name == "Amount" ? ((decimal)value!).ToString("N2") : value
+}
+```
 
 **Export request body** (same shape in TypeScript and .NET):
 

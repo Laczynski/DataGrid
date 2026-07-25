@@ -3,15 +3,18 @@
   <PropertyGroup>
     <RootNamespace>QueryGrid.Core</RootNamespace>
     <PackageId>QueryGrid.Core</PackageId>
-    <Description>QueryGrid engine: automatic field discovery from DTOs, filter and multi-sort expression building, and IQueryable shaping. Provider-agnostic (no EF Core dependency).</Description>
+    <Description>QueryGrid engine: field discovery, filter/sort/search expression building, IQueryable shaping, and CSV/Excel export.</Description>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\QueryGrid.Abstractions\QueryGrid.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="QueryGrid.Export.Excel" />
     <InternalsVisibleTo Include="QueryGrid.EntityFrameworkCore" />
     <InternalsVisibleTo Include="QueryGrid.IntegrationTests" />
   </ItemGroup>

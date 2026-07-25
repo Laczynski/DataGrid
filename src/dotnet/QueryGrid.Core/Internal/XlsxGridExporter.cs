@@ -1,10 +1,9 @@
 using System.Globalization;
 using ClosedXML.Excel;
 using QueryGrid.Abstractions;
-using QueryGrid.Core;
 using QueryGrid.Core.Schema;
 
-namespace QueryGrid.Export.Excel.Internal;
+namespace QueryGrid.Core.Internal;
 
 internal static class XlsxGridExporter
 {
@@ -20,7 +19,7 @@ internal static class XlsxGridExporter
     ArgumentNullException.ThrowIfNull(options);
 
     using var workbook = new XLWorkbook();
-    var worksheet = workbook.Worksheets.Add("Export");
+    var worksheet = workbook.Worksheets.Add(options.Xlsx.WorksheetName);
 
     var rowIndex = 1;
     if (options.IncludeHeaders)
@@ -39,7 +38,7 @@ internal static class XlsxGridExporter
     {
       for (var columnIndex = 0; columnIndex < fields.Count; columnIndex++)
       {
-        var value = fields[columnIndex].Property.GetValue(row);
+        var value = GridExportValues.Resolve(fields[columnIndex].Property.GetValue(row), fields[columnIndex], options);
         SetCellValue(worksheet.Cell(rowIndex, columnIndex + 1), value);
       }
 

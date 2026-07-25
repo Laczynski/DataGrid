@@ -18,8 +18,11 @@ public sealed class GridExportRequest
   /// <summary>Field used to match <see cref="SelectedKeys"/>. Default <c>id</c>.</summary>
   public string DataKeyField { get; set; } = "id";
 
-  /// <summary>Output format. <see cref="GridExportFormat.Csv"/> and <see cref="GridExportFormat.Xlsx"/> are supported.</summary>
-  public GridExportFormat Format { get; set; } = GridExportFormat.Csv;
+  /// <summary>
+  /// Output format identifier. Built-in values are <see cref="GridExportFormats.Csv"/> and
+  /// <see cref="GridExportFormats.Xlsx"/>; register custom writers for other values.
+  /// </summary>
+  public string Format { get; set; } = GridExportFormats.Csv;
 
   /// <summary>Columns to write (field whitelist and header labels).</summary>
   public IList<GridExportColumn> Columns { get; set; } = new List<GridExportColumn>();

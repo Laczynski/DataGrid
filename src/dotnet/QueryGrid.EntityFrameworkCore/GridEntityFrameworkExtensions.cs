@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using QueryGrid.Abstractions;
 using QueryGrid.Core;
 using QueryGrid.Core.Internal;
+using QueryGrid.EntityFrameworkCore.Internal;
 
 namespace QueryGrid.EntityFrameworkCore;
 
@@ -36,13 +37,53 @@ public static class GridEntityFrameworkExtensions
   /// Applies the export plan, streams matching rows as CSV to <paramref name="output"/>,
   /// and returns export metadata (total match count and truncation flag).
   /// </summary>
-  public static async Task<GridExportResult> ExportToCsvAsync<T>(
+  public static Task<GridExportResult> ExportToCsvAsync<T>(
     this IQueryable<T> source,
     GridExportRequest request,
     Stream output,
     GridOptions? gridOptions = null,
     GridExportOptions? exportOptions = null,
     CancellationToken cancellationToken = default)
+  {
+    ValidateFormat(request, GridExportFormats.Csv, "CSV export");
+    return ExportCoreAsync(source, request, output, gridOptions, exportOptions, cancellationToken);
+  }
+
+  /// <summary>
+  /// Applies the export plan, writes matching rows as an Excel workbook to <paramref name="output"/>,
+  /// and returns export metadata.
+  /// </summary>
+  public static Task<GridExportResult> ExportToXlsxAsync<T>(
+    this IQueryable<T> source,
+    GridExportRequest request,
+    Stream output,
+    GridOptions? gridOptions = null,
+    GridExportOptions? exportOptions = null,
+    CancellationToken cancellationToken = default)
+  {
+    ValidateFormat(request, GridExportFormats.Xlsx, "Excel export");
+    return ExportCoreAsync(source, request, output, gridOptions, exportOptions, cancellationToken);
+  }
+
+  /// <summary>
+  /// Exports rows using <see cref="GridExportRequest.Format"/> — built-in and registered writers are supported.
+  /// </summary>
+  public static Task<GridExportResult> ExportAsync<T>(
+    this IQueryable<T> source,
+    GridExportRequest request,
+    Stream output,
+    GridOptions? gridOptions = null,
+    GridExportOptions? exportOptions = null,
+    CancellationToken cancellationToken = default)
+    => ExportCoreAsync(source, request, output, gridOptions, exportOptions, cancellationToken);
+
+  private static Task<GridExportResult> ExportCoreAsync<T>(
+    IQueryable<T> source,
+    GridExportRequest request,
+    Stream output,
+    GridOptions? gridOptions,
+    GridExportOptions? exportOptions,
+    CancellationToken cancellationToken)
   {
     ArgumentNullException.ThrowIfNull(source);
     ArgumentNullException.ThrowIfNull(request);
@@ -51,28 +92,26 @@ public static class GridEntityFrameworkExtensions
     gridOptions ??= GridOptions.Default;
     exportOptions ??= GridExportOptions.Default;
 
-    if (request.Format != GridExportFormat.Csv)
+    var writer = (exportOptions.Writers ?? GridExportWriterRegistry.Default).GetRequired(request.Format);
+    return writer.WriteAsync(
+      source,
+      request,
+      output,
+      EfGridExportAsyncCapabilities.Instance,
+      gridOptions,
+      exportOptions,
+      cancellationToken);
+  }
+
+  private static void ValidateFormat(GridExportRequest request, string expectedFormat, string operationName)
+  {
+    ArgumentNullException.ThrowIfNull(request);
+
+    if (!string.Equals(request.Format, expectedFormat, StringComparison.OrdinalIgnoreCase))
     {
       throw new GridValidationException(
         GridValidationCodes.ExportFormatNotSupported,
-        $"Export format '{request.Format}' is not supported by CSV export.");
+        $"Export format '{request.Format}' is not supported by {operationName}.");
     }
-
-    var plan = GridExportExecutor.Plan(source, request, gridOptions, exportOptions);
-    var totalMatchingCount = await plan.FilteredQuery.CountAsync(cancellationToken);
-    var exportedRowCount = await CsvGridExporter.WriteAsync(
-      plan.ExportQuery.AsAsyncEnumerable(),
-      request.Columns.ToList(),
-      plan.ExportFields,
-      output,
-      exportOptions,
-      cancellationToken);
-
-    return new GridExportResult
-    {
-      TotalMatchingCount = totalMatchingCount,
-      ExportedRowCount = exportedRowCount,
-      Truncated = totalMatchingCount > exportOptions.MaxExportRows
-    };
   }
 }

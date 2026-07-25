@@ -61,6 +61,7 @@ describe("grid-export", () => {
     expect(defaultExportFilename("issues", "csv")).toBe("issues.csv");
     expect(defaultExportFilename("issues", "xlsx")).toBe("issues.xlsx");
     expect(defaultExportFilename("issues.csv", "xlsx")).toBe("issues.csv");
+    expect(defaultExportFilename("issues", "pdf")).toBe("issues.pdf");
   });
 
   it("resolveExportFilename reads Content-Disposition", () => {

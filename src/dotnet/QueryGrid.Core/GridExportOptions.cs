@@ -1,7 +1,7 @@
 namespace QueryGrid.Core;
 
 /// <summary>
-/// Configuration for grid export: row caps, CSV formatting and selection limits.
+/// Configuration for grid export: row caps, format-specific settings, and optional value formatting.
 /// Separate from <see cref="GridOptions"/> list paging limits.
 /// </summary>
 public sealed class GridExportOptions
@@ -15,12 +15,20 @@ public sealed class GridExportOptions
   /// <summary>Maximum number of keys allowed in a selected-keys export. Default 10_000.</summary>
   public int MaxSelectedKeys { get; set; } = 10_000;
 
-  /// <summary>When <see langword="true"/>, prepends a UTF-8 BOM so Excel on Windows opens the file correctly.</summary>
-  public bool IncludeUtf8Bom { get; set; } = true;
-
   /// <summary>When <see langword="true"/>, writes a header row from column labels. Default <see langword="true"/>.</summary>
   public bool IncludeHeaders { get; set; } = true;
 
-  /// <summary>Field delimiter for CSV output. Default comma.</summary>
-  public string CsvDelimiter { get; set; } = ",";
+  /// <summary>CSV output settings.</summary>
+  public CsvGridExportOptions Csv { get; set; } = new();
+
+  /// <summary>Excel output settings.</summary>
+  public XlsxGridExportOptions Xlsx { get; set; } = new();
+
+  /// <summary>Optional transform applied to each cell value before formatting.</summary>
+  public GridExportValueFormatter? ValueFormatter { get; set; }
+
+  /// <summary>
+  /// Optional writer registry. When <see langword="null"/>, <see cref="GridExportWriterRegistry.Default"/> is used.
+  /// </summary>
+  public GridExportWriterRegistry? Writers { get; set; }
 }

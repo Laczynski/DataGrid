@@ -21,7 +21,7 @@ internal static class CsvGridExporter
     ArgumentNullException.ThrowIfNull(output);
     ArgumentNullException.ThrowIfNull(options);
 
-    if (options.IncludeUtf8Bom)
+    if (options.Csv.IncludeUtf8Bom)
     {
       await output.WriteAsync(Encoding.UTF8.GetPreamble(), cancellationToken);
     }
@@ -29,7 +29,7 @@ internal static class CsvGridExporter
     await using var writer = new StreamWriter(output, Utf8WithoutBom, leaveOpen: true);
     if (options.IncludeHeaders)
     {
-      await writer.WriteLineAsync(FormatCsvLine(columns.Select(column => column.Header), options.CsvDelimiter));
+      await writer.WriteLineAsync(FormatCsvLine(columns.Select(column => column.Header), options.Csv.Delimiter));
     }
 
     var rowCount = 0;
@@ -38,11 +38,11 @@ internal static class CsvGridExporter
       var values = new string[fields.Count];
       for (var index = 0; index < fields.Count; index++)
       {
-        var value = fields[index].Property.GetValue(row);
+        var value = GridExportValues.Resolve(fields[index].Property.GetValue(row), fields[index], options);
         values[index] = FormatExportValue(value);
       }
 
-      await writer.WriteLineAsync(FormatCsvLine(values, options.CsvDelimiter));
+      await writer.WriteLineAsync(FormatCsvLine(values, options.Csv.Delimiter));
       rowCount++;
     }
 
@@ -61,7 +61,7 @@ internal static class CsvGridExporter
     ArgumentNullException.ThrowIfNull(output);
     ArgumentNullException.ThrowIfNull(options);
 
-    if (options.IncludeUtf8Bom)
+    if (options.Csv.IncludeUtf8Bom)
     {
       output.Write(Encoding.UTF8.GetPreamble());
     }
@@ -69,7 +69,7 @@ internal static class CsvGridExporter
     using var writer = new StreamWriter(output, Utf8WithoutBom, leaveOpen: true);
     if (options.IncludeHeaders)
     {
-      writer.WriteLine(FormatCsvLine(columns.Select(column => column.Header), options.CsvDelimiter));
+      writer.WriteLine(FormatCsvLine(columns.Select(column => column.Header), options.Csv.Delimiter));
     }
 
     var rowCount = 0;
@@ -78,11 +78,11 @@ internal static class CsvGridExporter
       var values = new string[fields.Count];
       for (var index = 0; index < fields.Count; index++)
       {
-        var value = fields[index].Property.GetValue(row);
+        var value = GridExportValues.Resolve(fields[index].Property.GetValue(row), fields[index], options);
         values[index] = FormatExportValue(value);
       }
 
-      writer.WriteLine(FormatCsvLine(values, options.CsvDelimiter));
+      writer.WriteLine(FormatCsvLine(values, options.Csv.Delimiter));
       rowCount++;
     }
 

@@ -132,7 +132,7 @@ public class EntityFrameworkTests
     var result = await context.People.ExportToCsvAsync(
       request,
       stream,
-      exportOptions: new GridExportOptions { IncludeUtf8Bom = false },
+      exportOptions: new GridExportOptions { Csv = { IncludeUtf8Bom = false } },
       cancellationToken: TestContext.Current.CancellationToken);
 
     var csv = Encoding.UTF8.GetString(stream.ToArray());
