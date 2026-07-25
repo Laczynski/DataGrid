@@ -272,14 +272,27 @@ if (hasExport(this.grid)) {
 }
 ```
 
-**.NET** — CSV via `QueryGrid.EntityFrameworkCore`; Excel via optional `QueryGrid.Export.Excel` (ClosedXML):
+**.NET** — shared `GridExportRequest` pipeline; CSV is built into Core/EF, Excel is an optional add-on package:
+
+| Format | NuGet package                                   | Extension           |
+| ------ | ----------------------------------------------- | ------------------- |
+| CSV    | `QueryGrid.EntityFrameworkCore` (includes Core) | `ExportToCsvAsync`  |
+| Excel  | `QueryGrid.Export.Excel` (ClosedXML)            | `ExportToXlsxAsync` |
+
+CSV uses only the BCL, so it ships with `QueryGrid.Core`. Excel depends on ClosedXML, so it stays in a separate package — apps that only export CSV do not pull that dependency. See [repo-map.md](guides/repo-map.md#export-layout) for the full split.
 
 ```csharp
-// NuGet: QueryGrid.Export.Excel
+using QueryGrid.EntityFrameworkCore;
+
+// CSV — no extra packages beyond EF integration
+await db.Issues.ProjectToDto().ExportToCsvAsync(request, stream, cancellationToken: ct);
+
+// Excel — dotnet add package QueryGrid.Export.Excel
+using QueryGrid.Export.Excel;
 await db.Issues.ProjectToDto().ExportToXlsxAsync(request, stream, cancellationToken: ct);
 ```
 
-Set `GridExportRequest.Format` to `GridExportFormat.Xlsx` or `Csv`. Return the file stream with an appropriate `Content-Type` and `Content-Disposition` filename.
+Set `GridExportRequest.Format` to `GridExportFormat.Csv` or `GridExportFormat.Xlsx`. Return the file stream with an appropriate `Content-Type` and `Content-Disposition` filename. If the endpoint does not reference `QueryGrid.Export.Excel`, return `400` for `format: "xlsx"` (or hide Excel in the UI).
 
 **Export request body** (same shape in TypeScript and .NET):
 

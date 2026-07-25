@@ -40,6 +40,15 @@ For build, test, and pack commands, see [`AGENTS.md`](../../AGENTS.md).
 - Document public members with XML comments — they appear in NuGet package docs.
 - Internal helpers live under `Internal/` folders and use `internal` visibility.
 
+## Export conventions
+
+- Shared contract: `GridExportRequest`, `GridExportResult`, `GridExportFormat` in `QueryGrid.Abstractions`.
+- Shared planning (`GridExportExecutor`, `ApplyGridExport`) in `QueryGrid.Core` — filter, search, sort, scope, and row cap are format-agnostic.
+- **CSV** — `CsvGridExporter` in `QueryGrid.Core.Internal`; public entry points: `ExportToCsv` (Core, sync/in-memory) and `ExportToCsvAsync` (EF Core, streaming). No third-party dependencies.
+- **Excel** — `QueryGrid.Export.Excel` only. Depends on ClosedXML; references Core and reuses the same export plan. Do not add ClosedXML to Core.
+- New export formats that need heavy or optional dependencies should follow the Excel pattern: separate `QueryGrid.Export.<Format>` package, `InternalsVisibleTo` from Core if the writer needs `GridFieldInfo`, public `ExportTo*Async` on `IQueryable<T>`.
+- If `GridExportRequest` JSON shape changes, update `@query-grid/core` and contract tests (see [Change coupling checklist](../../AGENTS.md#change-coupling-checklist)).
+
 ## What does not belong here
 
 - Application endpoints, DbContext, or domain entities — those live in `samples/` or consumer apps.

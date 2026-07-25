@@ -21,16 +21,28 @@
 
 ### Package responsibilities
 
-| Package                         | Owns                                                                                                                    |
-| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `QueryGrid.Abstractions`        | `GridQuery`, `GridResult`, filter/sort types, attributes, `GridQueryJson`, `FilterNodeJsonConverter`                    |
-| `QueryGrid.Core`                | Schema discovery (`GridSchemaProvider`), filter/sort/search expression builders, `IQueryable` extensions, `GridOptions` |
-| `QueryGrid.EntityFrameworkCore` | `ToGridResultAsync` — async count, sort, filter, page via EF Core                                                       |
+| Package                         | Owns                                                                                                                                                                   |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `QueryGrid.Abstractions`        | `GridQuery`, `GridResult`, filter/sort types, `GridExportRequest` / `GridExportResult`, attributes, `GridQueryJson`, `FilterNodeJsonConverter`                         |
+| `QueryGrid.Core`                | Schema discovery (`GridSchemaProvider`), filter/sort/search expression builders, `IQueryable` extensions, `GridOptions`, CSV export (`ExportToCsv`, `ApplyGridExport`) |
+| `QueryGrid.EntityFrameworkCore` | `ToGridResultAsync` — async count, sort, filter, page via EF Core; `ExportToCsvAsync` — streaming CSV export                                                           |
+| `QueryGrid.Export.Excel`        | Optional Excel (`.xlsx`) export via ClosedXML — `ExportToXlsx` / `ExportToXlsxAsync` (same `GridExportRequest` pipeline as CSV)                                        |
+
+### Export layout
+
+Shared export planning (`GridExportExecutor`) lives in `QueryGrid.Core`. Format-specific writers are split by dependency cost:
+
+| Format | Package                                       | Why                                                                   |
+| ------ | --------------------------------------------- | --------------------------------------------------------------------- |
+| CSV    | `QueryGrid.Core` (+ `ExportToCsvAsync` in EF) | BCL only (`StreamWriter`, UTF-8) — no extra NuGet dependencies        |
+| Excel  | `QueryGrid.Export.Excel` (optional)           | Pulls in ClosedXML; keep Core lightweight for apps that only need CSV |
+
+The npm grid shows both **Export CSV** and **Export Excel** when `export` is configured. The backend decides which `format` values it supports — Excel requires installing `QueryGrid.Export.Excel`.
 
 ### Internal layout (Core)
 
 - `Schema/` — field discovery and `GridFieldInfo`
-- `Internal/` — expression builders, type classification, value conversion (not public API)
+- `Internal/` — expression builders, type classification, value conversion, `CsvGridExporter` (not public API)
 
 ### Tests
 
@@ -46,11 +58,11 @@
 
 ### Package responsibilities
 
-| Package               | Owns                                                                                                                   |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `@query-grid/core`    | TypeScript models mirroring `GridQuery` / `GridResult`, `formatGridError`, `formatLocalDateTime`                       |
-| `@query-grid/primeng` | `createGridResource()`, `GridResourceFactory`, `<qg-prime-data-grid>`, `qgColumn` / `qgEmpty` directives, filter chips |
-| `@query-grid/ui`      | `createGridResource()`, `GridResourceFactory`, `<qg-ui-data-grid>`, `qgColumn` / `qgEmpty` directives, filter chips (laczynski/ui) |
+| Package               | Owns                                                                                                                                          |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@query-grid/core`    | TypeScript models mirroring `GridQuery` / `GridResult`, `formatGridError`, `formatLocalDateTime`, `buildGridExportBody`, `downloadGridExport` |
+| `@query-grid/primeng` | `createGridResource()`, `GridResourceFactory`, `<qg-prime-data-grid>`, `qgColumn` / `qgEmpty` directives, filter chips                        |
+| `@query-grid/ui`      | `createGridResource()`, `GridResourceFactory`, `<qg-ui-data-grid>`, `qgColumn` / `qgEmpty` directives, filter chips (laczynski/ui)            |
 
 ### PrimeNG package layout
 
@@ -77,7 +89,8 @@
 QueryGrid.Abstractions
         │
         ├── QueryGrid.Core
-        │         └── QueryGrid.EntityFrameworkCore
+        │         ├── QueryGrid.EntityFrameworkCore
+        │         └── QueryGrid.Export.Excel  (optional; ClosedXML)
         │
 @query-grid/core
         │
