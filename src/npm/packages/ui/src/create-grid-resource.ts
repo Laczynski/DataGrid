@@ -76,7 +76,7 @@ export interface GridResourceConfig<T> {
   columnLayout?: boolean;
   /** Client-side row selection for bulk actions. Requires `dataKey` on the grid component. */
   rowSelection?: boolean | GridRowSelectionConfig;
-  /** Server-side CSV export via POST to the configured URL. */
+  /** Server-side CSV or Excel export via POST to the configured URL. */
   export?: GridExportConfig;
   getExtraState?: () => Record<string, unknown> | undefined;
   applyExtraState?: (state: Record<string, unknown>) => void;

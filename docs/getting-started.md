@@ -261,7 +261,7 @@ readonly grid = this.gridFactory.create<IssueDto>({
 });
 ```
 
-When `export` is set, the grid toolbar shows **Export CSV** and **Export Excel**. With `rowSelection`, the bulk toolbar adds selected-row export for both formats.
+When `export` is set, the grid toolbar shows an **Export** dropdown with CSV and Excel options. With `rowSelection`, the bulk toolbar adds an **Export selected** dropdown with the same format choices.
 
 ```typescript
 import { hasExport } from "@query-grid/primeng";
@@ -317,7 +317,7 @@ new GridExportOptions
 }
 ```
 
-For selected rows, set `"scope": "selectedKeys"` and `"selectedKeys": ["1", "2"]`. Columns are a server-side whitelist — only listed fields are exported.
+For selected rows, set `"scope": "selectedKeys"` and `"selectedKeys": ["1", "2"]`. The client sends `columns` in the request body; treat that list as untrusted input and validate or override it server-side against an allowlist. `ExportAsync` rejects unknown field names via the grid schema, but it does not limit which schema fields a caller may request.
 
 Showcase: `POST /rows/export` in `samples/showcase-api/Program.cs` (binding in `GridExportBinding.cs`).
 

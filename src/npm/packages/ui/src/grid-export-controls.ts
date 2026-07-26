@@ -109,7 +109,7 @@ export function createGridExportControls(config: {
   };
 }
 
-import type { GridResource } from "./create-grid-resource.js";
+import type { GridResource } from "./create-grid-resource";
 
 export interface GridResourceWithExport {
   exporting: GridExportControls["exporting"];

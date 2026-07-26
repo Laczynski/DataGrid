@@ -76,7 +76,7 @@ export interface GridResourceConfig<T> {
   /** Client-side column resize, reorder, and pin stored in persist extra state. */
   columnLayout?: boolean;
   rowSelection?: boolean | GridRowSelectionConfig;
-  /** Server-side CSV export via POST to the configured URL. */
+  /** Server-side CSV or Excel export via POST to the configured URL. */
   export?: GridExportConfig;
   getExtraState?: () => Record<string, unknown> | undefined;
   applyExtraState?: (state: Record<string, unknown>) => void;

@@ -38,7 +38,7 @@ Shared export planning (`GridExportExecutor`) lives in `QueryGrid.Core`. Built-i
 | Excel  | `QueryGrid.Core` / EF           | `ExportToXlsx` / `ExportToXlsxAsync`                                                                                             |
 | Custom | consumer                        | `IGridExportWriter` + `GridExportPipeline`, register via `GridExportWriterRegistration.Configure` or `GridExportOptions.Writers` |
 
-The npm grid shows **Export CSV** and **Export Excel** when `export` is configured.
+The npm grid shows **Export** and **Export selected** dropdowns (CSV and Excel) when `export` is configured.
 
 ### Internal layout (Core)
 
