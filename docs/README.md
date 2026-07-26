@@ -25,7 +25,6 @@ Implementation conventions for library packages. Start with [guides/README.md](g
 | [npm-guidelines.md](guides/npm-guidelines.md)         | npm / Angular library conventions                      |
 | [testing-guidelines.md](guides/testing-guidelines.md) | Test ownership, anti-patterns, what to run before a PR |
 | [feature-recipes.md](guides/feature-recipes.md)       | Short recipes for common library changes               |
-| [grid-export-plan.md](guides/grid-export-plan.md)     | Planned grid export API and implementation phases      |
 
 ## Consumer docs
 
@@ -37,8 +36,8 @@ Implementation conventions for library packages. Start with [guides/README.md](g
 
 Run, configure, CI, and publishing. Start with [technical/README.md](technical/README.md).
 
-| Document                                 | Description                                       |
-| ---------------------------------------- | ------------------------------------------------- |
-| [README.md](technical/README.md)         | Entry point — when to read each technical doc     |
-| [ci.md](technical/ci.md)                 | GitHub Actions workflow and local reproduction    |
-| [publishing.md](technical/publishing.md) | Tag-based release (NuGet + npm via CI) |
+| Document                                 | Description                                    |
+| ---------------------------------------- | ---------------------------------------------- |
+| [README.md](technical/README.md)         | Entry point — when to read each technical doc  |
+| [ci.md](technical/ci.md)                 | GitHub Actions workflow and local reproduction |
+| [publishing.md](technical/publishing.md) | Tag-based release (NuGet + npm via CI)         |

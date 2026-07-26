@@ -55,7 +55,14 @@ See [Change coupling checklist](../../AGENTS.md#change-coupling-checklist). Step
 
 ## Add grid export
 
-Follow [grid-export-plan.md](grid-export-plan.md). Start with `@query-grid/core` CSV helpers, then thin ui/primeng wrappers and showcase.
+Server-first CSV and Excel export is implemented. See [getting-started.md](../getting-started.md#server-export-csv-and-excel).
+
+1. **Abstractions** — `GridExportRequest`, `GridExportResult`, `GridExportFormats`.
+2. **Core** — `GridExportExecutor`, `GridExportPipeline`, `BuiltInGridExportWriters`, `Export` / `ExportAsync`, nested `GridExportOptions`.
+3. **EF** — `ExportAsync` (facade), `ExportToCsvAsync`, `ExportToXlsxAsync`.
+4. **npm** — `buildGridExportBody`, `downloadGridExport` in `@query-grid/core`; `export` on `createGridResource`.
+5. **UI** — built-in Export toolbar buttons; Export selected in bulk toolbar when `rowSelection` is enabled.
+6. Showcase reference: `samples/showcase-api/Program.cs` (`POST /rows/export`, `GridExportBinding.cs`).
 
 ## Add a new NuGet integration package
 
