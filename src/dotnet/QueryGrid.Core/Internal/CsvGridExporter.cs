@@ -113,11 +113,11 @@ internal static class CsvGridExporter
   }
 
   internal static string FormatCsvLine(IEnumerable<string> values, string delimiter)
-    => string.Join(delimiter, values.Select(EscapeCsvField));
+    => string.Join(delimiter, values.Select(value => EscapeCsvField(value, delimiter)));
 
-  internal static string EscapeCsvField(string value)
+  internal static string EscapeCsvField(string value, string delimiter)
   {
-    var mustQuote = value.Contains('"') || value.Contains('\n') || value.Contains('\r') || value.Contains(',');
+    var mustQuote = value.Contains('"') || value.Contains('\n') || value.Contains('\r') || value.Contains(delimiter);
     if (!mustQuote)
     {
       return value;

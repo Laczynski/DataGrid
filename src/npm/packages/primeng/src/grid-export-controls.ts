@@ -120,5 +120,12 @@ export interface GridResourceWithExport {
 export function hasExport<T>(
   grid: GridResource<T>,
 ): grid is GridResource<T> & GridResourceWithExport {
-  return "exportAllMatching" in grid && typeof grid.exportAllMatching === "function";
+  return (
+    "exportAllMatching" in grid &&
+    typeof grid.exportAllMatching === "function" &&
+    "exportSelected" in grid &&
+    typeof grid.exportSelected === "function" &&
+    "exporting" in grid &&
+    typeof (grid as GridResourceWithExport).exporting === "function"
+  );
 }

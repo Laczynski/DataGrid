@@ -56,10 +56,6 @@ export function buildExportColumns(columns: readonly GridExportColumnInput[]): G
 }
 
 export function defaultExportFilename(base: string, format: GridExportFormat): string {
-  if (base.endsWith(".csv") || base.endsWith(".xlsx")) {
-    return base;
-  }
-
   const extension = format.startsWith(".") ? format.slice(1) : format;
   if (base.toLowerCase().endsWith(`.${extension.toLowerCase()}`)) {
     return base;

@@ -57,11 +57,41 @@ public class ExportTests
       Columns = PersonColumns
     };
 
-  private static string ExportCsv<T>(IQueryable<T> source, GridExportRequest request)
+  private static string ExportCsv<T>(
+    IQueryable<T> source,
+    GridExportRequest request,
+    GridExportOptions? exportOptions = null)
   {
     using var stream = new MemoryStream();
-    source.ExportToCsv(request, stream, exportOptions: new GridExportOptions { Csv = { IncludeUtf8Bom = false } });
+    source.ExportToCsv(
+      request,
+      stream,
+      exportOptions: exportOptions ?? new GridExportOptions { Csv = { IncludeUtf8Bom = false } });
     return Encoding.UTF8.GetString(stream.ToArray());
+  }
+
+  [Fact]
+  public void ExportToCsv_quotes_custom_delimiter_in_values()
+  {
+    var rows = new[]
+    {
+      new CsvRow { Id = 1, Name = "a;b", Email = "plain" }
+    }.AsQueryable();
+
+    var csv = ExportCsv(
+      rows,
+      new GridExportRequest
+      {
+        Columns =
+        [
+          new GridExportColumn { Field = "Id", Header = "ID" },
+          new GridExportColumn { Field = "Name", Header = "Name" },
+          new GridExportColumn { Field = "Email", Header = "Email" }
+        ]
+      },
+      exportOptions: new GridExportOptions { Csv = { Delimiter = ";", IncludeUtf8Bom = false } });
+
+    Assert.Contains("1;\"a;b\";plain", csv, StringComparison.Ordinal);
   }
 
   [Fact]

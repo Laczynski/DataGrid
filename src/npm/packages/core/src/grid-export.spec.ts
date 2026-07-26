@@ -60,7 +60,9 @@ describe("grid-export", () => {
   it("defaultExportFilename appends extension", () => {
     expect(defaultExportFilename("issues", "csv")).toBe("issues.csv");
     expect(defaultExportFilename("issues", "xlsx")).toBe("issues.xlsx");
-    expect(defaultExportFilename("issues.csv", "xlsx")).toBe("issues.csv");
+    expect(defaultExportFilename("issues.csv", "csv")).toBe("issues.csv");
+    expect(defaultExportFilename("Issues.CSV", "csv")).toBe("Issues.CSV");
+    expect(defaultExportFilename("issues.csv", "xlsx")).toBe("issues.csv.xlsx");
     expect(defaultExportFilename("issues", "pdf")).toBe("issues.pdf");
   });
 

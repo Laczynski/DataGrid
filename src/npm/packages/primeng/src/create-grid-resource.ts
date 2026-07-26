@@ -27,7 +27,11 @@ import {
 import { catchError, finalize, Observable, of, switchMap, tap } from "rxjs";
 import { createGridColumnLayoutControls } from "./grid-column-layout-controls";
 import { createGridColumnVisibilityControls } from "./grid-column-visibility-controls";
-import { createGridExportControls, type GridExportConfig } from "./grid-export-controls";
+import {
+  createGridExportControls,
+  type GridExportConfig,
+  type GridExportRunOptions,
+} from "./grid-export-controls";
 import {
   readGridQueryFromRoute,
   resolveGridRouteSyncConfig,
@@ -472,10 +476,10 @@ export function createGridResource<T>(config: GridResourceConfig<T>): GridResour
       ...(exportControls
         ? {
             exporting: exportControls.exporting,
-            exportAllMatching(options?: { filename?: string }) {
+            exportAllMatching(options?: GridExportRunOptions) {
               return exportControls.exportAllMatching(query(), options);
             },
-            exportSelected(options?: { filename?: string }) {
+            exportSelected(options?: GridExportRunOptions) {
               if (!rowSelectionControls) {
                 return Promise.resolve();
               }
