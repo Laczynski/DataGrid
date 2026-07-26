@@ -282,8 +282,8 @@ await db.Issues.ProjectToDto().ExportAsync(request, stream, cancellationToken: c
 
 return Results.Stream(
   stream => rows.ExportAsync(request, stream, cancellationToken: ct),
-  contentType: GridExportMetadata.GetContentType(request.Format),
-  fileDownloadName: GridExportMetadata.GetFilename("issues", request.Format));
+  contentType: GridExportWriterRegistry.Default.GetContentType(request.Format),
+  fileDownloadName: GridExportWriterRegistry.Default.GetFilename("issues", request.Format));
 ```
 
 CSV and Excel export ship in `QueryGrid.Core` / `QueryGrid.EntityFrameworkCore` (Excel via ClosedXML). Use `ExportAsync` for database-backed sources or `Export` for in-memory `IQueryable`. Format-specific methods (`ExportToCsvAsync`, `ExportToXlsxAsync`, …) remain for explicit call sites. Custom formats implement `IGridExportWriter` and register via `GridExportWriterRegistry.Default` or `GridExportOptions.Writers`.

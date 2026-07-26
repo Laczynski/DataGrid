@@ -24,7 +24,7 @@
 | Package                         | Owns                                                                                                                                                                                          |
 | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `QueryGrid.Abstractions`        | `GridQuery`, `GridResult`, filter/sort types, `GridExportRequest` / `GridExportResult`, `GridExportFormats`, `GridExportContentTypes`, attributes, `GridQueryJson`, `FilterNodeJsonConverter` |
-| `QueryGrid.Core`                | Schema discovery, expression builders, `IQueryable` extensions, `GridOptions`, CSV/Excel export writers, `IGridExportWriter`, `GridExportWriterRegistry`, `GridExportMetadata`                |
+| `QueryGrid.Core`                | Schema discovery, expression builders, `IQueryable` extensions, `GridOptions`, CSV/Excel export, `IGridExportWriter`, `GridExportWriterRegistry`                                              |
 | `QueryGrid.EntityFrameworkCore` | `ToGridResultAsync`, `ExportAsync` (facade), `ExportToCsvAsync`, `ExportToXlsxAsync`                                                                                                          |
 
 ### Export layout

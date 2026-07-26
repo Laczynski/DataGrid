@@ -83,9 +83,11 @@ public static class GridExportExtensions
     ArgumentNullException.ThrowIfNull(request);
     ArgumentNullException.ThrowIfNull(output);
 
+    var grid = ResolveGridOptions(gridOptions);
     var export = ResolveExportOptions(exportOptions);
     var writer = ResolveWriters(export).GetRequired(request.Format);
-    return writer.Write(source, request, output, ResolveGridOptions(gridOptions), export);
+    var context = GridExportContext.InMemory(grid, export);
+    return writer.WriteAsync(source, request, output, context, CancellationToken.None).GetAwaiter().GetResult();
   }
 
   private static void ValidateFormat(GridExportRequest request, string expectedFormat, string operationName)

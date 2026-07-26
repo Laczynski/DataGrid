@@ -78,11 +78,12 @@ app.MapPost("/rows/export", async (HttpContext http, ShowcaseDbContext db, Cance
   {
     var rows = ShowcaseQueries.Rows(db);
     var date = DateTime.UtcNow.ToString("yyyy-MM-dd");
+    var registry = GridExportWriterRegistry.Default;
 
     return Results.Stream(
       stream => rows.ExportAsync(request, stream, cancellationToken: ct),
-      contentType: GridExportMetadata.GetContentType(request.Format),
-      fileDownloadName: GridExportMetadata.GetFilename($"showcase-rows-{date}", request.Format));
+      contentType: registry.GetContentType(request.Format),
+      fileDownloadName: registry.GetFilename($"showcase-rows-{date}", request.Format));
   }
   catch (GridValidationException ex)
   {

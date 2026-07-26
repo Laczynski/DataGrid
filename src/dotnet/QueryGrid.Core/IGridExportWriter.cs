@@ -4,8 +4,7 @@ namespace QueryGrid.Core;
 
 /// <summary>
 /// Writes a grid export for a specific format identifier.
-/// Built-in CSV and Excel writers are registered by default; call <see cref="GridExportWriterRegistry.Default"/>.<see cref="GridExportWriterRegistry.Register"/>
-/// for custom formats.
+/// Built-in CSV and Excel writers are registered on <see cref="GridExportWriterRegistry.Default"/>.
 /// </summary>
 public interface IGridExportWriter
 {
@@ -18,25 +17,11 @@ public interface IGridExportWriter
   /// <summary>File extension without a leading dot.</summary>
   string FileExtension { get; }
 
-  /// <summary>
-  /// Applies the export plan and writes rows to <paramref name="output"/> synchronously.
-  /// </summary>
-  GridExportResult Write<T>(
-    IQueryable<T> source,
-    GridExportRequest request,
-    Stream output,
-    GridOptions? gridOptions,
-    GridExportOptions? exportOptions);
-
-  /// <summary>
-  /// Applies the export plan and writes rows to <paramref name="output"/> asynchronously.
-  /// </summary>
+  /// <summary>Applies the export plan and writes rows to <paramref name="output"/>.</summary>
   Task<GridExportResult> WriteAsync<T>(
     IQueryable<T> source,
     GridExportRequest request,
     Stream output,
-    IGridExportAsyncCapabilities capabilities,
-    GridOptions? gridOptions,
-    GridExportOptions? exportOptions,
+    GridExportContext context,
     CancellationToken cancellationToken);
 }

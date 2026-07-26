@@ -1,10 +1,8 @@
-using QueryGrid.Abstractions;
-
 namespace QueryGrid.Core.Internal;
 
-internal sealed class InMemoryGridExportAsyncCapabilities : IGridExportAsyncCapabilities
+internal sealed class InMemoryGridExportQueryExecutor : IGridExportQueryExecutor
 {
-  internal static InMemoryGridExportAsyncCapabilities Instance { get; } = new();
+  internal static InMemoryGridExportQueryExecutor Instance { get; } = new();
 
   public Task<int> CountAsync<T>(IQueryable<T> query, CancellationToken cancellationToken)
     => Task.FromResult(query.Count());

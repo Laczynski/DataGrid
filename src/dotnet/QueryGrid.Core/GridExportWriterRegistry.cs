@@ -15,10 +15,7 @@ public sealed class GridExportWriterRegistry
   public static GridExportWriterRegistry Default { get; } = new();
 
   static GridExportWriterRegistry()
-  {
-    Default.Register(new CsvGridExportWriter());
-    Default.Register(new XlsxGridExportWriter());
-  }
+    => BuiltInGridExportWriters.Register(Default);
 
   /// <summary>Registers or replaces a writer for <see cref="IGridExportWriter.Format"/>.</summary>
   public void Register(IGridExportWriter writer)
@@ -46,9 +43,13 @@ public sealed class GridExportWriterRegistry
     return writer;
   }
 
-  /// <summary>Returns a writer from <see cref="Default"/>.</summary>
-  public static IGridExportWriter? TryGetWriter(string format) => Default.TryGet(format);
+  /// <summary>Returns the HTTP <c>Content-Type</c> for a registered <paramref name="format"/>.</summary>
+  public string GetContentType(string format) => GetRequired(format).ContentType;
 
-  /// <summary>Returns a writer from <see cref="Default"/> or throws.</summary>
-  public static IGridExportWriter GetRequiredWriter(string format) => Default.GetRequired(format);
+  /// <summary>Returns the file extension without a leading dot for a registered <paramref name="format"/>.</summary>
+  public string GetFileExtension(string format) => GetRequired(format).FileExtension;
+
+  /// <summary>Builds a download filename from <paramref name="baseName"/> and a registered <paramref name="format"/>.</summary>
+  public string GetFilename(string baseName, string format)
+    => GridExportContentTypes.GetFilename(baseName, GetFileExtension(format));
 }

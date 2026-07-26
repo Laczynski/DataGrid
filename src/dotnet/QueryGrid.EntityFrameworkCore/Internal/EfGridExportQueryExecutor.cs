@@ -1,12 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using QueryGrid.Abstractions;
 using QueryGrid.Core;
 
 namespace QueryGrid.EntityFrameworkCore.Internal;
 
-internal sealed class EfGridExportAsyncCapabilities : IGridExportAsyncCapabilities
+internal sealed class EfGridExportQueryExecutor : IGridExportQueryExecutor
 {
-  internal static EfGridExportAsyncCapabilities Instance { get; } = new();
+  internal static EfGridExportQueryExecutor Instance { get; } = new();
 
   public Task<int> CountAsync<T>(IQueryable<T> query, CancellationToken cancellationToken)
     => query.CountAsync(cancellationToken);

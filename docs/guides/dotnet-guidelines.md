@@ -48,8 +48,8 @@ For build, test, and pack commands, see [`AGENTS.md`](../../AGENTS.md).
 - **Built-in writers** — `CsvGridExportWriter`, `XlsxGridExportWriter`; registered on `GridExportWriterRegistry.Default`.
 - **Options** — `GridExportOptions` with nested `Csv` / `Xlsx`, optional `ValueFormatter`, optional `Writers` registry override.
 - **Custom formats** — implement `IGridExportWriter` and register on `GridExportWriterRegistry.Default` or per-export via `GridExportOptions.Writers`.
-- **HTTP metadata** — `GridExportMetadata` resolves content type, extension, and filename from the writer registry.
-- **EF async capabilities** — `IGridExportAsyncCapabilities` enables streaming CSV from database providers.
+- **HTTP metadata** — `GridExportWriterRegistry.GetContentType` / `GetFilename`.
+- **Provider execution** — `GridExportContext` + `IGridExportQueryExecutor` (EF streams CSV from the database).
 
 ## What does not belong here
 

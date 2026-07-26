@@ -342,27 +342,27 @@ public class ExportTests
     public string ContentType => "text/plain";
     public string FileExtension => "txt";
 
-    public GridExportResult Write<T>(
+    public async Task<GridExportResult> WriteAsync<T>(
       IQueryable<T> source,
       GridExportRequest request,
       Stream output,
-      GridOptions? gridOptions,
-      GridExportOptions? exportOptions)
+      GridExportContext context,
+      CancellationToken cancellationToken)
     {
-      var planned = source.ApplyGridExport(request, gridOptions, exportOptions);
-      using var writer = new StreamWriter(output, leaveOpen: true);
-      writer.WriteLine(string.Join('|', request.Columns.Select(column => column.Header)));
+      var planned = source.ApplyGridExport(request, context.GridOptions, context.ExportOptions);
+      await using var writer = new StreamWriter(output, leaveOpen: true);
+      await writer.WriteLineAsync(string.Join('|', request.Columns.Select(column => column.Header)).AsMemory(), cancellationToken);
       var count = 0;
-      foreach (var row in planned)
+      await foreach (var row in context.StreamAsync(planned, cancellationToken))
       {
         var values = request.Columns
           .Select(column => typeof(T).GetProperty(column.Field)!.GetValue(row)?.ToString() ?? "")
           .ToArray();
-        writer.WriteLine(string.Join('|', values));
+        await writer.WriteLineAsync(string.Join('|', values).AsMemory(), cancellationToken);
         count++;
       }
 
-      writer.Flush();
+      await writer.FlushAsync(cancellationToken);
       return new GridExportResult
       {
         TotalMatchingCount = count,
@@ -370,15 +370,5 @@ public class ExportTests
         Truncated = false
       };
     }
-
-    public Task<GridExportResult> WriteAsync<T>(
-      IQueryable<T> source,
-      GridExportRequest request,
-      Stream output,
-      IGridExportAsyncCapabilities capabilities,
-      GridOptions? gridOptions,
-      GridExportOptions? exportOptions,
-      CancellationToken cancellationToken)
-      => Task.FromResult(Write(source, request, output, gridOptions, exportOptions));
   }
 }
