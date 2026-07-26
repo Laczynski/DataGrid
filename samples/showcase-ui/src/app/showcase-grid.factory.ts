@@ -1,6 +1,6 @@
 import { Injector } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import type { GridQuery, GridViewPreset } from '@query-grid/core';
+import type { GridExportColumnInput, GridQuery, GridViewPreset } from '@query-grid/core';
 import { createGridResource, type GridResource } from '@query-grid/primeng';
 import {
   createGridResource as createUiGridResource,
@@ -8,6 +8,25 @@ import {
 } from '@query-grid/ui';
 import { ShowcaseRow } from './models/showcase-row.model';
 import { ShowcaseApiService } from './services/showcase-api.service';
+
+const showcaseExportColumns: readonly GridExportColumnInput[] = [
+  { field: 'Id', header: 'Id' },
+  { field: 'Label', header: 'Label' },
+  { field: 'OptionalNote', header: 'Optional note' },
+  { field: 'Quantity', header: 'Quantity' },
+  { field: 'BigNumber', header: 'Big number' },
+  { field: 'Price', header: 'Price' },
+  { field: 'Score', header: 'Score' },
+  { field: 'IsActive', header: 'Active' },
+  { field: 'OccurredAt', header: 'Occurred at' },
+  { field: 'OccurredAtOffset', header: 'Occurred (offset)' },
+  { field: 'OccurredOn', header: 'Occurred on' },
+  { field: 'Category', header: 'Category' },
+  { field: 'ReferenceId', header: 'Reference' },
+  { field: 'SortDisabledField', header: 'Sort disabled' },
+  { field: 'FilterDisabledField', header: 'Filter disabled' },
+  { field: 'NullableDate', header: 'Nullable date' },
+];
 
 function showcaseGridOptions(injector: Injector, api: ShowcaseApiService, persistKey: string) {
   const translate = injector.get(TranslateService);
@@ -31,6 +50,12 @@ function showcaseGridOptions(injector: Injector, api: ShowcaseApiService, persis
     columnChooser: true,
     columnLayout: true,
     rowSelection: true,
+    export: {
+      url: '/rows/export',
+      dataKeyField: 'id',
+      defaultFilename: 'showcase-rows',
+      columns: showcaseExportColumns,
+    },
     views: {
       storageKey: persistKey,
       builtins: [showcaseActiveView],

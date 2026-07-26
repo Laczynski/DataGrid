@@ -51,6 +51,7 @@ From the repository root, run `npm install` once after clone or when workspace d
 ## Change coupling checklist
 
 - If you change `GridQuery` / `GridResult` or filter/sort JSON shape, update **both** `QueryGrid.Abstractions` and `@query-grid/core`, plus `GridQueryContractTests`.
+- If you change `GridExportRequest` / export JSON shape, update **both** `QueryGrid.Abstractions` and `@query-grid/core` (`buildGridExportBody`), plus export tests in `QueryGrid.UnitTests` and `grid-export.spec.ts`.
 - If you add or change an operator or field-type rule, update `QueryGrid.Core` expression builders and unit tests; check whether `@query-grid/primeng` filter UI needs a matching control.
 - If you change Angular grid state or persistence (`persistState`), update `@query-grid/primeng` and verify in `samples/showcase-ui`.
 - Keep package versions in sync across NuGet (`Directory.Build.props`) and npm (`package.json` per package) when releasing.

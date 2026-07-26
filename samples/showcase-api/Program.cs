@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using QueryGrid.Abstractions;
+using QueryGrid.Core;
 using QueryGrid.EntityFrameworkCore;
 using QueryGrid.Samples.ShowcaseApi;
 using QueryGrid.Samples.ShowcaseApi.Data;
@@ -48,36 +49,46 @@ app.MapGet("/rows", async (HttpContext http, ShowcaseDbContext db, CancellationT
 
   try
   {
-    var result = await db.ShowcaseRows
-      .AsNoTracking()
-      .Select(row => new ShowcaseRowDto
-      {
-        Id = row.Id,
-        Label = row.Label,
-        OptionalNote = row.OptionalNote,
-        Quantity = row.Quantity,
-        BigNumber = row.BigNumber,
-        Price = row.Price,
-        Score = row.Score,
-        IsActive = row.IsActive,
-        OccurredAt = row.OccurredAt,
-        OccurredAtOffset = row.OccurredAtOffset,
-        OccurredOn = row.OccurredOn,
-        Category = row.Category,
-        ReferenceId = row.ReferenceId,
-        InternalCode = row.InternalCode,
-        SortDisabledField = row.SortDisabledField,
-        FilterDisabledField = row.FilterDisabledField,
-        NullableDate = row.NullableDate,
-      })
-      .ToGridResultAsync(grid!, cancellationToken: ct);
-
+    var result = await ShowcaseQueries.Rows(db).ToGridResultAsync(grid!, cancellationToken: ct);
     return Results.Ok(result);
   }
   catch (GridValidationException ex)
   {
     return Results.Problem(
       title: "Grid query validation failed",
+      detail: ex.Message,
+      statusCode: StatusCodes.Status400BadRequest,
+      extensions: new Dictionary<string, object?> { ["code"] = ex.Code });
+  }
+});
+
+app.MapPost("/rows/export", async (HttpContext http, ShowcaseDbContext db, CancellationToken ct) =>
+{
+  var (request, jsonError) = await GridExportBinding.TryDeserializeAsync(http.Request.Body, ct);
+  if (request is null)
+  {
+    return Results.Problem(
+      title: "Grid export validation failed",
+      detail: $"The export request is not valid JSON: {jsonError}",
+      statusCode: StatusCodes.Status400BadRequest,
+      extensions: new Dictionary<string, object?> { ["code"] = GridTransportErrorCodes.InvalidGridJson });
+  }
+
+  try
+  {
+    var rows = ShowcaseQueries.Rows(db);
+    var date = DateTime.UtcNow.ToString("yyyy-MM-dd");
+    var registry = GridExportWriterRegistry.Default;
+
+    return Results.Stream(
+      stream => rows.ExportAsync(request, stream, cancellationToken: ct),
+      contentType: registry.GetContentType(request.Format),
+      fileDownloadName: registry.GetFilename($"showcase-rows-{date}", request.Format));
+  }
+  catch (GridValidationException ex)
+  {
+    return Results.Problem(
+      title: "Grid export validation failed",
       detail: ex.Message,
       statusCode: StatusCodes.Status400BadRequest,
       extensions: new Dictionary<string, object?> { ["code"] = ex.Code });

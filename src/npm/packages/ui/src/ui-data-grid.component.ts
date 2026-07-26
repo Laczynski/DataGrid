@@ -22,6 +22,8 @@ import {
   CheckboxComponent,
   IconComponent,
   type IconName,
+  MenuComponent,
+  type MenuItem,
   PaginationComponent,
   type PaginationConfig,
   SearchComponent,
@@ -34,6 +36,8 @@ import {
   computePinnedColumnOffsets,
   DEFAULT_GRID_OPTIONS,
   filterColumnsByVisibility,
+  formatGridError,
+  type GridExportFormat,
   isColumnHideable,
   isColumnPinnable,
   isColumnReorderable,
@@ -52,6 +56,7 @@ import { getFieldFilterConditions, getFieldFilterLogic, upsertFieldFilter } from
 import { QgGridColumnChooserComponent } from "./grid-column-chooser.component";
 import { hasColumnLayout } from "./grid-column-layout-controls";
 import { hasColumnChooser } from "./grid-column-visibility-controls";
+import { hasExport } from "./grid-export-controls";
 import { hasRowSelection } from "./grid-row-selection-controls";
 import { bindHorizontalScrollPersistence, hasScrollPersistence } from "./grid-scroll-controls";
 import { QgGridViewsComponent } from "./grid-views.component";
@@ -98,6 +103,7 @@ const GRID_IMPORTS = [
   QgColumnResizeDirective,
   QgGridColumnChooserComponent,
   QgGridViewsComponent,
+  MenuComponent,
   QgBulkToolbarDirective,
 ];
 
@@ -139,6 +145,7 @@ export class UiDataGridComponent<T = unknown> {
 
   readonly extraChipRemove = output<string>();
   readonly cleared = output<void>();
+  readonly exportError = output<string>();
 
   private readonly columnDirectives = contentChildren(QgColumnDirective);
   private readonly emptyDirective = contentChildren(QgEmptyDirective);
@@ -337,6 +344,26 @@ export class UiDataGridComponent<T = unknown> {
     return hasRowSelection(grid) ? grid.selectedCount() : 0;
   });
 
+  protected readonly exportEnabled = computed(() => hasExport(this.grid()));
+
+  protected readonly exportSelectedEnabled = computed(() => {
+    const grid = this.grid();
+    return hasExport(grid) && hasRowSelection(grid);
+  });
+
+  protected readonly exporting = computed(() => {
+    const grid = this.grid();
+    return hasExport(grid) ? grid.exporting() : false;
+  });
+
+  protected readonly showBulkToolbar = computed(() => {
+    if (this.selectedCount() === 0) {
+      return false;
+    }
+
+    return this.exportSelectedEnabled() || this.bulkToolbar().length > 0;
+  });
+
   protected readonly pageRowKeys = computed(() => {
     const key = this.dataKey();
     if (!key) {
@@ -505,6 +532,60 @@ export class UiDataGridComponent<T = unknown> {
     const grid = this.grid();
     if (hasRowSelection(grid)) {
       grid.clearRowSelection();
+    }
+  }
+
+  protected readonly exportAllMenuItems: MenuItem[] = [
+    { id: "csv", label: "CSV (.csv)", icon: "document_csv" },
+    { id: "xlsx", label: "Excel (.xlsx)", icon: "table" },
+  ];
+
+  protected readonly exportSelectedMenuItems: MenuItem[] = [
+    { id: "csv", label: "CSV (.csv)", icon: "document_csv" },
+    { id: "xlsx", label: "Excel (.xlsx)", icon: "table" },
+  ];
+
+  protected exportAllMatching(format: GridExportFormat = "csv"): void {
+    const grid = this.grid();
+    if (!hasExport(grid)) {
+      return;
+    }
+
+    void grid.exportAllMatching({ format }).catch((error: unknown) => {
+      this.exportError.emit(formatGridError(error));
+    });
+  }
+
+  protected exportSelected(format: GridExportFormat = "csv"): void {
+    const grid = this.grid();
+    if (!hasExport(grid) || !hasRowSelection(grid)) {
+      return;
+    }
+
+    void grid.exportSelected({ format }).catch((error: unknown) => {
+      this.exportError.emit(formatGridError(error));
+    });
+  }
+
+  protected onExportAllMenuItemClick(item: MenuItem): void {
+    if (item.id === "csv") {
+      this.exportAllMatching("csv");
+      return;
+    }
+
+    if (item.id === "xlsx") {
+      this.exportAllMatching("xlsx");
+    }
+  }
+
+  protected onExportSelectedMenuItemClick(item: MenuItem): void {
+    if (item.id === "csv") {
+      this.exportSelected("csv");
+      return;
+    }
+
+    if (item.id === "xlsx") {
+      this.exportSelected("xlsx");
     }
   }
 
