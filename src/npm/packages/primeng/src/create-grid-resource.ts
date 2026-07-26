@@ -15,6 +15,7 @@ import {
   DEFAULT_GRID_OPTIONS,
   mergeExtraState,
   readActiveGridViewPreset,
+  readScrollExtra,
   sameFilterNode,
   skipToPage,
   totalPages,
@@ -27,11 +28,21 @@ import { catchError, finalize, Observable, of, switchMap, tap } from "rxjs";
 import { createGridColumnLayoutControls } from "./grid-column-layout-controls";
 import { createGridColumnVisibilityControls } from "./grid-column-visibility-controls";
 import {
+  createGridExportControls,
+  type GridExportConfig,
+  type GridExportRunOptions,
+} from "./grid-export-controls";
+import {
   readGridQueryFromRoute,
   resolveGridRouteSyncConfig,
   setupGridRouteSync,
   type GridRouteSyncConfig,
 } from "./grid-route-sync";
+import {
+  createGridRowSelectionControls,
+  type GridRowSelectionConfig,
+} from "./grid-row-selection-controls";
+import { createGridScrollControls } from "./grid-scroll-controls";
 import {
   clearPersistedGridState,
   loadPersistedGridState,
@@ -43,6 +54,8 @@ import { createGridViewsControls, type GridViewsControls } from "./grid-views-co
 export type { GridViewPreset, GridViewsConfig } from "@query-grid/core";
 export type { GridResourceWithColumnLayout } from "./grid-column-layout-controls";
 export type { GridResourceWithColumnChooser } from "./grid-column-visibility-controls";
+export type { GridResourceWithExport } from "./grid-export-controls";
+export type { GridResourceWithScrollPersistence } from "./grid-scroll-controls";
 export type { GridResourceWithViews } from "./grid-views-controls";
 export type { GridRouteSyncConfig, GridStatePersistence };
 
@@ -62,6 +75,9 @@ export interface GridResourceConfig<T> {
   columnChooser?: boolean;
   /** Client-side column resize, reorder, and pin stored in persist extra state. */
   columnLayout?: boolean;
+  rowSelection?: boolean | GridRowSelectionConfig;
+  /** Server-side CSV or Excel export via POST to the configured URL. */
+  export?: GridExportConfig;
   getExtraState?: () => Record<string, unknown> | undefined;
   applyExtraState?: (state: Record<string, unknown>) => void;
   /** Component/environment injector — pass `inject(EnvironmentInjector)` from a field initializer. */
@@ -120,6 +136,40 @@ export function createGridResource<T>(config: GridResourceConfig<T>): GridResour
         })
       : null;
 
+    const scrollControls = config.persistState
+      ? createGridScrollControls({
+          onStateChange: () => {
+            if (!config.persistState) {
+              return;
+            }
+
+            const existing = loadPersistedGridState(config.persistState);
+            savePersistedGridState(
+              config.persistState,
+              query(),
+              mergeExtraState(existing?.extra, scrollControls?.getExtraState()),
+            );
+          },
+        })
+      : null;
+
+    const rowSelectionControls = config.rowSelection
+      ? createGridRowSelectionControls({
+          mode: typeof config.rowSelection === "object" ? config.rowSelection.mode : undefined,
+        })
+      : null;
+
+    const exportControls = config.export
+      ? createGridExportControls({
+          export: config.export,
+          resolveHiddenFields: () => columnVisibility?.hiddenColumnFields() ?? [],
+        })
+      : null;
+
+    const clearRowSelection = (): void => {
+      rowSelectionControls?.clearSelection();
+    };
+
     const getExtraState = (): Record<string, unknown> | undefined =>
       mergeExtraState(
         config.getExtraState?.(),
@@ -127,10 +177,14 @@ export function createGridResource<T>(config: GridResourceConfig<T>): GridResour
         columnLayout?.getExtraState(),
       );
 
+    const getPersistedExtraState = (): Record<string, unknown> | undefined =>
+      mergeExtraState(getExtraState(), scrollControls?.getExtraState());
+
     const applyExtraState = (extra: Record<string, unknown>): void => {
       config.applyExtraState?.(extra);
       columnVisibility?.applyExtraState(extra);
       columnLayout?.applyExtraState(extra);
+      scrollControls?.applyExtraState(extra);
     };
 
     const readInitialQuery = (): GridQuery => {
@@ -143,11 +197,13 @@ export function createGridResource<T>(config: GridResourceConfig<T>): GridResour
       const applyInitialExtra = (): void => {
         if (activePreset) {
           applyExtraState(activePreset.extra ?? {});
-          return;
+        } else if (persisted?.extra) {
+          applyExtraState(persisted.extra);
         }
 
-        if (persisted?.extra) {
-          applyExtraState(persisted.extra);
+        const persistedScroll = readScrollExtra(persisted?.extra);
+        if (persistedScroll !== undefined) {
+          scrollControls?.scrollLeft.set(persistedScroll);
         }
       };
 
@@ -193,7 +249,17 @@ export function createGridResource<T>(config: GridResourceConfig<T>): GridResour
 
       const includeExtra = options?.includeExtra ?? viewsControls?.activePresetId() == null;
 
-      savePersistedGridState(config.persistState, next, includeExtra ? getExtraState() : undefined);
+      if (includeExtra) {
+        savePersistedGridState(config.persistState, next, getPersistedExtraState());
+        return;
+      }
+
+      const existing = loadPersistedGridState(config.persistState);
+      savePersistedGridState(
+        config.persistState,
+        next,
+        mergeExtraState(existing?.extra, scrollControls?.getExtraState()),
+      );
     };
 
     persistCurrentState = () => persistState(query());
@@ -215,7 +281,14 @@ export function createGridResource<T>(config: GridResourceConfig<T>): GridResour
     const page = computed(() => skipToPage(query().skip ?? 0, resolvedTake()));
     const pageCount = computed(() => totalPages(totalCount(), resolvedTake()));
 
-    const updateQuery = (updater: (current: GridQuery) => GridQuery) => {
+    const updateQuery = (
+      updater: (current: GridQuery) => GridQuery,
+      updateOptions?: { clearSelection?: boolean },
+    ) => {
+      if (updateOptions?.clearSelection ?? true) {
+        clearRowSelection();
+      }
+
       const next = updater(query());
       next.take = clampTake(next.take, options);
       query.set(next);
@@ -223,6 +296,7 @@ export function createGridResource<T>(config: GridResourceConfig<T>): GridResour
     };
 
     const applyQueryState = (next: GridQuery) => {
+      clearRowSelection();
       query.set(clampQuery(next));
       persistState(query());
     };
@@ -286,11 +360,14 @@ export function createGridResource<T>(config: GridResourceConfig<T>): GridResour
         }));
       },
       setSort(sort: SortDescriptor[]) {
-        updateQuery((q) => ({
-          ...q,
-          sort: clampSortDescriptors(sort, options.maxSortDescriptors),
-          skip: 0,
-        }));
+        updateQuery(
+          (q) => ({
+            ...q,
+            sort: clampSortDescriptors(sort, options.maxSortDescriptors),
+            skip: 0,
+          }),
+          { clearSelection: false },
+        );
       },
       setFilter(filter: GridQuery["filter"]) {
         updateQuery((q) => ({ ...q, filter, skip: 0 }));
@@ -299,28 +376,39 @@ export function createGridResource<T>(config: GridResourceConfig<T>): GridResour
         updateQuery((q) => ({ ...q, search: search ?? undefined, skip: 0 }));
       },
       patchQuery(patch: Partial<GridQuery>) {
-        updateQuery((q) => {
-          const next = { ...q, ...patch };
-          if (patch.sort !== undefined) {
-            next.sort = clampSortDescriptors(patch.sort, options.maxSortDescriptors);
-          }
-          if (patch.filter !== undefined && !sameFilterNode(q.filter, patch.filter)) {
-            next.skip = 0;
-          }
-          if (patch.search !== undefined && (q.search ?? "") !== (patch.search ?? "")) {
-            next.skip = 0;
-          }
-          return next;
-        });
+        updateQuery(
+          (q) => {
+            const next = { ...q, ...patch };
+            if (patch.sort !== undefined) {
+              next.sort = clampSortDescriptors(patch.sort, options.maxSortDescriptors);
+            }
+            if (patch.filter !== undefined && !sameFilterNode(q.filter, patch.filter)) {
+              next.skip = 0;
+            }
+            if (patch.search !== undefined && (q.search ?? "") !== (patch.search ?? "")) {
+              next.skip = 0;
+            }
+            return next;
+          },
+          {
+            clearSelection:
+              patch.filter !== undefined ||
+              patch.search !== undefined ||
+              patch.skip !== undefined ||
+              patch.take !== undefined,
+          },
+        );
       },
       resetQuery() {
         const next = createDefaultQuery();
+        clearRowSelection();
+        scrollControls?.reset();
         applyExtraState({});
         viewsControls?.clearActivePreset();
         query.set(next);
         clearPersistedGridState(config.persistState);
         if (config.persistState) {
-          savePersistedGridState(config.persistState, next, getExtraState());
+          savePersistedGridState(config.persistState, next, getPersistedExtraState());
         }
       },
       reload() {
@@ -331,7 +419,10 @@ export function createGridResource<T>(config: GridResourceConfig<T>): GridResour
             presets: viewsControls.presets,
             activePresetId: viewsControls.activePresetId,
             isPresetDirty: viewsControls.isPresetDirty,
-            applyPreset: viewsControls.applyPreset,
+            applyPreset: (id: string) => {
+              scrollControls?.reset();
+              viewsControls!.applyPreset(id);
+            },
             saveCurrentAsPreset: viewsControls.saveCurrentAsPreset,
             updateActivePreset: viewsControls.updateActivePreset,
             deletePreset: viewsControls.deletePreset,
@@ -354,8 +445,51 @@ export function createGridResource<T>(config: GridResourceConfig<T>): GridResour
             setColumnOrder: columnLayout.setColumnOrder,
             setColumnWidth: columnLayout.setColumnWidth,
             setColumnPin: columnLayout.setColumnPin,
-            resetColumnLayout: columnLayout.resetColumnLayout,
+            resetColumnLayout() {
+              columnLayout.resetColumnLayout();
+              scrollControls?.reset();
+            },
             setAvailableLayoutFields: columnLayout.setAvailableColumnFields,
+          }
+        : {}),
+      ...(scrollControls
+        ? {
+            scrollLeft: scrollControls.scrollLeft,
+            setPersistedScrollLeft: scrollControls.setScrollLeft,
+            resetPersistedScroll: scrollControls.reset,
+          }
+        : {}),
+      ...(rowSelectionControls
+        ? {
+            selectedKeys: rowSelectionControls.selectedKeys,
+            selectedCount: rowSelectionControls.selectedCount,
+            selectionMode: rowSelectionControls.selectionMode,
+            isRowKeySelected: rowSelectionControls.isKeySelected,
+            toggleRowKey: rowSelectionControls.toggleKey,
+            togglePageRowKeys: rowSelectionControls.togglePageKeys,
+            setPageRowSelection: rowSelectionControls.setPageSelection,
+            areAllPageKeysSelected: rowSelectionControls.areAllPageKeysSelected,
+            isSomePageKeysSelected: rowSelectionControls.isSomePageKeysSelected,
+            clearRowSelection: rowSelectionControls.clearSelection,
+          }
+        : {}),
+      ...(exportControls
+        ? {
+            exporting: exportControls.exporting,
+            exportAllMatching(options?: GridExportRunOptions) {
+              return exportControls.exportAllMatching(query(), options);
+            },
+            exportSelected(options?: GridExportRunOptions) {
+              if (!rowSelectionControls) {
+                return Promise.resolve();
+              }
+
+              return exportControls.exportSelected(
+                query(),
+                rowSelectionControls.selectedKeys(),
+                options,
+              );
+            },
           }
         : {}),
     };

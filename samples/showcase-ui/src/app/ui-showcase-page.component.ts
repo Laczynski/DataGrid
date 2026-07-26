@@ -35,6 +35,8 @@ export class UiShowcasePageComponent {
 
   readonly errorMessage = computed(() => formatGridError(this.grid.error()));
 
+  readonly exportError = signal<string | null>(null);
+
   readonly linkCopied = signal(false);
 
   copyGridLink(): void {
@@ -43,5 +45,9 @@ export class UiShowcasePageComponent {
       this.linkCopied.set(true);
       globalThis.setTimeout(() => this.linkCopied.set(false), 2000);
     });
+  }
+
+  onExportError(message: string): void {
+    this.exportError.set(message);
   }
 }

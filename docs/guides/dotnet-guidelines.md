@@ -40,6 +40,18 @@ For build, test, and pack commands, see [`AGENTS.md`](../../AGENTS.md).
 - Document public members with XML comments — they appear in NuGet package docs.
 - Internal helpers live under `Internal/` folders and use `internal` visibility.
 
+## Export conventions
+
+- Shared contract: `GridExportRequest`, `GridExportResult`, `GridExportFormats`, `GridExportContentTypes.GetFilename` in `QueryGrid.Abstractions`.
+- Shared planning (`GridExportExecutor`, `ApplyGridExport`) in `QueryGrid.Core` — filter, search, sort, scope, and row cap are format-agnostic.
+- **Facade** — `ExportAsync` (EF) and `Export` (Core sync, in-memory) dispatch through `IGridExportWriter`.
+- **Built-in writers** — CSV and Excel registered on `GridExportWriterRegistry.Default` via `BuiltInGridExportWriters`.
+- **Custom writers** — implement `IGridExportWriter`, delegate row writing to `GridExportPipeline.RunAsync`, register with `GridExportWriterRegistration.Configure` or `GridExportOptions.Writers`.
+- **Options** — `GridExportOptions` with nested `Csv` / `Xlsx`, optional `ValueFormatter`, optional `Writers` registry override.
+- **HTTP metadata** — `GridExportWriterRegistry.GetContentType`, `GetFileExtension`, `GetFilename`, `GetFormatDescriptors`.
+- **Provider execution** — `GridExportContext` + `IGridExportQueryExecutor` (EF streams CSV from the database).
+- **Performance** — CSV streams rows; Excel materializes the capped result set before writing the workbook.
+
 ## What does not belong here
 
 - Application endpoints, DbContext, or domain entities — those live in `samples/` or consumer apps.

@@ -1,6 +1,6 @@
 # QueryGrid.Core
 
-QueryGrid engine: automatic DTO field discovery, filter/sort/search expression building, and `IQueryable` extensions. Provider-agnostic — no EF Core dependency.
+QueryGrid engine: automatic DTO field discovery, filter/sort/search expression building, `IQueryable` extensions, and pluggable CSV/Excel export via `IGridExportWriter`.
 
 ## Install
 

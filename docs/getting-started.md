@@ -195,6 +195,162 @@ readonly grid = this.gridFactory.create<IssueDto>({
 
 Use `[reorderable]="false"`, `[resizable]="false"`, or `[pinnable]="false"` on fixed columns. The column chooser footer offers **Reset layout** when widths or pins differ from defaults.
 
+### Row selection and bulk actions
+
+Enable `rowSelection` for a checkbox column and cross-page selection keyed by `dataKey` on the grid component:
+
+```typescript
+readonly grid = this.gridFactory.create<IssueDto>({
+  // …
+  rowSelection: true, // or { mode: "single" }
+});
+```
+
+```html
+<qg-prime-data-grid [grid]="grid" dataKey="id">
+  <ng-template qgBulkToolbar>
+    <p-button label="Delete selected" (onClick)="deleteSelected()" />
+  </ng-template>
+  <!-- qgColumn templates … -->
+</qg-prime-data-grid>
+```
+
+`qg-ui-data-grid` uses the same `qgBulkToolbar` slot and `dataKey` input.
+
+**Behavior:**
+
+- Selection is stored as `Set<string>` row keys in memory — **not** in `GridQuery`, `persistState`, or saved views.
+- **Multiple** mode (default): checkboxes on each row; header checkbox selects the current page; selection survives paging.
+- **Single** mode: one row at a time (`rowSelection: { mode: "single" }`).
+- Selection clears on filter, search, page size, and page changes. It is **kept** on sort-only changes.
+- `grid.selectedKeys()`, `grid.selectedCount()`, `grid.clearRowSelection()`, and related helpers are available when `rowSelection` is enabled.
+
+Wire bulk actions in your component:
+
+```typescript
+import { hasRowSelection } from "@query-grid/primeng";
+
+deleteSelected(): void {
+  if (!hasRowSelection(this.grid)) {
+    return;
+  }
+
+  const keys = [...this.grid.selectedKeys()];
+  // call API with keys …
+}
+```
+
+### Server export (CSV and Excel)
+
+Export uses the **same filter, search, and sort** as the grid list, applied on the server. Configure `export` on `createGridResource` and add a matching `POST` endpoint that accepts a `GridExportRequest` JSON body (paging in `query` is ignored).
+
+```typescript
+readonly grid = this.gridFactory.create<IssueDto>({
+  load: (query) => this.api.getIssues(query),
+  rowSelection: true,
+  columnChooser: true,
+  export: {
+    url: "/api/issues/export",
+    dataKeyField: "id",
+    defaultFilename: "issues",
+    columns: [
+      { field: "Id", header: "ID" },
+      { field: "Title", header: "Title" },
+    ],
+  },
+});
+```
+
+When `export` is set, the grid toolbar shows an **Export** dropdown with CSV and Excel options. With `rowSelection`, the bulk toolbar adds an **Export selected** dropdown with the same format choices.
+
+```typescript
+import { hasExport } from "@query-grid/primeng";
+
+if (hasExport(this.grid)) {
+  await this.grid.exportAllMatching({ format: "xlsx" });
+  await this.grid.exportSelected({ format: "csv" });
+}
+```
+
+**.NET** — one endpoint, format in `GridExportRequest.Format`:
+
+```csharp
+using QueryGrid.Abstractions;
+using QueryGrid.EntityFrameworkCore;
+
+await db.Issues.ProjectToDto().ExportAsync(request, stream, cancellationToken: ct);
+
+return Results.Stream(
+  stream => rows.ExportAsync(request, stream, cancellationToken: ct),
+  contentType: GridExportWriterRegistry.Default.GetContentType(request.Format),
+  fileDownloadName: GridExportWriterRegistry.Default.GetFilename("issues", request.Format));
+```
+
+CSV and Excel export ship in `QueryGrid.Core` / `QueryGrid.EntityFrameworkCore` (Excel via ClosedXML). Use `ExportAsync` for database-backed sources or sync `Export` for in-memory `IQueryable`.
+
+**Performance** — CSV export streams rows from the provider; Excel loads the capped result set into memory before writing the workbook. Respect `GridExportOptions.MaxExportRows` and check `GridExportResult.Truncated`.
+
+**Options** — shared limits on `GridExportOptions`; format-specific settings under `Csv` and `Xlsx`. Optional `ValueFormatter` transforms cell values before they are written:
+
+```csharp
+new GridExportOptions
+{
+  MaxExportRows = 10_000,
+  Csv = { Delimiter = ";", IncludeUtf8Bom = true },
+  Xlsx = { WorksheetName = "Issues" },
+  ValueFormatter = (value, field) => field.Name == "Amount" ? ((decimal)value!).ToString("N2") : value
+}
+```
+
+**Export request body** (same shape in TypeScript and .NET):
+
+```json
+{
+  "query": { "filter": {}, "search": "", "sort": [] },
+  "scope": "allMatching",
+  "format": "csv",
+  "dataKeyField": "id",
+  "columns": [
+    { "field": "Id", "header": "ID" },
+    { "field": "Title", "header": "Title" }
+  ]
+}
+```
+
+For selected rows, set `"scope": "selectedKeys"` and `"selectedKeys": ["1", "2"]`. The client sends `columns` in the request body; treat that list as untrusted input and validate or override it server-side against an allowlist. `ExportAsync` rejects unknown field names via the grid schema, but it does not limit which schema fields a caller may request.
+
+Showcase: `POST /rows/export` in `samples/showcase-api/Program.cs` (binding in `GridExportBinding.cs`).
+
+### Horizontal scroll (session)
+
+When `persistState` is enabled, horizontal scroll position is stored automatically in session **extra** under `scroll.left` (not in `GridQuery` or saved views):
+
+```json
+{
+  "extra": {
+    "scroll": { "left": 240 },
+    "columnLayout": { "…": "…" }
+  }
+}
+```
+
+- Restored after reload and after data/layout changes (including when a saved view is active).
+- Cleared by **Clear** (toolbar) and **Reset layout** (column chooser).
+- Switching saved views resets scroll to the left edge.
+- Scroll the **table body** (scrollbar under headers), then wait briefly (~200 ms) before reloading so the debounced save can run.
+
+Requires horizontal overflow (wide columns, many visible columns, or pinned layout).
+
+### Persist extra state summary
+
+| State             | Storage       | In `GridQuery` | In saved views |
+| ----------------- | ------------- | -------------- | -------------- |
+| Sort/filter/page  | session + URL | yes            | yes (`query`)  |
+| Column visibility | session extra | no             | yes (`extra`)  |
+| Column layout     | session extra | no             | yes (`extra`)  |
+| Horizontal scroll | session extra | no             | no             |
+| Row selection     | memory only   | no             | no             |
+
 Declare columns with `qgColumn` — each template defines header, filters, and cell content:
 
 ```html

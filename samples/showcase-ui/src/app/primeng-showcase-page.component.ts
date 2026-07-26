@@ -33,10 +33,11 @@ export class PrimengShowcasePageComponent {
 
   readonly grid = createPrimengShowcaseGrid(this.injector, this.api);
 
-  /** Type anchor for `qgColumn` cell templates (`[qgColumnOf]="rowType"`). */
   protected readonly rowType!: ShowcaseRow;
 
   readonly errorMessage = computed(() => formatGridError(this.grid.error()));
+
+  readonly exportError = signal<string | null>(null);
 
   readonly linkCopied = signal(false);
 
@@ -46,5 +47,9 @@ export class PrimengShowcasePageComponent {
       this.linkCopied.set(true);
       globalThis.setTimeout(() => this.linkCopied.set(false), 2000);
     });
+  }
+
+  onExportError(message: string): void {
+    this.exportError.set(message);
   }
 }

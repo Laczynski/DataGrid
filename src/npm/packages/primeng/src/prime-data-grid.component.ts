@@ -22,6 +22,7 @@ import {
   computePinnedColumnOffsets,
   DEFAULT_GRID_OPTIONS,
   filterColumnsByVisibility,
+  formatGridError,
   isColumnHideable,
   isColumnPinnable,
   isColumnReorderable,
@@ -31,20 +32,30 @@ import {
   reorderDisplayedColumnFields,
   resolveColumnPin,
   resolveColumnWidthPx,
+  resolveHorizontalScrollContainer,
+  resolveRowKey,
+  type GridExportFormat,
   type SortDescriptor,
 } from "@query-grid/core";
-import type { SortMeta } from "primeng/api";
+import type { MenuItem, SortMeta } from "primeng/api";
 import { Button } from "primeng/button";
+import { Checkbox } from "primeng/checkbox";
 import { Chip } from "primeng/chip";
 import { IconField } from "primeng/iconfield";
 import { InputIcon } from "primeng/inputicon";
 import { InputText } from "primeng/inputtext";
+import { Menu } from "primeng/menu";
 import { Table, TableModule, type TableLazyLoadEvent } from "primeng/table";
+import { Tooltip } from "primeng/tooltip";
+import { QgBulkToolbarDirective } from "./bulk-toolbar.directive";
 import type { GridResource } from "./create-grid-resource";
 import { buildGridFilterChips, removeFilterCondition, type GridFilterChip } from "./filter-chips";
 import { QgGridColumnChooserComponent } from "./grid-column-chooser.component";
 import { hasColumnLayout } from "./grid-column-layout-controls";
 import { hasColumnChooser } from "./grid-column-visibility-controls";
+import { hasExport } from "./grid-export-controls";
+import { hasRowSelection } from "./grid-row-selection-controls";
+import { bindHorizontalScrollPersistence, hasScrollPersistence } from "./grid-scroll-controls";
 import { QgGridViewsComponent } from "./grid-views.component";
 import {
   applyGridQueryToPrimeTable,
@@ -71,6 +82,8 @@ export type GridExtraChip = {
   label: string;
 };
 
+const SELECTION_COLUMN_WIDTH_PX = 44;
+
 const GRID_TABLE_IMPORTS = [
   CommonModule,
   FormsModule,
@@ -80,6 +93,7 @@ const GRID_TABLE_IMPORTS = [
   CdkDragPreview,
   TableModule,
   Button,
+  Checkbox,
   Chip,
   InputText,
   IconField,
@@ -88,6 +102,9 @@ const GRID_TABLE_IMPORTS = [
   QgColumnResizeDirective,
   QgGridColumnChooserComponent,
   QgGridViewsComponent,
+  Menu,
+  QgBulkToolbarDirective,
+  Tooltip,
 ];
 
 const GRID_TABLE_HOST = {
@@ -135,10 +152,12 @@ export class PrimeDataGridComponent<T = unknown> {
 
   readonly extraChipRemove = output<string>();
   readonly cleared = output<void>();
+  readonly exportError = output<string>();
 
   private readonly columnDirectives = contentChildren(QgColumnDirective);
   private readonly emptyDirective = contentChildren(QgEmptyDirective);
   private readonly toolbar = contentChildren(QgToolbarDirective);
+  private readonly bulkToolbar = contentChildren(QgBulkToolbarDirective);
 
   protected columnDirectiveQueries(): readonly QgColumnDirective<T>[] {
     return this.columnDirectives() as QgColumnDirective<T>[];
@@ -208,6 +227,49 @@ export class PrimeDataGridComponent<T = unknown> {
   );
 
   protected readonly columnLayoutEnabled = computed(() => hasColumnLayout(this.grid()));
+
+  protected readonly rowSelectionEnabled = computed(() => hasRowSelection(this.grid()));
+
+  protected readonly selectedCount = computed(() => {
+    const grid = this.grid();
+    return hasRowSelection(grid) ? grid.selectedCount() : 0;
+  });
+
+  protected readonly exportEnabled = computed(() => hasExport(this.grid()));
+
+  protected readonly exportSelectedEnabled = computed(() => {
+    const grid = this.grid();
+    return hasExport(grid) && hasRowSelection(grid);
+  });
+
+  protected readonly exporting = computed(() => {
+    const grid = this.grid();
+    return hasExport(grid) ? grid.exporting() : false;
+  });
+
+  protected readonly showBulkToolbar = computed(() => {
+    if (this.selectedCount() === 0) {
+      return false;
+    }
+
+    return this.exportSelectedEnabled() || this.bulkToolbar().length > 0;
+  });
+
+  protected readonly pageRowKeys = computed(() => {
+    const key = this.dataKey();
+    if (!key) {
+      return [] as string[];
+    }
+
+    return (this.grid().items() ?? [])
+      .map((row) => resolveRowKey(row, key))
+      .filter((value): value is string => value != null);
+  });
+
+  protected readonly isMultipleSelection = computed(() => {
+    const grid = this.grid();
+    return !hasRowSelection(grid) || grid.selectionMode() === "multiple";
+  });
 
   protected readonly hasPinnedColumns = computed(() => this.pinnedOffsets().size > 0);
 
@@ -282,6 +344,34 @@ export class PrimeDataGridComponent<T = unknown> {
       this.measuredColumnWidths.set({});
       this.scheduleColumnWidthMeasure();
     });
+
+    bindHorizontalScrollPersistence({
+      injector: this.injector,
+      grid: () => this.grid(),
+      resolveContainer: () => {
+        const host = this.tableRef()?.el?.nativeElement as HTMLElement | undefined;
+        if (!host) {
+          return null;
+        }
+
+        return resolveHorizontalScrollContainer(host);
+      },
+      restoreDeps: () => {
+        const grid = this.grid();
+        grid.items();
+        grid.loading();
+        this.displayedColumns();
+        this.tableRef();
+        if (hasColumnLayout(grid)) {
+          grid.columnOrder();
+          grid.columnWidths();
+          grid.columnPins();
+        }
+        if (hasScrollPersistence(grid)) {
+          grid.scrollLeft();
+        }
+      },
+    });
   }
 
   private scheduleColumnWidthMeasure(): void {
@@ -346,6 +436,128 @@ export class PrimeDataGridComponent<T = unknown> {
     return this.toolbarDirectiveQueries()[0]?.template;
   }
 
+  protected bulkToolbarTemplate(): TemplateRef<unknown> | undefined {
+    return this.bulkToolbarDirectiveQueries()[0]?.template;
+  }
+
+  protected bulkToolbarDirectiveQueries(): readonly QgBulkToolbarDirective[] {
+    return this.bulkToolbar();
+  }
+
+  protected rowKey(row: T): string | null {
+    const key = this.dataKey();
+    return key ? resolveRowKey(row, key) : null;
+  }
+
+  protected isRowSelected(row: T): boolean {
+    const grid = this.grid();
+    const key = this.rowKey(row);
+    return hasRowSelection(grid) && key != null && grid.isRowKeySelected(key);
+  }
+
+  protected onRowSelectionChange(row: T, selected: boolean): void {
+    const grid = this.grid();
+    const key = this.rowKey(row);
+    if (!hasRowSelection(grid) || !key) {
+      return;
+    }
+
+    const isSelected = grid.isRowKeySelected(key);
+    if (selected !== isSelected) {
+      grid.toggleRowKey(key);
+    }
+  }
+
+  protected onPageSelectionChange(selected: boolean): void {
+    const grid = this.grid();
+    if (!hasRowSelection(grid) || !this.isMultipleSelection()) {
+      return;
+    }
+
+    const pageKeys = this.pageRowKeys();
+    const allSelected = grid.areAllPageKeysSelected(pageKeys);
+    if (selected !== allSelected) {
+      grid.togglePageRowKeys(pageKeys);
+    }
+  }
+
+  protected isPageSelectionChecked(): boolean {
+    const grid = this.grid();
+    if (!hasRowSelection(grid)) {
+      return false;
+    }
+
+    return grid.areAllPageKeysSelected(this.pageRowKeys());
+  }
+
+  protected isPageSelectionIndeterminate(): boolean {
+    const grid = this.grid();
+    if (!hasRowSelection(grid) || !this.isMultipleSelection()) {
+      return false;
+    }
+
+    return grid.isSomePageKeysSelected(this.pageRowKeys());
+  }
+
+  protected tableColumnCount(): number {
+    return this.displayedColumns().length + (this.rowSelectionEnabled() ? 1 : 0);
+  }
+
+  protected clearRowSelection(): void {
+    const grid = this.grid();
+    if (hasRowSelection(grid)) {
+      grid.clearRowSelection();
+    }
+  }
+
+  protected readonly exportAllMenuItems: MenuItem[] = [
+    {
+      label: "CSV (.csv)",
+      icon: "pi pi-file",
+      command: () => this.exportAllMatching("csv"),
+    },
+    {
+      label: "Excel (.xlsx)",
+      icon: "pi pi-file-excel",
+      command: () => this.exportAllMatching("xlsx"),
+    },
+  ];
+
+  protected readonly exportSelectedMenuItems: MenuItem[] = [
+    {
+      label: "CSV (.csv)",
+      icon: "pi pi-file",
+      command: () => this.exportSelected("csv"),
+    },
+    {
+      label: "Excel (.xlsx)",
+      icon: "pi pi-file-excel",
+      command: () => this.exportSelected("xlsx"),
+    },
+  ];
+
+  protected exportAllMatching(format: GridExportFormat = "csv"): void {
+    const grid = this.grid();
+    if (!hasExport(grid)) {
+      return;
+    }
+
+    void grid.exportAllMatching({ format }).catch((error: unknown) => {
+      this.exportError.emit(formatGridError(error));
+    });
+  }
+
+  protected exportSelected(format: GridExportFormat = "csv"): void {
+    const grid = this.grid();
+    if (!hasExport(grid) || !hasRowSelection(grid)) {
+      return;
+    }
+
+    void grid.exportSelected({ format }).catch((error: unknown) => {
+      this.exportError.emit(formatGridError(error));
+    });
+  }
+
   protected cellTemplate(field: string): TemplateRef<QgColumnContext<T>> | undefined {
     return this.cellMap().get(field);
   }
@@ -396,6 +608,15 @@ export class PrimeDataGridComponent<T = unknown> {
     return this.pinnedOffsets().get(field);
   }
 
+  protected pinnedLeftPx(field: string): number | undefined {
+    const offset = this.pinnedOffset(field);
+    if (!offset || offset.pin !== "left" || offset.left === undefined) {
+      return undefined;
+    }
+
+    return offset.left + (this.rowSelectionEnabled() ? SELECTION_COLUMN_WIDTH_PX : 0);
+  }
+
   protected isLeftPinnedSeparator(field: string): boolean {
     const fields = this.leftPinnedFields();
     return fields.length > 1 && fields.indexOf(field) > 0;
@@ -404,6 +625,14 @@ export class PrimeDataGridComponent<T = unknown> {
   protected isLeftPinnedEdge(field: string): boolean {
     const fields = this.leftPinnedFields();
     return fields.length > 0 && fields[fields.length - 1] === field;
+  }
+
+  protected isSelectionColumnFrozenEdge(): boolean {
+    return this.rowSelectionEnabled() && this.leftPinnedFields().length === 0;
+  }
+
+  protected isSelectionColumnSeparator(): boolean {
+    return this.rowSelectionEnabled() && this.leftPinnedFields().length > 0;
   }
 
   protected isRightPinnedSeparator(field: string): boolean {
@@ -422,7 +651,7 @@ export class PrimeDataGridComponent<T = unknown> {
       return undefined;
     }
 
-    const base = section === "header" ? 20 : 1;
+    const base = section === "header" ? 33 : 1;
     let pinIndex = 0;
 
     for (const column of this.displayedColumns()) {
@@ -440,8 +669,20 @@ export class PrimeDataGridComponent<T = unknown> {
     return undefined;
   }
 
-  protected scrollableZIndex(field: string): number | undefined {
-    return this.pinnedOffset(field) ? undefined : 0;
+  protected headerCellZIndex(field: string): number {
+    return this.pinnedZIndex(field, "header") ?? 31;
+  }
+
+  protected bodyCellZIndex(field: string): number | undefined {
+    return this.pinnedZIndex(field, "body");
+  }
+
+  protected selectionHeaderZIndex(): number {
+    return 42;
+  }
+
+  protected selectionBodyZIndex(): number {
+    return 1;
   }
 
   protected currentPin(column: GridColumn<T>) {
@@ -664,6 +905,10 @@ export class PrimeDataGridComponent<T = unknown> {
   }
 
   protected clear(table: Table): void {
+    if (!this.hasActiveFilters()) {
+      return;
+    }
+
     this.grid().resetQuery();
     this.searchText.set("");
     this.filtersExpanded.set(false);
