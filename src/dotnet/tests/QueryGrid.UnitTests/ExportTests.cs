@@ -234,10 +234,11 @@ public class ExportTests
 
     await using var context = NewInMemoryContext();
     await using var stream = new MemoryStream();
+    var exportOptions = new GridExportOptions { Csv = { IncludeUtf8Bom = false } };
     var result = await context.People.ExportAsync(
       request,
       stream,
-      exportOptions: new GridExportOptions { Csv = { IncludeUtf8Bom = false } },
+      exportOptions: exportOptions,
       cancellationToken: TestContext.Current.CancellationToken);
 
     var csv = Encoding.UTF8.GetString(stream.ToArray());
@@ -262,6 +263,23 @@ public class ExportTests
 
     using var workbook = new XLWorkbook(stream);
     Assert.Equal("Alice", workbook.Worksheet("Export").Cell(2, 2).GetString());
+  }
+
+  [Fact]
+  public void Export_writes_csv_for_in_memory_source()
+  {
+    var request = PersonExportRequest();
+    request.Format = GridExportFormats.Csv;
+
+    using var stream = new MemoryStream();
+    var result = TestData.Query().Export(
+      request,
+      stream,
+      exportOptions: new GridExportOptions { Csv = { IncludeUtf8Bom = false } });
+
+    var csv = Encoding.UTF8.GetString(stream.ToArray());
+    Assert.Equal(4, result.ExportedRowCount);
+    Assert.StartsWith("ID,Name,Email", csv, StringComparison.Ordinal);
   }
 
   [Fact]
@@ -342,33 +360,34 @@ public class ExportTests
     public string ContentType => "text/plain";
     public string FileExtension => "txt";
 
-    public async Task<GridExportResult> WriteAsync<T>(
+    public Task<GridExportResult> WriteAsync<T>(
       IQueryable<T> source,
       GridExportRequest request,
       Stream output,
       GridExportContext context,
       CancellationToken cancellationToken)
-    {
-      var planned = source.ApplyGridExport(request, context.GridOptions, context.ExportOptions);
-      await using var writer = new StreamWriter(output, leaveOpen: true);
-      await writer.WriteLineAsync(string.Join('|', request.Columns.Select(column => column.Header)).AsMemory(), cancellationToken);
-      var count = 0;
-      await foreach (var row in context.StreamAsync(planned, cancellationToken))
-      {
-        var values = request.Columns
-          .Select(column => typeof(T).GetProperty(column.Field)!.GetValue(row)?.ToString() ?? "")
-          .ToArray();
-        await writer.WriteLineAsync(string.Join('|', values).AsMemory(), cancellationToken);
-        count++;
-      }
+      => GridExportPipeline.RunAsync(
+        source,
+        request,
+        output,
+        context,
+        static async (plan, columns, stream, options, ctx, ct) =>
+        {
+          await using var writer = new StreamWriter(stream, leaveOpen: true);
+          await writer.WriteLineAsync(string.Join('|', columns.Select(column => column.Header)).AsMemory(), ct);
+          var count = 0;
+          await foreach (var row in ctx.StreamAsync(plan.ExportQuery, ct))
+          {
+            var values = columns
+              .Select(column => typeof(T).GetProperty(column.Field)!.GetValue(row)?.ToString() ?? "")
+              .ToArray();
+            await writer.WriteLineAsync(string.Join('|', values).AsMemory(), ct);
+            count++;
+          }
 
-      await writer.FlushAsync(cancellationToken);
-      return new GridExportResult
-      {
-        TotalMatchingCount = count,
-        ExportedRowCount = count,
-        Truncated = false
-      };
-    }
+          await writer.FlushAsync(ct);
+          return count;
+        },
+        cancellationToken);
   }
 }

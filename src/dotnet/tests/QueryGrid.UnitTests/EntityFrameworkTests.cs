@@ -128,11 +128,12 @@ public class EntityFrameworkTests
       ]
     };
 
+    var exportOptions = new GridExportOptions { Csv = { IncludeUtf8Bom = false } };
     await using var stream = new MemoryStream();
     var result = await context.People.ExportToCsvAsync(
       request,
       stream,
-      exportOptions: new GridExportOptions { Csv = { IncludeUtf8Bom = false } },
+      exportOptions: exportOptions,
       cancellationToken: TestContext.Current.CancellationToken);
 
     var csv = Encoding.UTF8.GetString(stream.ToArray());

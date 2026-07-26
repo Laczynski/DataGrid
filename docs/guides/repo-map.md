@@ -21,22 +21,22 @@
 
 ### Package responsibilities
 
-| Package                         | Owns                                                                                                                                                                                          |
-| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `QueryGrid.Abstractions`        | `GridQuery`, `GridResult`, filter/sort types, `GridExportRequest` / `GridExportResult`, `GridExportFormats`, `GridExportContentTypes`, attributes, `GridQueryJson`, `FilterNodeJsonConverter` |
-| `QueryGrid.Core`                | Schema discovery, expression builders, `IQueryable` extensions, `GridOptions`, CSV/Excel export, `IGridExportWriter`, `GridExportWriterRegistry`                                              |
-| `QueryGrid.EntityFrameworkCore` | `ToGridResultAsync`, `ExportAsync` (facade), `ExportToCsvAsync`, `ExportToXlsxAsync`                                                                                                          |
+| Package                         | Owns                                                                                                                                                                                                      |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `QueryGrid.Abstractions`        | `GridQuery`, `GridResult`, filter/sort types, `GridExportRequest` / `GridExportResult`, `GridExportFormats`, `GridExportContentTypes.GetFilename`, attributes, `GridQueryJson`, `FilterNodeJsonConverter` |
+| `QueryGrid.Core`                | Schema discovery, expression builders, `IQueryable` extensions, `GridOptions`, CSV/Excel export, `IGridExportWriter`, `GridExportWriterRegistry`, `GridExportPipeline`, `GridExportWriterRegistration`    |
+| `QueryGrid.EntityFrameworkCore` | `ToGridResultAsync`, `ExportAsync`, `ExportToCsvAsync`, `ExportToXlsxAsync`                                                                                                                               |
 
 ### Export layout
 
 Shared export planning (`GridExportExecutor`) lives in `QueryGrid.Core`. Built-in writers: CSV (BCL) and Excel (ClosedXML).
 
-| Format | Package                         | Entry point                                                                |
-| ------ | ------------------------------- | -------------------------------------------------------------------------- |
-| Any    | `QueryGrid.EntityFrameworkCore` | `ExportAsync`                                                              |
-| CSV    | `QueryGrid.Core` / EF           | `ExportToCsv` / `ExportToCsvAsync`                                         |
-| Excel  | `QueryGrid.Core` / EF           | `ExportToXlsx` / `ExportToXlsxAsync`                                       |
-| Custom | consumer                        | `GridExportWriterRegistry.Default.Register` or `GridExportOptions.Writers` |
+| Format | Package                         | Entry point                                                                                                                      |
+| ------ | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Any    | `QueryGrid.EntityFrameworkCore` | `ExportAsync`                                                                                                                    |
+| CSV    | `QueryGrid.Core` / EF           | `ExportToCsv` / `ExportToCsvAsync`                                                                                               |
+| Excel  | `QueryGrid.Core` / EF           | `ExportToXlsx` / `ExportToXlsxAsync`                                                                                             |
+| Custom | consumer                        | `IGridExportWriter` + `GridExportPipeline`, register via `GridExportWriterRegistration.Configure` or `GridExportOptions.Writers` |
 
 The npm grid shows **Export CSV** and **Export Excel** when `export` is configured.
 

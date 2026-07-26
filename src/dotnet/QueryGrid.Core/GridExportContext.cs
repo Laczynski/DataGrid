@@ -1,6 +1,6 @@
 namespace QueryGrid.Core;
 
-/// <summary>Execution context passed to <see cref="IGridExportWriter.WriteAsync"/>.</summary>
+/// <summary>Execution context used by <see cref="IGridExportWriter"/> implementations.</summary>
 public sealed class GridExportContext
 {
   private readonly IGridExportQueryExecutor _executor;

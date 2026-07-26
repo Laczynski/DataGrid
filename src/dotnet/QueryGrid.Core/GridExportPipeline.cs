@@ -1,19 +1,27 @@
 using QueryGrid.Abstractions;
-using QueryGrid.Core.Schema;
+using QueryGrid.Core.Internal;
 
-namespace QueryGrid.Core.Internal;
+namespace QueryGrid.Core;
 
-internal static class GridExportRunner
+/// <summary>
+/// Shared export execution for custom <see cref="IGridExportWriter"/> implementations.
+/// Plans the query, counts matching rows, writes output, and builds <see cref="GridExportResult"/>.
+/// </summary>
+public static class GridExportPipeline
 {
-  internal delegate Task<int> WritePlanAsync<T>(
-    GridExportExecutor.GridExportPlan<T> plan,
+  /// <summary>Writes export rows for a planned query.</summary>
+  public delegate Task<int> WritePlanAsync<T>(
+    GridExportPlan<T> plan,
     IReadOnlyList<GridExportColumn> columns,
     Stream output,
     GridExportOptions options,
     GridExportContext context,
     CancellationToken cancellationToken);
 
-  internal static async Task<GridExportResult> RunAsync<T>(
+  /// <summary>
+  /// Plans the export, counts total matches, invokes <paramref name="writeAsync"/>, and returns export metadata.
+  /// </summary>
+  public static async Task<GridExportResult> RunAsync<T>(
     IQueryable<T> source,
     GridExportRequest request,
     Stream output,
@@ -21,6 +29,12 @@ internal static class GridExportRunner
     WritePlanAsync<T> writeAsync,
     CancellationToken cancellationToken)
   {
+    ArgumentNullException.ThrowIfNull(source);
+    ArgumentNullException.ThrowIfNull(request);
+    ArgumentNullException.ThrowIfNull(output);
+    ArgumentNullException.ThrowIfNull(context);
+    ArgumentNullException.ThrowIfNull(writeAsync);
+
     var plan = GridExportExecutor.Plan(source, request, context.GridOptions, context.ExportOptions);
     var totalMatchingCount = await context.CountAsync(plan.FilteredQuery, cancellationToken);
     var exportedRowCount = await writeAsync(

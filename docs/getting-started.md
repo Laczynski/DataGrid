@@ -286,9 +286,9 @@ return Results.Stream(
   fileDownloadName: GridExportWriterRegistry.Default.GetFilename("issues", request.Format));
 ```
 
-CSV and Excel export ship in `QueryGrid.Core` / `QueryGrid.EntityFrameworkCore` (Excel via ClosedXML). Use `ExportAsync` for database-backed sources or `Export` for in-memory `IQueryable`. Format-specific methods (`ExportToCsvAsync`, `ExportToXlsxAsync`, …) remain for explicit call sites. Custom formats implement `IGridExportWriter` and register via `GridExportWriterRegistry.Default` or `GridExportOptions.Writers`.
+CSV and Excel export ship in `QueryGrid.Core` / `QueryGrid.EntityFrameworkCore` (Excel via ClosedXML). Use `ExportAsync` for database-backed sources or sync `Export` for in-memory `IQueryable`.
 
-**Performance** — CSV export streams rows from the database; Excel loads the capped result set into memory before writing the workbook. Respect `GridExportOptions.MaxExportRows` and check `GridExportResult.Truncated`.
+**Performance** — CSV export streams rows from the provider; Excel loads the capped result set into memory before writing the workbook. Respect `GridExportOptions.MaxExportRows` and check `GridExportResult.Truncated`.
 
 **Options** — shared limits on `GridExportOptions`; format-specific settings under `Csv` and `Xlsx`. Optional `ValueFormatter` transforms cell values before they are written:
 

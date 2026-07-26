@@ -31,8 +31,8 @@ public static class GridExportExtensions
   }
 
   /// <summary>
-  /// Exports rows to CSV synchronously (in-memory providers). For database-backed sources use
-  /// the Entity Framework Core <c>ExportToCsvAsync</c> extension.
+  /// Exports rows to CSV synchronously (in-memory providers).
+  /// For database-backed sources use <c>ExportToCsvAsync</c> from <c>QueryGrid.EntityFrameworkCore</c>.
   /// </summary>
   public static GridExportResult ExportToCsv<T>(
     this IQueryable<T> source,
@@ -46,8 +46,8 @@ public static class GridExportExtensions
   }
 
   /// <summary>
-  /// Exports rows to Excel synchronously (in-memory providers). For database-backed sources use
-  /// the Entity Framework Core <c>ExportToXlsxAsync</c> extension.
+  /// Exports rows to Excel synchronously (in-memory providers).
+  /// For database-backed sources use <c>ExportToXlsxAsync</c> from <c>QueryGrid.EntityFrameworkCore</c>.
   /// </summary>
   public static GridExportResult ExportToXlsx<T>(
     this IQueryable<T> source,
@@ -61,8 +61,8 @@ public static class GridExportExtensions
   }
 
   /// <summary>
-  /// Exports rows using <see cref="GridExportRequest.Format"/> — built-in and registered writers are supported.
-  /// For database-backed sources use the Entity Framework Core <c>ExportAsync</c> extension.
+  /// Exports rows using <see cref="GridExportRequest.Format"/> synchronously (in-memory providers).
+  /// For database-backed sources use <c>ExportAsync</c> from <c>QueryGrid.EntityFrameworkCore</c>.
   /// </summary>
   public static GridExportResult Export<T>(
     this IQueryable<T> source,
@@ -72,23 +72,36 @@ public static class GridExportExtensions
     GridExportOptions? exportOptions = null)
     => ExportCore(source, request, output, gridOptions, exportOptions);
 
+  internal static async Task<GridExportResult> ExportCoreAsync<T>(
+    IQueryable<T> source,
+    GridExportRequest request,
+    Stream output,
+    GridExportContext context,
+    CancellationToken cancellationToken)
+  {
+    ArgumentNullException.ThrowIfNull(source);
+    ArgumentNullException.ThrowIfNull(request);
+    ArgumentNullException.ThrowIfNull(output);
+    ArgumentNullException.ThrowIfNull(context);
+
+    var writer = ResolveWriters(context.ExportOptions).GetRequired(request.Format);
+    return await writer.WriteAsync(source, request, output, context, cancellationToken);
+  }
+
   private static GridExportResult ExportCore<T>(
     IQueryable<T> source,
     GridExportRequest request,
     Stream output,
     GridOptions? gridOptions,
     GridExportOptions? exportOptions)
-  {
-    ArgumentNullException.ThrowIfNull(source);
-    ArgumentNullException.ThrowIfNull(request);
-    ArgumentNullException.ThrowIfNull(output);
-
-    var grid = ResolveGridOptions(gridOptions);
-    var export = ResolveExportOptions(exportOptions);
-    var writer = ResolveWriters(export).GetRequired(request.Format);
-    var context = GridExportContext.InMemory(grid, export);
-    return writer.WriteAsync(source, request, output, context, CancellationToken.None).GetAwaiter().GetResult();
-  }
+    => ExportCoreAsync(
+        source,
+        request,
+        output,
+        GridExportContext.InMemory(ResolveGridOptions(gridOptions), ResolveExportOptions(exportOptions)),
+        CancellationToken.None)
+      .GetAwaiter()
+      .GetResult();
 
   private static void ValidateFormat(GridExportRequest request, string expectedFormat, string operationName)
   {

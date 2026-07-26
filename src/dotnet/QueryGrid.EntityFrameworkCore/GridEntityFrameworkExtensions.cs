@@ -92,10 +92,8 @@ public static class GridEntityFrameworkExtensions
     gridOptions ??= GridOptions.Default;
     exportOptions ??= GridExportOptions.Default;
 
-    var registry = exportOptions.Writers ?? GridExportWriterRegistry.Default;
-    var writer = registry.GetRequired(request.Format);
     var context = GridExportContext.Create(gridOptions, exportOptions, EfGridExportQueryExecutor.Instance);
-    return writer.WriteAsync(source, request, output, context, cancellationToken);
+    return GridExportExtensions.ExportCoreAsync(source, request, output, context, cancellationToken);
   }
 
   private static void ValidateFormat(GridExportRequest request, string expectedFormat, string operationName)

@@ -42,14 +42,15 @@ For build, test, and pack commands, see [`AGENTS.md`](../../AGENTS.md).
 
 ## Export conventions
 
-- Shared contract: `GridExportRequest`, `GridExportResult`, `GridExportFormats`, `GridExportContentTypes` in `QueryGrid.Abstractions`.
+- Shared contract: `GridExportRequest`, `GridExportResult`, `GridExportFormats`, `GridExportContentTypes.GetFilename` in `QueryGrid.Abstractions`.
 - Shared planning (`GridExportExecutor`, `ApplyGridExport`) in `QueryGrid.Core` — filter, search, sort, scope, and row cap are format-agnostic.
-- **Facade** — `ExportAsync` (EF) and `Export` (Core, in-memory) dispatch through `IGridExportWriter`.
-- **Built-in writers** — `CsvGridExportWriter`, `XlsxGridExportWriter`; registered on `GridExportWriterRegistry.Default`.
+- **Facade** — `ExportAsync` (EF) and `Export` (Core sync, in-memory) dispatch through `IGridExportWriter`.
+- **Built-in writers** — CSV and Excel registered on `GridExportWriterRegistry.Default` via `BuiltInGridExportWriters`.
+- **Custom writers** — implement `IGridExportWriter`, delegate row writing to `GridExportPipeline.RunAsync`, register with `GridExportWriterRegistration.Configure` or `GridExportOptions.Writers`.
 - **Options** — `GridExportOptions` with nested `Csv` / `Xlsx`, optional `ValueFormatter`, optional `Writers` registry override.
-- **Custom formats** — implement `IGridExportWriter` and register on `GridExportWriterRegistry.Default` or per-export via `GridExportOptions.Writers`.
-- **HTTP metadata** — `GridExportWriterRegistry.GetContentType` / `GetFilename`.
+- **HTTP metadata** — `GridExportWriterRegistry.GetContentType`, `GetFileExtension`, `GetFilename`, `GetFormatDescriptors`.
 - **Provider execution** — `GridExportContext` + `IGridExportQueryExecutor` (EF streams CSV from the database).
+- **Performance** — CSV streams rows; Excel materializes the capped result set before writing the workbook.
 
 ## What does not belong here
 

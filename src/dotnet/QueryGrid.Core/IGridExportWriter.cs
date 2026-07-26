@@ -5,6 +5,7 @@ namespace QueryGrid.Core;
 /// <summary>
 /// Writes a grid export for a specific format identifier.
 /// Built-in CSV and Excel writers are registered on <see cref="GridExportWriterRegistry.Default"/>.
+/// Custom writers can delegate to <see cref="GridExportPipeline.RunAsync"/> for shared planning and metadata.
 /// </summary>
 public interface IGridExportWriter
 {

@@ -13,12 +13,6 @@ internal static class GridExportExecutor
       method.Name == nameof(Enumerable.Contains) &&
       method.GetParameters().Length == 2);
 
-  internal readonly record struct GridExportPlan<T>(
-    IQueryable<T> FilteredQuery,
-    IQueryable<T> ExportQuery,
-    IReadOnlyList<SortDescriptor> EffectiveSort,
-    IReadOnlyList<GridFieldInfo> ExportFields);
-
   public static GridExportPlan<T> Plan<T>(
     IQueryable<T> source,
     GridExportRequest request,

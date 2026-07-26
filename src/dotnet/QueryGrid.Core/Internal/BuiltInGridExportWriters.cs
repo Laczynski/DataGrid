@@ -24,7 +24,7 @@ internal static class BuiltInGridExportWriters
       Stream output,
       GridExportContext context,
       CancellationToken cancellationToken)
-      => GridExportRunner.RunAsync(
+      => GridExportPipeline.RunAsync(
         source,
         request,
         output,
@@ -53,7 +53,7 @@ internal static class BuiltInGridExportWriters
       Stream output,
       GridExportContext context,
       CancellationToken cancellationToken)
-      => GridExportRunner.RunAsync(
+      => GridExportPipeline.RunAsync(
         source,
         request,
         output,

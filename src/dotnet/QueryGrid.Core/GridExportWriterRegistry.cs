@@ -25,6 +25,17 @@ public sealed class GridExportWriterRegistry
     _writers[writer.Format] = writer;
   }
 
+  /// <summary>Returns format identifiers registered in this registry.</summary>
+  public IReadOnlyList<string> GetRegisteredFormats()
+    => _writers.Keys.OrderBy(format => format, StringComparer.OrdinalIgnoreCase).ToList();
+
+  /// <summary>Returns metadata for every writer registered in this registry.</summary>
+  public IReadOnlyList<GridExportFormatDescriptor> GetFormatDescriptors()
+    => GetRegisteredFormats()
+      .Select(format => _writers[format])
+      .Select(writer => new GridExportFormatDescriptor(writer.Format, writer.ContentType, writer.FileExtension))
+      .ToList();
+
   /// <summary>Returns a registered writer for <paramref name="format"/>, or <see langword="null"/>.</summary>
   public IGridExportWriter? TryGet(string format)
     => string.IsNullOrWhiteSpace(format) ? null : _writers.TryGetValue(format, out var writer) ? writer : null;

@@ -25,6 +25,31 @@ public class GridExportWriterRegistryTests
     Assert.Equal("issues.pdf", registry.GetFilename("issues", "pdf"));
   }
 
+  [Fact]
+  public void Registry_lists_registered_formats()
+  {
+    var registry = new GridExportWriterRegistry();
+    registry.Register(new TestWriter("pdf", "application/pdf", "pdf"));
+    registry.Register(new TestWriter("csv", "text/csv", "csv"));
+
+    Assert.Equal(["csv", "pdf"], registry.GetRegisteredFormats());
+    Assert.Equal(
+      [
+        new GridExportFormatDescriptor("csv", "text/csv", "csv"),
+        new GridExportFormatDescriptor("pdf", "application/pdf", "pdf")
+      ],
+      registry.GetFormatDescriptors());
+  }
+
+  [Fact]
+  public void Default_registry_includes_builtin_formats()
+  {
+    var formats = GridExportWriterRegistry.Default.GetRegisteredFormats();
+
+    Assert.Contains(GridExportFormats.Csv, formats);
+    Assert.Contains(GridExportFormats.Xlsx, formats);
+  }
+
   private sealed class TestWriter(string format, string contentType, string fileExtension) : IGridExportWriter
   {
     public string Format => format;
