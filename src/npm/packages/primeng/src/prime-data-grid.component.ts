@@ -22,6 +22,7 @@ import {
   computePinnedColumnOffsets,
   DEFAULT_GRID_OPTIONS,
   filterColumnsByVisibility,
+  formatGridError,
   isColumnHideable,
   isColumnPinnable,
   isColumnReorderable,
@@ -34,14 +35,16 @@ import {
   resolveColumnWidthPx,
   resolveHorizontalScrollContainer,
   resolveRowKey,
+  type GridExportFormat,
   type SortDescriptor,
 } from "@query-grid/core";
-import type { SortMeta } from "primeng/api";
+import type { MenuItem, SortMeta } from "primeng/api";
 import { Button } from "primeng/button";
 import { Checkbox } from "primeng/checkbox";
 import { IconField } from "primeng/iconfield";
 import { InputIcon } from "primeng/inputicon";
 import { InputText } from "primeng/inputtext";
+import { Menu } from "primeng/menu";
 import { Table, TableModule, type TableLazyLoadEvent } from "primeng/table";
 import { Tooltip } from "primeng/tooltip";
 import { QgBulkToolbarDirective } from "./bulk-toolbar.directive";
@@ -50,6 +53,7 @@ import { buildGridFilterFeed, type FilterFeedSegment } from "./filter-feed";
 import { QgGridColumnChooserComponent } from "./grid-column-chooser.component";
 import { hasColumnLayout } from "./grid-column-layout-controls";
 import { hasColumnChooser } from "./grid-column-visibility-controls";
+import { hasExport } from "./grid-export-controls";
 import { hasRowSelection } from "./grid-row-selection-controls";
 import { bindHorizontalScrollPersistence, hasScrollPersistence } from "./grid-scroll-controls";
 import { QgGridViewsComponent } from "./grid-views.component";
@@ -98,6 +102,7 @@ const GRID_TABLE_IMPORTS = [
   QgColumnResizeDirective,
   QgGridColumnChooserComponent,
   QgGridViewsComponent,
+  Menu,
   QgBulkToolbarDirective,
   Tooltip,
 ];
@@ -148,6 +153,7 @@ export class PrimeDataGridComponent<T = unknown> {
 
   readonly extraChipRemove = output<string>();
   readonly cleared = output<void>();
+  readonly exportError = output<string>();
 
   private readonly columnDirectives = contentChildren(QgColumnDirective);
   private readonly emptyDirective = contentChildren(QgEmptyDirective);
@@ -228,6 +234,26 @@ export class PrimeDataGridComponent<T = unknown> {
   protected readonly selectedCount = computed(() => {
     const grid = this.grid();
     return hasRowSelection(grid) ? grid.selectedCount() : 0;
+  });
+
+  protected readonly exportEnabled = computed(() => hasExport(this.grid()));
+
+  protected readonly exportSelectedEnabled = computed(() => {
+    const grid = this.grid();
+    return hasExport(grid) && hasRowSelection(grid);
+  });
+
+  protected readonly exporting = computed(() => {
+    const grid = this.grid();
+    return hasExport(grid) ? grid.exporting() : false;
+  });
+
+  protected readonly showBulkToolbar = computed(() => {
+    if (this.selectedCount() === 0) {
+      return false;
+    }
+
+    return this.exportSelectedEnabled() || this.bulkToolbar().length > 0;
   });
 
   protected readonly pageRowKeys = computed(() => {
@@ -517,6 +543,66 @@ export class PrimeDataGridComponent<T = unknown> {
     if (hasRowSelection(grid)) {
       grid.clearRowSelection();
     }
+  }
+
+  protected readonly exportLabel = this.i18n.tSignal("grid.export", "Export");
+  protected readonly exportSelectedLabel = this.i18n.tSignal(
+    "grid.exportSelected",
+    "Export selected",
+  );
+
+  protected readonly exportAllMenuItems = computed<MenuItem[]>(() => {
+    this.i18n.languageVersion()();
+    return [
+      {
+        label: this.i18n.t("grid.exportFormatCsv", "CSV (.csv)"),
+        icon: "pi pi-file",
+        command: () => this.exportAllMatching("csv"),
+      },
+      {
+        label: this.i18n.t("grid.exportFormatXlsx", "Excel (.xlsx)"),
+        icon: "pi pi-file-excel",
+        command: () => this.exportAllMatching("xlsx"),
+      },
+    ];
+  });
+
+  protected readonly exportSelectedMenuItems = computed<MenuItem[]>(() => {
+    this.i18n.languageVersion()();
+    return [
+      {
+        label: this.i18n.t("grid.exportFormatCsv", "CSV (.csv)"),
+        icon: "pi pi-file",
+        command: () => this.exportSelected("csv"),
+      },
+      {
+        label: this.i18n.t("grid.exportFormatXlsx", "Excel (.xlsx)"),
+        icon: "pi pi-file-excel",
+        command: () => this.exportSelected("xlsx"),
+      },
+    ];
+  });
+
+  protected exportAllMatching(format: GridExportFormat = "csv"): void {
+    const grid = this.grid();
+    if (!hasExport(grid)) {
+      return;
+    }
+
+    void grid.exportAllMatching({ format }).catch((error: unknown) => {
+      this.exportError.emit(formatGridError(error));
+    });
+  }
+
+  protected exportSelected(format: GridExportFormat = "csv"): void {
+    const grid = this.grid();
+    if (!hasExport(grid) || !hasRowSelection(grid)) {
+      return;
+    }
+
+    void grid.exportSelected({ format }).catch((error: unknown) => {
+      this.exportError.emit(formatGridError(error));
+    });
   }
 
   protected cellTemplate(field: string): TemplateRef<QgColumnContext<T>> | undefined {

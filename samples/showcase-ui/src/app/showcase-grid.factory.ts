@@ -1,6 +1,6 @@
 import { Injector } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import type { GridQuery, GridViewPreset } from '@query-grid/core';
+import type { GridExportColumnInput, GridQuery, GridViewPreset } from '@query-grid/core';
 import { createGridResource, type GridResource } from '@query-grid/primeng';
 import {
   createGridResource as createUiGridResource,
@@ -8,6 +8,30 @@ import {
 } from '@query-grid/ui';
 import { ShowcaseRow } from './models/showcase-row.model';
 import { ShowcaseApiService } from './services/showcase-api.service';
+
+function showcaseExportColumns(translate: TranslateService): readonly GridExportColumnInput[] {
+  return [
+    { field: 'Id', header: translate.instant('showcase.columns.id') },
+    { field: 'Label', header: translate.instant('showcase.columns.label') },
+    { field: 'OptionalNote', header: translate.instant('showcase.columns.optionalNote') },
+    { field: 'Quantity', header: translate.instant('showcase.columns.quantity') },
+    { field: 'BigNumber', header: translate.instant('showcase.columns.bigNumber') },
+    { field: 'Price', header: translate.instant('showcase.columns.price') },
+    { field: 'Score', header: translate.instant('showcase.columns.score') },
+    { field: 'IsActive', header: translate.instant('showcase.columns.isActive') },
+    { field: 'OccurredAt', header: translate.instant('showcase.columns.occurredAt') },
+    { field: 'OccurredAtOffset', header: translate.instant('showcase.columns.occurredAtOffset') },
+    { field: 'OccurredOn', header: translate.instant('showcase.columns.occurredOn') },
+    { field: 'Category', header: translate.instant('showcase.columns.category') },
+    { field: 'ReferenceId', header: translate.instant('showcase.columns.referenceId') },
+    { field: 'SortDisabledField', header: translate.instant('showcase.columns.sortDisabledField') },
+    {
+      field: 'FilterDisabledField',
+      header: translate.instant('showcase.columns.filterDisabledField'),
+    },
+    { field: 'NullableDate', header: translate.instant('showcase.columns.nullableDate') },
+  ];
+}
 
 function showcaseGridOptions(injector: Injector, api: ShowcaseApiService, persistKey: string) {
   const translate = injector.get(TranslateService);
@@ -31,6 +55,13 @@ function showcaseGridOptions(injector: Injector, api: ShowcaseApiService, persis
     columnChooser: true,
     columnLayout: true,
     rowSelection: true,
+    export: {
+      url: '/rows/export',
+      dataKeyField: 'id',
+      defaultFilename: 'showcase-rows',
+      columns: [],
+      resolveColumns: () => showcaseExportColumns(translate),
+    },
     views: {
       storageKey: persistKey,
       builtins: [showcaseActiveView],

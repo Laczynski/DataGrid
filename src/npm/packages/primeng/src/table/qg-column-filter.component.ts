@@ -11,7 +11,7 @@ import { Checkbox } from "primeng/checkbox";
 import { MultiSelect } from "primeng/multiselect";
 import { TableModule } from "primeng/table";
 import { QgI18nService } from "../i18n";
-import { buildEnumMatchModeOptions, buildNullableMatchModeOptions } from "../match-mode-options";
+import { buildEnumMatchModeOptions, buildMatchModeOptions } from "../match-mode-options";
 import type { GridColumn } from "./grid-column";
 
 /** Aligned with `@query-grid/ui` multi-rule column filters. PrimeNG defaults to 2. */
@@ -53,14 +53,16 @@ export class QgColumnFilterComponent<T = unknown> {
     return column.filter?.useGrouping ?? false;
   }
 
-  protected nullableMatchModeOptions(column: GridColumn<T>) {
-    if (!column.filter?.nullable) {
+  protected columnMatchModeOptions(column: GridColumn<T>) {
+    if (!column.filter || column.filter.type === "boolean") {
       return undefined;
     }
 
     this.i18n.languageVersion()();
-    return buildNullableMatchModeOptions(column.filter.type, (key, fallback) =>
-      this.i18n.t(key, fallback),
+    return buildMatchModeOptions(
+      column.filter.type,
+      column.filter.nullable ?? false,
+      (key, fallback) => this.i18n.t(key, fallback),
     );
   }
 

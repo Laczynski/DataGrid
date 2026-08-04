@@ -1,7 +1,8 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { UiI18nService } from '@laczynski/ui';
 import { TranslateService } from '@ngx-translate/core';
-import { QgI18nService } from '@query-grid/ui';
+import { QgI18nService as QgPrimengI18nService } from '@query-grid/primeng';
+import { QgI18nService as QgUiI18nService } from '@query-grid/ui';
 import { en } from 'primelocale/js/en.js';
 import { pl } from 'primelocale/js/pl.js';
 import { PrimeNG } from 'primeng/config';
@@ -15,7 +16,8 @@ const STORAGE_KEY = 'querygrid.showcase.lang';
 export class ShowcaseLocaleService {
   private readonly translate = inject(TranslateService);
   private readonly primeNG = inject(PrimeNG);
-  private readonly qgI18n = inject(QgI18nService);
+  private readonly qgUiI18n = inject(QgUiI18nService);
+  private readonly qgPrimengI18n = inject(QgPrimengI18nService);
   private readonly uiI18n = inject(UiI18nService);
 
   readonly language = signal<ShowcaseLanguage>('pl');
@@ -33,7 +35,8 @@ export class ShowcaseLocaleService {
     globalThis.localStorage?.setItem(STORAGE_KEY, lang);
     this.primeNG.setTranslation(lang === 'pl' ? pl : en);
     document.documentElement.lang = lang;
-    this.qgI18n.notifyLanguageChanged();
+    this.qgUiI18n.notifyLanguageChanged();
+    this.qgPrimengI18n.notifyLanguageChanged();
     this.uiI18n.notifyLanguageChanged();
   }
 }

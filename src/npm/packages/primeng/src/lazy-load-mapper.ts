@@ -18,7 +18,11 @@ export {
   syncPrimeTableFieldFilters,
   type ApplyGridQueryToPrimeTableOptions,
 } from "./filter-mapper";
-export { buildEnumMatchModeOptions, buildNullableMatchModeOptions } from "./match-mode-options";
+export {
+  buildEnumMatchModeOptions,
+  buildMatchModeOptions,
+  buildNullableMatchModeOptions,
+} from "./match-mode-options";
 export {
   mapLazyLoadSort,
   mapPrimeSortMetaToDescriptors,

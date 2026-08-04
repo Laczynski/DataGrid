@@ -16,7 +16,11 @@
       "pinColumnRight": "Pin {{header}} right",
       "sortAscending": "{{header}} sorted ascending",
       "sortDescending": "{{header}} sorted descending",
-      "sortable": "{{header}} sortable"
+      "sortable": "{{header}} sortable",
+      "export": "Export",
+      "exportSelected": "Export selected",
+      "exportFormatCsv": "CSV (.csv)",
+      "exportFormatXlsx": "Excel (.xlsx)"
     },
     "columnChooser": {
       "columns": "Columns",

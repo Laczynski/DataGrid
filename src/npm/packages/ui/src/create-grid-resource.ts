@@ -28,6 +28,11 @@ import { catchError, finalize, Observable, of, switchMap, tap } from "rxjs";
 import { createGridColumnLayoutControls } from "./grid-column-layout-controls";
 import { createGridColumnVisibilityControls } from "./grid-column-visibility-controls";
 import {
+  createGridExportControls,
+  type GridExportConfig,
+  type GridExportRunOptions,
+} from "./grid-export-controls";
+import {
   readGridQueryFromRoute,
   resolveGridRouteSyncConfig,
   setupGridRouteSync,
@@ -49,6 +54,7 @@ import { createGridViewsControls, type GridViewsControls } from "./grid-views-co
 export type { GridViewPreset, GridViewsConfig } from "@query-grid/core";
 export type { GridResourceWithColumnLayout } from "./grid-column-layout-controls";
 export type { GridResourceWithColumnChooser } from "./grid-column-visibility-controls";
+export type { GridResourceWithExport } from "./grid-export-controls";
 export type { GridResourceWithScrollPersistence } from "./grid-scroll-controls";
 export type { GridResourceWithViews } from "./grid-views-controls";
 export type { GridRouteSyncConfig, GridStatePersistence };
@@ -70,6 +76,8 @@ export interface GridResourceConfig<T> {
   columnLayout?: boolean;
   /** Client-side row selection for bulk actions. Requires `dataKey` on the grid component. */
   rowSelection?: boolean | GridRowSelectionConfig;
+  /** Server-side CSV or Excel export via POST to the configured URL. */
+  export?: GridExportConfig;
   getExtraState?: () => Record<string, unknown> | undefined;
   applyExtraState?: (state: Record<string, unknown>) => void;
   /** Component/environment injector — pass `inject(EnvironmentInjector)` from a field initializer. */
@@ -148,6 +156,13 @@ export function createGridResource<T>(config: GridResourceConfig<T>): GridResour
     const rowSelectionControls = config.rowSelection
       ? createGridRowSelectionControls({
           mode: typeof config.rowSelection === "object" ? config.rowSelection.mode : undefined,
+        })
+      : null;
+
+    const exportControls = config.export
+      ? createGridExportControls({
+          export: config.export,
+          resolveHiddenFields: () => columnVisibility?.hiddenColumnFields() ?? [],
         })
       : null;
 
@@ -456,6 +471,25 @@ export function createGridResource<T>(config: GridResourceConfig<T>): GridResour
             areAllPageKeysSelected: rowSelectionControls.areAllPageKeysSelected,
             isSomePageKeysSelected: rowSelectionControls.isSomePageKeysSelected,
             clearRowSelection: rowSelectionControls.clearSelection,
+          }
+        : {}),
+      ...(exportControls
+        ? {
+            exporting: exportControls.exporting,
+            exportAllMatching(options?: GridExportRunOptions) {
+              return exportControls.exportAllMatching(query(), options);
+            },
+            exportSelected(options?: GridExportRunOptions) {
+              if (!rowSelectionControls) {
+                return Promise.resolve();
+              }
+
+              return exportControls.exportSelected(
+                query(),
+                rowSelectionControls.selectedKeys(),
+                options,
+              );
+            },
           }
         : {}),
     };

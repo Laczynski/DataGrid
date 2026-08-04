@@ -240,6 +240,87 @@ deleteSelected(): void {
 }
 ```
 
+### Server export (CSV and Excel)
+
+Export uses the **same filter, search, and sort** as the grid list, applied on the server. Configure `export` on `createGridResource` and add a matching `POST` endpoint that accepts a `GridExportRequest` JSON body (paging in `query` is ignored).
+
+```typescript
+readonly grid = this.gridFactory.create<IssueDto>({
+  load: (query) => this.api.getIssues(query),
+  rowSelection: true,
+  columnChooser: true,
+  export: {
+    url: "/api/issues/export",
+    dataKeyField: "id",
+    defaultFilename: "issues",
+    columns: [
+      { field: "Id", header: "ID" },
+      { field: "Title", header: "Title" },
+    ],
+  },
+});
+```
+
+When `export` is set, the grid toolbar shows an **Export** dropdown with CSV and Excel options. With `rowSelection`, the bulk toolbar adds an **Export selected** dropdown with the same format choices.
+
+```typescript
+import { hasExport } from "@query-grid/primeng";
+
+if (hasExport(this.grid)) {
+  await this.grid.exportAllMatching({ format: "xlsx" });
+  await this.grid.exportSelected({ format: "csv" });
+}
+```
+
+**.NET** — one endpoint, format in `GridExportRequest.Format`:
+
+```csharp
+using QueryGrid.Abstractions;
+using QueryGrid.EntityFrameworkCore;
+
+await db.Issues.ProjectToDto().ExportAsync(request, stream, cancellationToken: ct);
+
+return Results.Stream(
+  stream => rows.ExportAsync(request, stream, cancellationToken: ct),
+  contentType: GridExportWriterRegistry.Default.GetContentType(request.Format),
+  fileDownloadName: GridExportWriterRegistry.Default.GetFilename("issues", request.Format));
+```
+
+CSV and Excel export ship in `QueryGrid.Core` / `QueryGrid.EntityFrameworkCore` (Excel via ClosedXML). Use `ExportAsync` for database-backed sources or sync `Export` for in-memory `IQueryable`.
+
+**Performance** — CSV export streams rows from the provider; Excel loads the capped result set into memory before writing the workbook. Respect `GridExportOptions.MaxExportRows` and check `GridExportResult.Truncated`.
+
+**Options** — shared limits on `GridExportOptions`; format-specific settings under `Csv` and `Xlsx`. Optional `ValueFormatter` transforms cell values before they are written:
+
+```csharp
+new GridExportOptions
+{
+  MaxExportRows = 10_000,
+  Csv = { Delimiter = ";", IncludeUtf8Bom = true },
+  Xlsx = { WorksheetName = "Issues" },
+  ValueFormatter = (value, field) => field.Name == "Amount" ? ((decimal)value!).ToString("N2") : value
+}
+```
+
+**Export request body** (same shape in TypeScript and .NET):
+
+```json
+{
+  "query": { "filter": {}, "search": "", "sort": [] },
+  "scope": "allMatching",
+  "format": "csv",
+  "dataKeyField": "id",
+  "columns": [
+    { "field": "Id", "header": "ID" },
+    { "field": "Title", "header": "Title" }
+  ]
+}
+```
+
+For selected rows, set `"scope": "selectedKeys"` and `"selectedKeys": ["1", "2"]`. The client sends `columns` in the request body; treat that list as untrusted input and validate or override it server-side against an allowlist. `ExportAsync` rejects unknown field names via the grid schema, but it does not limit which schema fields a caller may request.
+
+Showcase: `POST /rows/export` in `samples/showcase-api/Program.cs` (binding in `GridExportBinding.cs`).
+
 ### Horizontal scroll (session)
 
 When `persistState` is enabled, horizontal scroll position is stored automatically in session **extra** under `scroll.left` (not in `GridQuery` or saved views):
