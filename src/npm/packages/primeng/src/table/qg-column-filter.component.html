@@ -10,7 +10,7 @@
         [showAddButton]="true"
         [maxConstraints]="maxConstraints"
         [placeholder]="column.filter.placeholder"
-        [matchModeOptions]="nullableMatchModeOptions(column)"
+        [matchModeOptions]="columnMatchModeOptions(column)"
       />
     }
     @case ("date") {
@@ -21,7 +21,7 @@
         [showOperator]="true"
         [showAddButton]="true"
         [maxConstraints]="maxConstraints"
-        [matchModeOptions]="nullableMatchModeOptions(column)"
+        [matchModeOptions]="columnMatchModeOptions(column)"
       />
     }
     @case ("number") {
@@ -36,7 +36,7 @@
         [minFractionDigits]="numberFilterFractionDigits(column).min"
         [maxFractionDigits]="numberFilterFractionDigits(column).max"
         [useGrouping]="numberFilterUseGrouping(column)"
-        [matchModeOptions]="nullableMatchModeOptions(column)"
+        [matchModeOptions]="columnMatchModeOptions(column)"
       />
     }
     @case ("boolean") {

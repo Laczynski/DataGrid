@@ -16,7 +16,11 @@
       "pinColumnRight": "Przypnij {{header}} po prawej",
       "sortAscending": "{{header}} — sortowanie rosnąco",
       "sortDescending": "{{header}} — sortowanie malejąco",
-      "sortable": "{{header}} — możliwe sortowanie"
+      "sortable": "{{header}} — możliwe sortowanie",
+      "export": "Eksportuj",
+      "exportSelected": "Eksportuj zaznaczone",
+      "exportFormatCsv": "CSV (.csv)",
+      "exportFormatXlsx": "Excel (.xlsx)"
     },
     "columnChooser": {
       "columns": "Kolumny",

@@ -536,31 +536,43 @@ export class PrimeDataGridComponent<T = unknown> {
     }
   }
 
-  protected readonly exportAllMenuItems: MenuItem[] = [
-    {
-      label: "CSV (.csv)",
-      icon: "pi pi-file",
-      command: () => this.exportAllMatching("csv"),
-    },
-    {
-      label: "Excel (.xlsx)",
-      icon: "pi pi-file-excel",
-      command: () => this.exportAllMatching("xlsx"),
-    },
-  ];
+  protected readonly exportLabel = this.i18n.tSignal("grid.export", "Export");
+  protected readonly exportSelectedLabel = this.i18n.tSignal(
+    "grid.exportSelected",
+    "Export selected",
+  );
 
-  protected readonly exportSelectedMenuItems: MenuItem[] = [
-    {
-      label: "CSV (.csv)",
-      icon: "pi pi-file",
-      command: () => this.exportSelected("csv"),
-    },
-    {
-      label: "Excel (.xlsx)",
-      icon: "pi pi-file-excel",
-      command: () => this.exportSelected("xlsx"),
-    },
-  ];
+  protected readonly exportAllMenuItems = computed<MenuItem[]>(() => {
+    this.i18n.languageVersion()();
+    return [
+      {
+        label: this.i18n.t("grid.exportFormatCsv", "CSV (.csv)"),
+        icon: "pi pi-file",
+        command: () => this.exportAllMatching("csv"),
+      },
+      {
+        label: this.i18n.t("grid.exportFormatXlsx", "Excel (.xlsx)"),
+        icon: "pi pi-file-excel",
+        command: () => this.exportAllMatching("xlsx"),
+      },
+    ];
+  });
+
+  protected readonly exportSelectedMenuItems = computed<MenuItem[]>(() => {
+    this.i18n.languageVersion()();
+    return [
+      {
+        label: this.i18n.t("grid.exportFormatCsv", "CSV (.csv)"),
+        icon: "pi pi-file",
+        command: () => this.exportSelected("csv"),
+      },
+      {
+        label: this.i18n.t("grid.exportFormatXlsx", "Excel (.xlsx)"),
+        icon: "pi pi-file-excel",
+        command: () => this.exportSelected("xlsx"),
+      },
+    ];
+  });
 
   protected exportAllMatching(format: GridExportFormat = "csv"): void {
     const grid = this.grid();

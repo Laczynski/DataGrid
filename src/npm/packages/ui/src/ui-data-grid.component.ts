@@ -535,15 +535,27 @@ export class UiDataGridComponent<T = unknown> {
     }
   }
 
-  protected readonly exportAllMenuItems: MenuItem[] = [
-    { id: "csv", label: "CSV (.csv)", icon: "document_csv" },
-    { id: "xlsx", label: "Excel (.xlsx)", icon: "table" },
-  ];
+  protected readonly exportLabel = this.i18n.tSignal("grid.export", "Export");
+  protected readonly exportSelectedLabel = this.i18n.tSignal(
+    "grid.exportSelected",
+    "Export selected",
+  );
 
-  protected readonly exportSelectedMenuItems: MenuItem[] = [
-    { id: "csv", label: "CSV (.csv)", icon: "document_csv" },
-    { id: "xlsx", label: "Excel (.xlsx)", icon: "table" },
-  ];
+  protected readonly exportAllMenuItems = computed<MenuItem[]>(() => {
+    this.i18n.languageVersion()();
+    return [
+      { id: "csv", label: this.i18n.t("grid.exportFormatCsv", "CSV (.csv)"), icon: "document_csv" },
+      { id: "xlsx", label: this.i18n.t("grid.exportFormatXlsx", "Excel (.xlsx)"), icon: "table" },
+    ];
+  });
+
+  protected readonly exportSelectedMenuItems = computed<MenuItem[]>(() => {
+    this.i18n.languageVersion()();
+    return [
+      { id: "csv", label: this.i18n.t("grid.exportFormatCsv", "CSV (.csv)"), icon: "document_csv" },
+      { id: "xlsx", label: this.i18n.t("grid.exportFormatXlsx", "Excel (.xlsx)"), icon: "table" },
+    ];
+  });
 
   protected exportAllMatching(format: GridExportFormat = "csv"): void {
     const grid = this.grid();

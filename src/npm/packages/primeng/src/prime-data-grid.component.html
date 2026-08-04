@@ -58,14 +58,14 @@
           @if (exportEnabled()) {
             <p-button
               type="button"
-              label="Export"
+              [label]="exportLabel()"
               icon="pi pi-file-export"
               [outlined]="true"
               severity="secondary"
               [disabled]="grid().loading() || exporting()"
               (onClick)="exportAllMenu.toggle($event)"
             />
-            <p-menu #exportAllMenu [model]="exportAllMenuItems" [popup]="true" />
+            <p-menu #exportAllMenu [model]="exportAllMenuItems()" [popup]="true" />
           }
 
           <p-button
@@ -86,14 +86,14 @@
             @if (exportSelectedEnabled()) {
               <p-button
                 type="button"
-                label="Export selected"
+                [label]="exportSelectedLabel()"
                 icon="pi pi-file-export"
                 [outlined]="true"
                 severity="secondary"
                 [disabled]="exporting()"
                 (onClick)="exportSelectedMenu.toggle($event)"
               />
-              <p-menu #exportSelectedMenu [model]="exportSelectedMenuItems" [popup]="true" />
+              <p-menu #exportSelectedMenu [model]="exportSelectedMenuItems()" [popup]="true" />
             }
             @if (bulkToolbarTemplate(); as bulkToolbar) {
               <ng-container [ngTemplateOutlet]="bulkToolbar" />

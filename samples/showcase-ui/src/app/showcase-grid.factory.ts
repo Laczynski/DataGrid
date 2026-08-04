@@ -9,24 +9,29 @@ import {
 import { ShowcaseRow } from './models/showcase-row.model';
 import { ShowcaseApiService } from './services/showcase-api.service';
 
-const showcaseExportColumns: readonly GridExportColumnInput[] = [
-  { field: 'Id', header: 'Id' },
-  { field: 'Label', header: 'Label' },
-  { field: 'OptionalNote', header: 'Optional note' },
-  { field: 'Quantity', header: 'Quantity' },
-  { field: 'BigNumber', header: 'Big number' },
-  { field: 'Price', header: 'Price' },
-  { field: 'Score', header: 'Score' },
-  { field: 'IsActive', header: 'Active' },
-  { field: 'OccurredAt', header: 'Occurred at' },
-  { field: 'OccurredAtOffset', header: 'Occurred (offset)' },
-  { field: 'OccurredOn', header: 'Occurred on' },
-  { field: 'Category', header: 'Category' },
-  { field: 'ReferenceId', header: 'Reference' },
-  { field: 'SortDisabledField', header: 'Sort disabled' },
-  { field: 'FilterDisabledField', header: 'Filter disabled' },
-  { field: 'NullableDate', header: 'Nullable date' },
-];
+function showcaseExportColumns(translate: TranslateService): readonly GridExportColumnInput[] {
+  return [
+    { field: 'Id', header: translate.instant('showcase.columns.id') },
+    { field: 'Label', header: translate.instant('showcase.columns.label') },
+    { field: 'OptionalNote', header: translate.instant('showcase.columns.optionalNote') },
+    { field: 'Quantity', header: translate.instant('showcase.columns.quantity') },
+    { field: 'BigNumber', header: translate.instant('showcase.columns.bigNumber') },
+    { field: 'Price', header: translate.instant('showcase.columns.price') },
+    { field: 'Score', header: translate.instant('showcase.columns.score') },
+    { field: 'IsActive', header: translate.instant('showcase.columns.isActive') },
+    { field: 'OccurredAt', header: translate.instant('showcase.columns.occurredAt') },
+    { field: 'OccurredAtOffset', header: translate.instant('showcase.columns.occurredAtOffset') },
+    { field: 'OccurredOn', header: translate.instant('showcase.columns.occurredOn') },
+    { field: 'Category', header: translate.instant('showcase.columns.category') },
+    { field: 'ReferenceId', header: translate.instant('showcase.columns.referenceId') },
+    { field: 'SortDisabledField', header: translate.instant('showcase.columns.sortDisabledField') },
+    {
+      field: 'FilterDisabledField',
+      header: translate.instant('showcase.columns.filterDisabledField'),
+    },
+    { field: 'NullableDate', header: translate.instant('showcase.columns.nullableDate') },
+  ];
+}
 
 function showcaseGridOptions(injector: Injector, api: ShowcaseApiService, persistKey: string) {
   const translate = injector.get(TranslateService);
@@ -54,7 +59,8 @@ function showcaseGridOptions(injector: Injector, api: ShowcaseApiService, persis
       url: '/rows/export',
       dataKeyField: 'id',
       defaultFilename: 'showcase-rows',
-      columns: showcaseExportColumns,
+      columns: [],
+      resolveColumns: () => showcaseExportColumns(translate),
     },
     views: {
       storageKey: persistKey,

@@ -15,6 +15,7 @@ export interface GridExportConfig {
   dataKeyField?: string;
   defaultFilename?: string;
   columns: readonly GridExportColumnInput[];
+  resolveColumns?: () => readonly GridExportColumnInput[];
 }
 
 export interface GridExportRunOptions {
@@ -40,8 +41,9 @@ export function createGridExportControls(config: {
 
   const resolveColumns = (): GridExportColumn[] => {
     const hidden = new Set(config.resolveHiddenFields?.() ?? []);
+    const sourceColumns = config.export.resolveColumns?.() ?? config.export.columns;
     return buildExportColumns(
-      config.export.columns.map((column) => ({
+      sourceColumns.map((column) => ({
         ...column,
         hidden: hidden.has(column.field),
       })),
