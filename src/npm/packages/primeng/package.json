@@ -19,11 +19,11 @@
   "sideEffects": false,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/damianlaczynski/QueryGrid.git"
+    "url": "git+https://github.com/laczynski/QueryGrid.git"
   },
-  "homepage": "https://github.com/damianlaczynski/QueryGrid#readme",
+  "homepage": "https://github.com/laczynski/QueryGrid#readme",
   "bugs": {
-    "url": "https://github.com/damianlaczynski/QueryGrid/issues"
+    "url": "https://github.com/laczynski/QueryGrid/issues"
   },
   "keywords": [
     "querygrid",

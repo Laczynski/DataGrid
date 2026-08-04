@@ -1,6 +1,6 @@
 # @query-grid/ui
 
-laczynski/ui adapter for [QueryGrid](https://github.com/damianlaczynski/QueryGrid): `<qg-ui-data-grid>` with column filters (multi-rule, Match All / Match Any), global search, removable filter chips, multi-sort, pagination, and optional state persistence.
+laczynski/ui adapter for [QueryGrid](https://github.com/laczynski/QueryGrid): `<qg-ui-data-grid>` with column filters (multi-rule, Match All / Match Any), global search, removable filter chips, multi-sort, pagination, and optional state persistence.
 
 ## Install
 
@@ -16,4 +16,4 @@ Create a grid store with `createGridResource` (or inject `GridResourceFactory`),
 
 ## Full guide
 
-[Getting started](https://github.com/damianlaczynski/QueryGrid/blob/main/docs/getting-started.md)
+[Getting started](https://github.com/laczynski/QueryGrid/blob/main/docs/getting-started.md)

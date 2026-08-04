@@ -66,7 +66,7 @@ Settings → Secrets and variables → Actions:
    | Field            | Value                  |
    | ---------------- | ---------------------- |
    | Package Owner    | your nuget.org account |
-   | Repository Owner | `damianlaczynski`      |
+   | Repository Owner | `laczynski`            |
    | Repository       | `QueryGrid`            |
    | Workflow File    | `publish.yml`          |
    | Environment      | _(leave empty)_        |
@@ -79,7 +79,7 @@ npmjs.com → package → **Settings** → **Trusted Publisher** → **GitHub Ac
 
 | Field                | Value             |
 | -------------------- | ----------------- |
-| Organization or user | `damianlaczynski` |
+| Organization or user | `laczynski`       |
 | Repository           | `QueryGrid`       |
 | Workflow filename    | `publish.yml`     |
 | Environment          | _(leave empty)_   |
@@ -112,7 +112,7 @@ dotnet add package QueryGrid.EntityFrameworkCore --version 0.1.0-preview.8
 
 ### NuGet (GitHub Packages)
 
-Copy [`nuget.config.example`](nuget.config.example). Replace `OWNER` with `damianlaczynski`.
+Copy [`nuget.config.example`](nuget.config.example). Replace `OWNER` with `laczynski`.
 
 ```powershell
 dotnet nuget add source --username YOUR_GITHUB_USERNAME --password YOUR_PAT --store-password-in-clear-text --name github "https://nuget.pkg.github.com/OWNER/index.json"
