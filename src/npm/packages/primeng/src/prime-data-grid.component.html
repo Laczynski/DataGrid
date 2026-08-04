@@ -65,7 +65,7 @@
               [disabled]="grid().loading() || exporting()"
               (onClick)="exportAllMenu.toggle($event)"
             />
-            <p-menu #exportAllMenu [model]="exportAllMenuItems()" [popup]="true" />
+            <p-menu #exportAllMenu [model]="exportAllMenuItems()" [popup]="true" appendTo="body" />
           }
 
           <p-button
@@ -93,7 +93,12 @@
                 [disabled]="exporting()"
                 (onClick)="exportSelectedMenu.toggle($event)"
               />
-              <p-menu #exportSelectedMenu [model]="exportSelectedMenuItems()" [popup]="true" />
+              <p-menu
+                #exportSelectedMenu
+                [model]="exportSelectedMenuItems()"
+                [popup]="true"
+                appendTo="body"
+              />
             }
             @if (bulkToolbarTemplate(); as bulkToolbar) {
               <ng-container [ngTemplateOutlet]="bulkToolbar" />
@@ -226,7 +231,9 @@
                 </button>
               }
               @if (column.filter) {
-                <qg-column-filter [column]="column" [filterLocale]="resolvedFilterLocale()" />
+                @for (version of [filterPanelVersion()]; track version) {
+                  <qg-column-filter [column]="column" [filterLocale]="resolvedFilterLocale()" />
+                }
               }
             </div>
           </div>

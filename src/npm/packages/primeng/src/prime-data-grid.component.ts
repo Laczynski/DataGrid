@@ -278,6 +278,12 @@ export class PrimeDataGridComponent<T = unknown> {
   protected readonly filtersExpanded = signal(false);
   protected readonly measuredColumnWidths = signal<Readonly<Record<string, number>>>({});
   protected readonly columnDragActive = signal(false);
+  /**
+   * PrimeNG ColumnFilter keeps references to its constraint controls. When a saved
+   * view replaces table filters externally, recreate only those controls so they
+   * bind to the restored constraints instead of retaining stale references.
+   */
+  protected readonly filterPanelVersion = signal(0);
   private readonly tableRef = viewChild<Table>("table");
   private initialLazyLoadHandled = false;
   private suppressLazyLoad = false;
@@ -336,6 +342,7 @@ export class PrimeDataGridComponent<T = unknown> {
           applyGridQueryToPrimeTable(table, query, columns, {
             resetMissingFields: true,
           });
+          this.filterPanelVersion.update((version) => version + 1);
           this.searchText.set(query.search ?? "");
         } finally {
           queueMicrotask(() => {
