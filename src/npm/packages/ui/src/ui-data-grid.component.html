@@ -32,9 +32,9 @@
             appearance="outline"
             [size]="size()"
             icon="arrow_download"
-            text="Export"
+            [text]="exportLabel()"
             [disabled]="grid().loading() || exporting()"
-            [menuItems]="exportAllMenuItems"
+            [menuItems]="exportAllMenuItems()"
             (menuItemClick)="onExportAllMenuItemClick($event)"
           />
         }
@@ -60,9 +60,9 @@
               appearance="outline"
               [size]="size()"
               icon="arrow_download"
-              text="Export selected"
+              [text]="exportSelectedLabel()"
               [disabled]="exporting()"
-              [menuItems]="exportSelectedMenuItems"
+              [menuItems]="exportSelectedMenuItems()"
               (menuItemClick)="onExportSelectedMenuItemClick($event)"
             />
           }

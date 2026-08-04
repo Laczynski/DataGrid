@@ -1,10 +1,127 @@
-import type { QgMessageTranslateFn } from "@query-grid/core";
+import {
+  getAllowedOperatorsForColumnType,
+  type FilterOperator,
+  type QgMessageTranslateFn,
+} from "@query-grid/core";
 import type { SelectItem } from "primeng/api";
 import { FilterMatchMode } from "primeng/api";
 import type { GridColumnFilterType } from "./table/grid-column";
 
 function resolveTranslate(translate?: QgMessageTranslateFn): QgMessageTranslateFn {
   return translate ?? ((_key, fallback) => fallback);
+}
+
+function operatorLabel(
+  operator: FilterOperator,
+  columnType: GridColumnFilterType | undefined,
+  t: QgMessageTranslateFn,
+): string {
+  switch (operator) {
+    case "contains":
+      return t("filter.operator.contains", "Contains");
+    case "notContains":
+      return t("filter.operator.notContains", "Not contains");
+    case "startsWith":
+      return t("filter.operator.startsWith", "Starts with");
+    case "endsWith":
+      return t("filter.operator.endsWith", "Ends with");
+    case "eq":
+      return columnType === "date"
+        ? t("filter.operator.dateIs", "Date is")
+        : t("filter.operator.equals", "Equals");
+    case "ne":
+      return columnType === "date"
+        ? t("filter.operator.dateIsNot", "Date is not")
+        : t("filter.operator.notEquals", "Not equals");
+    case "lt":
+      return columnType === "date"
+        ? t("filter.operator.dateBefore", "Date before")
+        : t("filter.operator.lessThan", "Less than");
+    case "lte":
+      return t("filter.operator.lessOrEqual", "Less or equal");
+    case "gt":
+      return columnType === "date"
+        ? t("filter.operator.dateAfter", "Date after")
+        : t("filter.operator.greaterThan", "Greater than");
+    case "gte":
+      return t("filter.operator.greaterOrEqual", "Greater or equal");
+    case "between":
+      return t("filter.operator.between", "Between");
+    case "in":
+      return t("filter.operator.in", "In");
+    case "notIn":
+      return t("filter.operator.notIn", "Not in");
+    case "isNull":
+      return t("filter.operator.isEmpty", "Is empty");
+    case "isNotNull":
+      return t("filter.operator.isNotEmpty", "Is not empty");
+    default:
+      return operator;
+  }
+}
+
+function operatorToMatchMode(
+  operator: FilterOperator,
+  columnType: GridColumnFilterType | undefined,
+): string {
+  const isDate = columnType === "date";
+
+  switch (operator) {
+    case "contains":
+      return FilterMatchMode.CONTAINS;
+    case "notContains":
+      return FilterMatchMode.NOT_CONTAINS;
+    case "startsWith":
+      return FilterMatchMode.STARTS_WITH;
+    case "endsWith":
+      return FilterMatchMode.ENDS_WITH;
+    case "in":
+      return FilterMatchMode.IN;
+    case "notIn":
+      return "notIn";
+    case "between":
+      return FilterMatchMode.BETWEEN;
+    case "eq":
+      return isDate ? FilterMatchMode.DATE_IS : FilterMatchMode.EQUALS;
+    case "ne":
+      return isDate ? FilterMatchMode.DATE_IS_NOT : FilterMatchMode.NOT_EQUALS;
+    case "lt":
+      return isDate ? FilterMatchMode.DATE_BEFORE : FilterMatchMode.LESS_THAN;
+    case "lte":
+      return FilterMatchMode.LESS_THAN_OR_EQUAL_TO;
+    case "gt":
+      return isDate ? FilterMatchMode.DATE_AFTER : FilterMatchMode.GREATER_THAN;
+    case "gte":
+      return FilterMatchMode.GREATER_THAN_OR_EQUAL_TO;
+    case "isNull":
+      return FilterMatchMode.IS;
+    case "isNotNull":
+      return FilterMatchMode.IS_NOT;
+    default:
+      return FilterMatchMode.EQUALS;
+  }
+}
+
+/** Match modes for a column type, including nullable operators when requested. */
+export function buildMatchModeOptions(
+  columnType: GridColumnFilterType | undefined,
+  nullable = false,
+  translate?: QgMessageTranslateFn,
+): SelectItem[] | undefined {
+  if (columnType === "enum") {
+    return buildEnumMatchModeOptions(translate, nullable);
+  }
+
+  const operators = getAllowedOperatorsForColumnType(columnType, nullable);
+  if (operators.length === 0) {
+    return undefined;
+  }
+
+  const t = resolveTranslate(translate);
+  return operators.map((operator) => ({
+    label: operatorLabel(operator, columnType, t),
+    value: operatorToMatchMode(operator, columnType),
+  }));
 }
 
 /** Match modes for enum columns (`in` / `notIn`, plus null checks when nullable). */
@@ -14,7 +131,7 @@ export function buildEnumMatchModeOptions(
 ): SelectItem[] {
   const t = resolveTranslate(translate);
   const modes: SelectItem[] = [
-    { label: t("filter.operator.in", "In"), value: "in" },
+    { label: t("filter.operator.in", "In"), value: FilterMatchMode.IN },
     { label: t("filter.operator.notIn", "Not in"), value: "notIn" },
   ];
 
