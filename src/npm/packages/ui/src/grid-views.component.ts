@@ -24,7 +24,7 @@ import type { GridSize } from "./types";
 
 function asGridWithViews<T>(
   grid: GridResource<T>,
-): (GridResource<T> & GridResourceWithViews<T>) | null {
+): (GridResource<T> & GridResourceWithViews) | null {
   return hasGridViews(grid) ? grid : null;
 }
 

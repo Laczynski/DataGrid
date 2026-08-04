@@ -159,7 +159,7 @@ export function createGridViewsControls(options: {
 
 import type { GridResource } from "./create-grid-resource";
 
-export interface GridResourceWithViews<T> {
+export interface GridResourceWithViews {
   presets: GridViewsControls["presets"];
   activePresetId: GridViewsControls["activePresetId"];
   isPresetDirty: GridViewsControls["isPresetDirty"];
@@ -172,6 +172,6 @@ export interface GridResourceWithViews<T> {
 
 export function hasGridViews<T>(
   grid: GridResource<T>,
-): grid is GridResource<T> & GridResourceWithViews<T> {
+): grid is GridResource<T> & GridResourceWithViews {
   return "applyPreset" in grid && typeof grid.applyPreset === "function";
 }

@@ -2,6 +2,25 @@
 
 All notable changes to this project are documented here.
 
+## 0.1.0-preview.9 — 2026-08-04
+
+### Added
+
+- **QueryGrid.Abstractions / QueryGrid.Core / QueryGrid.EntityFrameworkCore** — server-side CSV and XLSX export pipeline with configurable formats, column metadata, selection or filtered-result scope, and validation errors
+- **@query-grid/core** — export request helpers, grid view presets, URL query-state helpers, column layout/visibility, row selection, and horizontal-scroll persistence models
+- **@query-grid/primeng / @query-grid/ui** — export controls; saved views; URL state sync; column chooser, resize/reorder/pinning controls; row selection; persisted scroll position; and a filter feed
+- **@query-grid/primeng / @query-grid/ui** — optional `ngx-translate` secondary entry point and translated showcase UI
+
+### Changed
+
+- **@query-grid/primeng / @query-grid/ui** — grid toolbar, filter panel, menus, and loading/scroll UX refined across the showcase adapters
+- Documentation expanded for grid export, state management, and integration recipes
+
+### Fixed
+
+- Saved views now restore sorting consistently across adapters
+- Grid scrollbars are clipped correctly and showcase grids keep their row area scrollable
+
 ## 0.1.0-preview.8 — 2026-07-22
 
 ### Added
