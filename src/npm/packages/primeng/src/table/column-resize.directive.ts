@@ -6,6 +6,7 @@ import { Directive, ElementRef, inject, input, output } from "@angular/core";
   host: {
     class: "qg-column-resize-handle",
     "(mousedown)": "onMouseDown($event)",
+    "(click)": "onClick($event)",
   },
 })
 export class QgColumnResizeDirective {
@@ -16,6 +17,16 @@ export class QgColumnResizeDirective {
   readonly resized = output<number>();
 
   private active = false;
+
+  /**
+   * The resize handle is rendered inside a sortable `<th>`. A mouse drag ends
+   * with a click event, which would otherwise bubble to PrimeNG's
+   * `pSortableColumn` handler and change the column sort.
+   */
+  onClick(event: MouseEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+  }
 
   onMouseDown(event: MouseEvent): void {
     event.preventDefault();
