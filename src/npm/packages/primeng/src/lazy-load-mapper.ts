@@ -11,9 +11,12 @@ export {
   applyGridQueryToPrimeTable,
   buildPrimeTableFilters,
   defaultPrimeMatchMode,
+  emptyPrimeFieldFilter,
+  ensurePrimeFieldFilters,
   mapPrimeFiltersToGridFilter,
   needsPrimeTableQuerySync,
   syncPrimeTableFieldFilters,
+  type ApplyGridQueryToPrimeTableOptions,
 } from "./filter-mapper";
 export {
   buildEnumMatchModeOptions,
@@ -31,7 +34,7 @@ export type { GridAppearance } from "./types";
 /** Maps a PrimeNG lazy-load event to a partial {@link GridQuery} patch. */
 export function lazyLoadEventToGridPatch(
   event: TableLazyLoadEvent,
-  columns: GridColumn[],
+  columns: ReadonlyArray<GridColumn<any>>,
   defaultPageSize = DEFAULT_GRID_OPTIONS.defaultPageSize,
   table?: Pick<Table, "multiSortMeta">,
 ): Partial<GridQuery> {

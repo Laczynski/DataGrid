@@ -28,7 +28,6 @@ import {
   type PaginationConfig,
   SearchComponent,
   SpinnerComponent,
-  TagComponent,
   TooltipDirective,
 } from "@laczynski/ui";
 import type { FilterCondition, FilterLogic } from "@query-grid/core";
@@ -44,6 +43,7 @@ import {
   isColumnResizable,
   orderColumns,
   partitionColumnsByPin,
+  removeFilterAtPath,
   reorderDisplayedColumnFields,
   resolveColumnPin,
   resolveColumnWidthPx,
@@ -51,7 +51,7 @@ import {
 } from "@query-grid/core";
 import { QgBulkToolbarDirective } from "./bulk-toolbar.directive";
 import type { GridResource } from "./create-grid-resource";
-import { buildGridFilterChips, type GridFilterChip, removeFilterCondition } from "./filter-chips";
+import { buildGridFilterFeed, type FilterFeedSegment } from "./filter-feed";
 import { getFieldFilterConditions, getFieldFilterLogic, upsertFieldFilter } from "./filter-mapper";
 import { QgGridColumnChooserComponent } from "./grid-column-chooser.component";
 import { hasColumnLayout } from "./grid-column-layout-controls";
@@ -95,7 +95,6 @@ const GRID_IMPORTS = [
   CheckboxComponent,
   IconComponent,
   SearchComponent,
-  TagComponent,
   TooltipDirective,
   PaginationComponent,
   SpinnerComponent,
@@ -388,10 +387,11 @@ export class UiDataGridComponent<T = unknown> {
     return map;
   });
 
-  protected readonly queryChips = computed(() => {
+  protected readonly filterFeed = computed(() => {
     this.i18n.languageVersion()();
-    return buildGridFilterChips(this.grid().query(), this.resolvedColumns(), {
+    return buildGridFilterFeed(this.grid().query(), this.resolvedColumns(), {
       translate: (key, fallback, params) => this.i18n.t(key, fallback, params),
+      extras: this.extraChips(),
     });
   });
 
@@ -405,6 +405,10 @@ export class UiDataGridComponent<T = unknown> {
   protected readonly noDataLabel = this.i18n.tSignal("grid.noData", "No data");
   protected readonly selectPageLabel = this.i18n.tSignal("grid.selectPage", "Select page");
   protected readonly selectRowLabel = this.i18n.tSignal("grid.selectRow", "Select row");
+  protected readonly activeFiltersLabel = this.i18n.tSignal(
+    "filter.feed.activeFilters",
+    "Active filters",
+  );
 
   protected readonly resolvedSearchPlaceholder = computed(() => {
     this.i18n.languageVersion()();
@@ -417,16 +421,7 @@ export class UiDataGridComponent<T = unknown> {
     return this.i18n.t("grid.selectedCount", `${count} selected`, { count });
   });
 
-  protected readonly allChips = computed(() => {
-    const extra = this.extraChips().map((chip) => ({
-      id: chip.id,
-      kind: "extra" as const,
-      label: chip.label,
-    }));
-    return [...this.queryChips(), ...extra];
-  });
-
-  protected readonly hasActiveFilters = computed(() => this.allChips().length > 0);
+  protected readonly hasActiveFilters = computed(() => this.filterFeed().length > 0);
 
   protected readonly paginationConfig = computed<PaginationConfig>(() => {
     const resource = this.grid();
@@ -945,23 +940,28 @@ export class UiDataGridComponent<T = unknown> {
     this.grid().patchQuery({ filter: nextFilter, skip: 0 });
   }
 
-  protected removeChip(chip: GridFilterChip | { id: string; kind: "extra"; label: string }): void {
-    if (chip.kind === "extra") {
-      this.extraChipRemove.emit(chip.id);
+  protected removeFeedLabel(segment: FilterFeedSegment): string {
+    return this.i18n.t("filter.feed.remove", `Remove ${segment.text}`, { label: segment.text });
+  }
+
+  protected removeFeedSegment(segment: FilterFeedSegment): void {
+    if (!segment.removable) {
       return;
     }
 
-    if (chip.kind === "search") {
+    if (segment.kind === "extra" && segment.extraId) {
+      this.extraChipRemove.emit(segment.extraId);
+      return;
+    }
+
+    if (segment.kind === "search") {
       this.searchText.set("");
       this.grid().patchQuery({ search: undefined, skip: 0 });
       return;
     }
 
-    if (chip.kind === "column" && chip.field) {
-      const nextFilter = removeFilterCondition(this.grid().query().filter, {
-        field: chip.field,
-        operator: chip.operator,
-      });
+    if (segment.kind === "condition" && segment.path !== undefined) {
+      const nextFilter = removeFilterAtPath(this.grid().query().filter, segment.path);
       this.grid().patchQuery({ filter: nextFilter, skip: 0 });
     }
   }

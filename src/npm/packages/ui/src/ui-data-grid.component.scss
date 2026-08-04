@@ -59,10 +59,56 @@
   background: var(--color-neutral-background-rest, #ffffff);
 }
 
-.qg-ui-grid__chips {
+.qg-ui-grid__feed {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--color-neutral-foreground-rest, #242424);
+}
+
+.qg-ui-grid__feed-token {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  max-width: 100%;
+  padding: 0.125rem 0.25rem 0.125rem 0.5rem;
+  border: 1px solid var(--color-neutral-stroke-rest, #d1d1d1);
+  border-radius: 0.375rem;
+  background: var(--color-neutral-background-2-rest, #f5f5f5);
+}
+
+.qg-ui-grid__feed-token-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.qg-ui-grid__feed-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0.25rem;
+  background: transparent;
+  color: var(--color-neutral-foreground-2-rest, #616161);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.qg-ui-grid__feed-remove:hover {
+  background: color-mix(in srgb, var(--color-neutral-foreground-rest, #242424) 10%, transparent);
+  color: var(--color-neutral-foreground-rest, #242424);
+}
+
+.qg-ui-grid__feed-logic {
+  color: var(--color-neutral-foreground-2-rest, #616161);
+  white-space: pre-wrap;
 }
 
 .qg-ui-grid__bulk-toolbar {

@@ -54,10 +54,56 @@ export const GRID_TABLE_STYLES = `
     padding: 1rem;
   }
 
-  :host .qg-caption-chips {
+  :host .qg-caption-feed {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: var(--p-text-color, #0f172a);
+  }
+
+  :host .qg-caption-feed__token {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    max-width: 100%;
+    padding: 0.125rem 0.25rem 0.125rem 0.5rem;
+    border: 1px solid var(--p-content-border-color, #e2e8f0);
+    border-radius: var(--p-border-radius, 0.375rem);
+    background: var(--p-content-hover-background, #f1f5f9);
+  }
+
+  :host .qg-caption-feed__token-text {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  :host .qg-caption-feed__remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    padding: 0;
+    border: 0;
+    border-radius: 0.25rem;
+    background: transparent;
+    color: var(--p-text-muted-color, #64748b);
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  :host .qg-caption-feed__remove:hover {
+    background: color-mix(in srgb, var(--p-text-color, #0f172a) 10%, transparent);
+    color: var(--p-text-color, #0f172a);
+  }
+
+  :host .qg-caption-feed__logic {
+    color: var(--p-text-muted-color, #64748b);
+    white-space: pre-wrap;
   }
 
   :host .qg-caption-bulk-toolbar {

@@ -29,6 +29,7 @@ import {
   isColumnResizable,
   orderColumns,
   partitionColumnsByPin,
+  removeFilterAtPath,
   reorderDisplayedColumnFields,
   resolveColumnPin,
   resolveColumnWidthPx,
@@ -40,7 +41,6 @@ import {
 import type { MenuItem, SortMeta } from "primeng/api";
 import { Button } from "primeng/button";
 import { Checkbox } from "primeng/checkbox";
-import { Chip } from "primeng/chip";
 import { IconField } from "primeng/iconfield";
 import { InputIcon } from "primeng/inputicon";
 import { InputText } from "primeng/inputtext";
@@ -49,7 +49,7 @@ import { Table, TableModule, type TableLazyLoadEvent } from "primeng/table";
 import { Tooltip } from "primeng/tooltip";
 import { QgBulkToolbarDirective } from "./bulk-toolbar.directive";
 import type { GridResource } from "./create-grid-resource";
-import { buildGridFilterChips, removeFilterCondition, type GridFilterChip } from "./filter-chips";
+import { buildGridFilterFeed, type FilterFeedSegment } from "./filter-feed";
 import { QgGridColumnChooserComponent } from "./grid-column-chooser.component";
 import { hasColumnLayout } from "./grid-column-layout-controls";
 import { hasColumnChooser } from "./grid-column-visibility-controls";
@@ -95,7 +95,6 @@ const GRID_TABLE_IMPORTS = [
   TableModule,
   Button,
   Checkbox,
-  Chip,
   InputText,
   IconField,
   InputIcon,
@@ -118,7 +117,7 @@ const GRID_TABLE_HOST = {
  * PrimeNG lazy table wired to a {@link GridResource}.
  *
  * Caption layout: search (left), optional expandable toolbar filters, clear
- * (right). Applied filters render as removable chips below the toolbar.
+ * (right). Applied filters render as an interactive query feed below the toolbar.
  */
 @Component({
   selector: "qg-prime-data-grid",
@@ -279,9 +278,17 @@ export class PrimeDataGridComponent<T = unknown> {
   protected readonly filtersExpanded = signal(false);
   protected readonly measuredColumnWidths = signal<Readonly<Record<string, number>>>({});
   protected readonly columnDragActive = signal(false);
+  /**
+   * PrimeNG ColumnFilter keeps references to its constraint controls. When a saved
+   * view replaces table filters externally, recreate only those controls so they
+   * bind to the restored constraints instead of retaining stale references.
+   */
+  protected readonly filterPanelVersion = signal(0);
   private readonly tableRef = viewChild<Table>("table");
   private initialLazyLoadHandled = false;
   private suppressLazyLoad = false;
+  /** Skips query→table filter sync after the table itself wrote the query (lazy-load / typing). */
+  private ignoreQueryToTableSync = 0;
 
   constructor() {
     effect(() => {
@@ -309,20 +316,33 @@ export class PrimeDataGridComponent<T = unknown> {
 
     effect(() => {
       const table = this.tableRef();
+      // Track query only. Reading resolvedColumns() here re-ran this effect on
+      // unrelated column/layout churn and wiped open ColumnFilter drafts.
       const query = this.grid().query();
-      const columns = this.resolvedColumns();
       if (!table || !this.initialLazyLoadHandled) {
         return;
       }
 
       untracked(() => {
+        const columns = this.resolvedColumns();
+
+        // Lazy-load / ColumnFilter typing already wrote table.filters → query.
+        // Pushing query back clears in-progress drafts (value "a" → null).
+        if (this.ignoreQueryToTableSync > 0) {
+          this.ignoreQueryToTableSync -= 1;
+          return;
+        }
+
         if (!needsPrimeTableQuerySync(table, query, columns)) {
           return;
         }
 
         this.suppressLazyLoad = true;
         try {
-          applyGridQueryToPrimeTable(table, query, columns);
+          applyGridQueryToPrimeTable(table, query, columns, {
+            resetMissingFields: true,
+          });
+          this.filterPanelVersion.update((version) => version + 1);
           this.searchText.set(query.search ?? "");
         } finally {
           queueMicrotask(() => {
@@ -419,10 +439,11 @@ export class PrimeDataGridComponent<T = unknown> {
 
   protected readonly DEFAULT_GRID_OPTIONS = DEFAULT_GRID_OPTIONS;
 
-  protected readonly queryChips = computed(() => {
+  protected readonly filterFeed = computed(() => {
     this.i18n.languageVersion()();
-    return buildGridFilterChips(this.grid().query(), this.resolvedColumns(), {
+    return buildGridFilterFeed(this.grid().query(), this.resolvedColumns(), {
       translate: (key, fallback, params) => this.i18n.t(key, fallback, params),
+      extras: this.extraChips(),
     });
   });
 
@@ -435,6 +456,10 @@ export class PrimeDataGridComponent<T = unknown> {
   protected readonly noDataLabel = this.i18n.tSignal("grid.noData", "No data");
   protected readonly selectPageLabel = this.i18n.tSignal("grid.selectPage", "Select page");
   protected readonly selectRowLabel = this.i18n.tSignal("grid.selectRow", "Select row");
+  protected readonly activeFiltersLabel = this.i18n.tSignal(
+    "filter.feed.activeFilters",
+    "Active filters",
+  );
 
   protected readonly resolvedSearchPlaceholder = computed(() => {
     this.i18n.languageVersion()();
@@ -447,16 +472,7 @@ export class PrimeDataGridComponent<T = unknown> {
     return this.i18n.t("grid.selectedCount", `${count} selected`, { count });
   });
 
-  protected readonly allChips = computed(() => {
-    const extra = this.extraChips().map((chip) => ({
-      id: chip.id,
-      kind: "extra" as const,
-      label: chip.label,
-    }));
-    return [...this.queryChips(), ...extra];
-  });
-
-  protected readonly hasActiveFilters = computed(() => this.allChips().length > 0);
+  protected readonly hasActiveFilters = computed(() => this.filterFeed().length > 0);
 
   protected toolbarTemplate(): TemplateRef<unknown> | undefined {
     return this.toolbarDirectiveQueries()[0]?.template;
@@ -901,6 +917,7 @@ export class PrimeDataGridComponent<T = unknown> {
       applyGridQueryToPrimeTable(table, merged, this.resolvedColumns());
 
       if (!isSameGridPatch(current, merged, defaultPageSize)) {
+        this.ignoreQueryToTableSync += 1;
         this.grid().patchQuery(merged);
       }
 
@@ -915,6 +932,7 @@ export class PrimeDataGridComponent<T = unknown> {
       return;
     }
 
+    this.ignoreQueryToTableSync += 1;
     this.grid().patchQuery(patch);
   }
 
@@ -923,31 +941,33 @@ export class PrimeDataGridComponent<T = unknown> {
     table.filterGlobal(value, "contains");
   }
 
-  protected removeChip(
-    chip: GridFilterChip | { id: string; kind: "extra"; label: string },
-    table: Table,
-    event: MouseEvent,
-  ): void {
-    event.preventDefault();
+  protected removeFeedLabel(segment: FilterFeedSegment): string {
+    return this.i18n.t("filter.feed.remove", `Remove ${segment.text}`, { label: segment.text });
+  }
 
-    if (chip.kind === "extra") {
-      this.extraChipRemove.emit(chip.id);
+  protected removeFeedSegment(segment: FilterFeedSegment, table: Table): void {
+    if (!segment.removable) {
       return;
     }
 
-    if (chip.kind === "search") {
+    if (segment.kind === "extra" && segment.extraId) {
+      this.extraChipRemove.emit(segment.extraId);
+      return;
+    }
+
+    if (segment.kind === "search") {
       this.searchText.set("");
+      // filterGlobal → onLazyLoad → patchQuery (with ignoreQueryToTableSync).
       table.filterGlobal("", "contains");
-      this.grid().patchQuery({ search: undefined, skip: 0 });
       return;
     }
 
-    if (chip.kind === "column" && chip.field) {
-      const nextFilter = removeFilterCondition(this.grid().query().filter, {
-        field: chip.field,
-        operator: chip.operator,
-      });
-      syncPrimeTableFieldFilters(table, chip.field, nextFilter, this.resolvedColumns());
+    if (segment.kind === "condition" && segment.path !== undefined) {
+      const nextFilter = removeFilterAtPath(this.grid().query().filter, segment.path);
+      if (segment.field) {
+        syncPrimeTableFieldFilters(table, segment.field, nextFilter, this.resolvedColumns());
+      }
+      this.ignoreQueryToTableSync += 1;
       this.grid().patchQuery({ filter: nextFilter, skip: 0 });
     }
   }
@@ -957,6 +977,7 @@ export class PrimeDataGridComponent<T = unknown> {
       return;
     }
 
+    this.ignoreQueryToTableSync += 1;
     this.grid().resetQuery();
     this.searchText.set("");
     this.filtersExpanded.set(false);

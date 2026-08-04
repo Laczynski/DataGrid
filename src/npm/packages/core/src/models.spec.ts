@@ -7,6 +7,7 @@ import {
   flattenFilterConditions,
   isFilterCondition,
   isFilterGroup,
+  removeFilterAtPath,
   sameFilterNode,
   skipToPage,
   totalPages,
@@ -21,10 +22,7 @@ describe("models helpers", () => {
 
   it("clampSortDescriptors limits descriptor count", () => {
     const sort = [{ field: "a" }, { field: "b" }, { field: "c" }];
-    expect(clampSortDescriptors(sort, 2)).toEqual([
-      { field: "a" },
-      { field: "b" },
-    ]);
+    expect(clampSortDescriptors(sort, 2)).toEqual([{ field: "a" }, { field: "b" }]);
   });
 
   it("skipToPage and totalPages", () => {
@@ -57,10 +55,24 @@ describe("models helpers", () => {
         },
       ],
     };
-    expect(flattenFilterConditions(filter).map((c) => c.field)).toEqual([
-      "a",
-      "b",
-    ]);
+    expect(flattenFilterConditions(filter).map((c) => c.field)).toEqual(["a", "b"]);
+  });
+
+  it("removeFilterAtPath removes one OR branch and collapses", () => {
+    const filter = {
+      logic: "or" as const,
+      conditions: [
+        { field: "Name", operator: "contains" as const, value: "a" },
+        { field: "Name", operator: "contains" as const, value: "b" },
+      ],
+    };
+
+    expect(removeFilterAtPath(filter, [0])).toEqual({
+      field: "Name",
+      operator: "contains",
+      value: "b",
+    });
+    expect(removeFilterAtPath(filter, [])).toBeNull();
   });
 
   it("sameFilterNode compares structure", () => {
@@ -71,8 +83,6 @@ describe("models helpers", () => {
   });
 
   it("areSortDescriptorsEqual ignores desc default", () => {
-    expect(
-      areSortDescriptorsEqual([{ field: "a" }], [{ field: "a", desc: false }]),
-    ).toBe(true);
+    expect(areSortDescriptorsEqual([{ field: "a" }], [{ field: "a", desc: false }])).toBe(true);
   });
 });

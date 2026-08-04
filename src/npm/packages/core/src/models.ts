@@ -135,6 +135,49 @@ export function flattenFilterConditions(
   return result;
 }
 
+/** Removes the node at `path` (indexes into nested `FilterGroup.conditions`). Empty path clears the root. */
+export function removeFilterAtPath(
+  filter: FilterNode | null | undefined,
+  path: readonly number[],
+): FilterNode | null {
+  if (!filter) {
+    return null;
+  }
+
+  if (path.length === 0) {
+    return null;
+  }
+
+  if (!isFilterGroup(filter)) {
+    return filter;
+  }
+
+  const [index, ...rest] = path;
+  if (index < 0 || index >= filter.conditions.length) {
+    return filter;
+  }
+
+  let nextConditions: FilterNode[];
+  if (rest.length === 0) {
+    nextConditions = filter.conditions.filter((_, childIndex) => childIndex !== index);
+  } else {
+    const nextChild = removeFilterAtPath(filter.conditions[index], rest);
+    nextConditions = filter.conditions
+      .map((child, childIndex) => (childIndex === index ? nextChild : child))
+      .filter((child): child is FilterNode => child !== null);
+  }
+
+  if (nextConditions.length === 0) {
+    return null;
+  }
+
+  if (nextConditions.length === 1) {
+    return nextConditions[0];
+  }
+
+  return { logic: filter.logic, conditions: nextConditions };
+}
+
 function sameFilterValue(a: unknown, b: unknown): boolean {
   if (a === b) {
     return true;
