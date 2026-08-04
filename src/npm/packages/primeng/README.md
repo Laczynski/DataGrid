@@ -8,7 +8,7 @@ PrimeNG lazy data grid for [QueryGrid](https://github.com/laczynski/QueryGrid) â
 npm install @query-grid/core @query-grid/primeng primeng
 ```
 
-Peer dependencies: Angular 21+, PrimeNG 21+, RxJS 7+.
+Peer dependencies: Angular 22+, PrimeNG 22+, RxJS 7+.
 
 ## Example
 

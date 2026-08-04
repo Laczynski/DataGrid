@@ -559,7 +559,10 @@ export class UiDataGridComponent<T = unknown> {
     }
 
     void grid.exportAllMatching({ format }).catch((error: unknown) => {
-      this.exportError.emit(formatGridError(error));
+      const message = formatGridError(error ?? "Export failed");
+      if (message) {
+        this.exportError.emit(message);
+      }
     });
   }
 
@@ -570,7 +573,10 @@ export class UiDataGridComponent<T = unknown> {
     }
 
     void grid.exportSelected({ format }).catch((error: unknown) => {
-      this.exportError.emit(formatGridError(error));
+      const message = formatGridError(error ?? "Export failed");
+      if (message) {
+        this.exportError.emit(message);
+      }
     });
   }
 

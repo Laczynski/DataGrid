@@ -261,7 +261,7 @@ readonly grid = this.gridFactory.create<IssueDto>({
 });
 ```
 
-When `export` is set, the grid toolbar shows an **Export** dropdown with CSV and Excel options. With `rowSelection`, the bulk toolbar adds an **Export selected** dropdown with the same format choices.
+When `export` is set, the PrimeNG toolbar shows an **Export** split button: its main action exports CSV and its arrow opens CSV and Excel choices. With `rowSelection`, the bulk toolbar adds an **Export selected** split button with the same format choices. The `@query-grid/ui` adapter shows an export dropdown with CSV and Excel choices.
 
 ```typescript
 import { hasExport } from "@query-grid/primeng";

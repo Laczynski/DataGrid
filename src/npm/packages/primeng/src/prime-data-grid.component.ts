@@ -44,8 +44,8 @@ import { Checkbox } from "primeng/checkbox";
 import { IconField } from "primeng/iconfield";
 import { InputIcon } from "primeng/inputicon";
 import { InputText } from "primeng/inputtext";
-import { Menu } from "primeng/menu";
-import { Table, TableModule, type TableLazyLoadEvent } from "primeng/table";
+import { SplitButton } from "primeng/splitbutton";
+import { SortableColumn, SortIcon, Table, type TableLazyLoadEvent } from "primeng/table";
 import { Tooltip } from "primeng/tooltip";
 import { QgBulkToolbarDirective } from "./bulk-toolbar.directive";
 import type { GridResource } from "./create-grid-resource";
@@ -92,7 +92,9 @@ const GRID_TABLE_IMPORTS = [
   CdkDropList,
   CdkDrag,
   CdkDragPreview,
-  TableModule,
+  Table,
+  SortableColumn,
+  SortIcon,
   Button,
   Checkbox,
   InputText,
@@ -102,7 +104,7 @@ const GRID_TABLE_IMPORTS = [
   QgColumnResizeDirective,
   QgGridColumnChooserComponent,
   QgGridViewsComponent,
-  Menu,
+  SplitButton,
   QgBulkToolbarDirective,
   Tooltip,
 ];
@@ -597,7 +599,10 @@ export class PrimeDataGridComponent<T = unknown> {
     }
 
     void grid.exportAllMatching({ format }).catch((error: unknown) => {
-      this.exportError.emit(formatGridError(error));
+      const message = formatGridError(error ?? "Export failed");
+      if (message) {
+        this.exportError.emit(message);
+      }
     });
   }
 
@@ -608,7 +613,10 @@ export class PrimeDataGridComponent<T = unknown> {
     }
 
     void grid.exportSelected({ format }).catch((error: unknown) => {
-      this.exportError.emit(formatGridError(error));
+      const message = formatGridError(error ?? "Export failed");
+      if (message) {
+        this.exportError.emit(message);
+      }
     });
   }
 

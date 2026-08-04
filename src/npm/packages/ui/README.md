@@ -8,7 +8,7 @@ laczynski/ui adapter for [QueryGrid](https://github.com/laczynski/QueryGrid): `<
 npm install @query-grid/core @query-grid/ui @laczynski/ui
 ```
 
-Peer dependencies: Angular 21+, `@laczynski/ui` 2.0.0-preview+, `@angular/cdk` 21+, RxJS 7+.
+Peer dependencies: Angular 22.1+, `@laczynski/ui` 2.0.0-preview.6+, `@angular/cdk` 22.1+, RxJS 7+.
 
 ## Usage
 
