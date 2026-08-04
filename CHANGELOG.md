@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here.
 
+## 0.1.0-preview.10 — 2026-08-04
+
+### Changed
+
+- Package metadata, documentation, and publishing examples now reference the `laczynski/QueryGrid` GitHub repository.
+
 ## 0.1.0-preview.9 — 2026-08-04
 
 ### Added
