@@ -2,6 +2,19 @@
 
 All notable changes to this project are documented here.
 
+## 0.1.0-preview.11 — 2026-08-04
+
+### Changed
+
+- **@query-grid/primeng / showcase-ui** — upgraded to Angular 22.1, TypeScript 6.0, ng-packagr 22.1, and PrimeNG 22.
+- **@query-grid/ui / showcase-ui** — upgraded `@laczynski/ui` to `2.0.0-preview.6`, with Angular 22.1 peer dependencies.
+- **@query-grid/primeng** — the export controls now use `p-splitbutton`; clicking the main action exports CSV and the arrow exposes CSV and Excel choices.
+- Package READMEs and publishing examples now state the Angular 22 / PrimeNG 22 requirements and the current preview version.
+
+### Fixed
+
+- **@query-grid/primeng** — export options no longer render through the PrimeNG `Menu` component that fails at runtime with `parentId_r3` under Angular 22.
+
 ## 0.1.0-preview.10 — 2026-08-04
 
 ### Changed

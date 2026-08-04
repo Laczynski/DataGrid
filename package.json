@@ -27,10 +27,22 @@
     "publish:npm": "npm run build:npm && npm publish -w @query-grid/core --access public --tag preview && npm publish src/npm/packages/primeng/dist --access public --tag preview && npm publish src/npm/packages/ui/dist --access public --tag preview"
   },
   "devDependencies": {
+    "@angular/build": "^22.0.0",
+    "@angular/cdk": "^22.0.0",
+    "@angular/cli": "^22.0.0",
+    "@angular/common": "^22.0.0",
+    "@angular/compiler": "^22.0.0",
+    "@angular/compiler-cli": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/forms": "^22.0.0",
+    "@angular/platform-browser": "^22.0.0",
+    "@angular/router": "^22.0.0",
     "@eslint/js": "^9.39.1",
     "concurrently": "^9.2.1",
     "eslint": "^9.39.1",
     "prettier": "^3.6.2",
+    "ng-packagr": "^22.0.0",
+    "typescript": "~6.0.0",
     "typescript-eslint": "^8.46.4"
   }
 }

@@ -9,7 +9,7 @@ import {
 import { FormsModule } from "@angular/forms";
 import { Checkbox } from "primeng/checkbox";
 import { MultiSelect } from "primeng/multiselect";
-import { TableModule } from "primeng/table";
+import { ColumnFilter } from "primeng/table";
 import { QgI18nService } from "../i18n";
 import { buildEnumMatchModeOptions, buildMatchModeOptions } from "../match-mode-options";
 import type { GridColumn } from "./grid-column";
@@ -20,7 +20,7 @@ const MAX_COLUMN_FILTER_RULES = 5;
 @Component({
   selector: "qg-column-filter",
   standalone: true,
-  imports: [FormsModule, TableModule, Checkbox, MultiSelect],
+  imports: [FormsModule, ColumnFilter, Checkbox, MultiSelect],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   styleUrl: "./qg-column-filter.component.css",

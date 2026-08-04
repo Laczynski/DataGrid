@@ -19,7 +19,7 @@
   [dataKey]="dataKey()"
   [scrollable]="!!scrollHeight() || hasPinnedColumns()"
   [scrollHeight]="scrollHeight() ?? undefined"
-  [styleClass]="appearance() === 'plain' ? 'qg-plain-table' : undefined"
+  [tableStyleClass]="appearance() === 'plain' ? 'qg-plain-table' : undefined"
   [tableStyle]="hasPinnedColumns() ? { 'min-width': 'max-content' } : undefined"
 >
   <ng-template #caption>
@@ -56,16 +56,16 @@
           }
 
           @if (exportEnabled()) {
-            <p-button
-              type="button"
+            <p-splitbutton
+              [model]="exportAllMenuItems()"
               [label]="exportLabel()"
               icon="pi pi-file-export"
               [outlined]="true"
               severity="secondary"
               [disabled]="grid().loading() || exporting()"
-              (onClick)="exportAllMenu.toggle($event)"
+              appendTo="body"
+              (onClick)="exportAllMatching('csv')"
             />
-            <p-menu #exportAllMenu [model]="exportAllMenuItems()" [popup]="true" appendTo="body" />
           }
 
           <p-button
@@ -84,20 +84,15 @@
           <span class="qg-caption-bulk-toolbar-count">{{ selectedCountText() }}</span>
           <div class="qg-caption-bulk-toolbar-actions">
             @if (exportSelectedEnabled()) {
-              <p-button
-                type="button"
+              <p-splitbutton
+                [model]="exportSelectedMenuItems()"
                 [label]="exportSelectedLabel()"
                 icon="pi pi-file-export"
                 [outlined]="true"
                 severity="secondary"
                 [disabled]="exporting()"
-                (onClick)="exportSelectedMenu.toggle($event)"
-              />
-              <p-menu
-                #exportSelectedMenu
-                [model]="exportSelectedMenuItems()"
-                [popup]="true"
                 appendTo="body"
+                (onClick)="exportSelected('csv')"
               />
             }
             @if (bulkToolbarTemplate(); as bulkToolbar) {
@@ -215,7 +210,7 @@
             <div class="qg-column-title">
               <span>{{ column.header }}</span>
               @if (isSortable(column)) {
-                <p-sortIcon [field]="column.field" />
+                <p-sort-icon [field]="column.field" />
               }
             </div>
             <div class="qg-column-header-actions">
