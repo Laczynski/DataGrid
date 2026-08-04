@@ -1,6 +1,6 @@
 {
   "name": "@query-grid/ui",
-  "version": "0.1.0-preview.11",
+  "version": "0.1.0-preview.12",
   "description": "laczynski/ui data grid with column filters, search and clear for QueryGrid.",
   "license": "MIT",
   "type": "module",
@@ -10,7 +10,7 @@
     "@angular/core": "^22.0.0",
     "@angular/forms": "^22.0.0",
     "@laczynski/ui": "^2.0.0-preview.6",
-    "@query-grid/core": "0.1.0-preview.11",
+    "@query-grid/core": "0.1.0-preview.12",
     "rxjs": "^7.8.0"
   },
   "dependencies": {

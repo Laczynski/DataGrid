@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented here.
 
+## 0.1.0-preview.12 — 2026-08-04
+
+### Fixed
+
+- **@query-grid/primeng** — resizing a column no longer bubbles a trailing click to the sortable header and changes its sort order.
+- **@query-grid/primeng** — switching saved views now refreshes multi-sort badges, so their displayed order matches the restored sort descriptors.
+
 ## 0.1.0-preview.11 — 2026-08-04
 
 ### Changed

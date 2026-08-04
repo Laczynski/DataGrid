@@ -38,4 +38,21 @@ describe("sort-mapper", () => {
     expect(table.multiSortMeta).toEqual([{ field: "Label", order: -1 }]);
     expect(onSort).toHaveBeenCalledWith([{ field: "Label", order: -1 }]);
   });
+
+  it("notifies sort icons when a restored view reduces multi-sort metadata", () => {
+    const onSort = vi.fn();
+    const table = {
+      multiSortMeta: [],
+      tableService: { onSort },
+    } as unknown as import("primeng/table").Table;
+
+    syncPrimeTableSort(table, [
+      { field: "Name", desc: false },
+      { field: "Label", desc: true },
+    ]);
+    syncPrimeTableSort(table, [{ field: "Label", desc: true }]);
+
+    expect(table.multiSortMeta).toEqual([{ field: "Label", order: -1 }]);
+    expect(onSort).toHaveBeenLastCalledWith([{ field: "Label", order: -1 }]);
+  });
 });
