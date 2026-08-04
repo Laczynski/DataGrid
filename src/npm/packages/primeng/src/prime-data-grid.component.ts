@@ -286,6 +286,12 @@ export class PrimeDataGridComponent<T = unknown> {
    * bind to the restored constraints instead of retaining stale references.
    */
   protected readonly filterPanelVersion = signal(0);
+  /**
+   * PrimeNG SortIcon only marks itself for rendering when the sort direction
+   * changes. Recreate it after an external query sync so a restored view also
+   * refreshes a multi-sort badge whose direction stayed the same.
+   */
+  protected readonly sortIconVersion = signal(0);
   private readonly tableRef = viewChild<Table>("table");
   private initialLazyLoadHandled = false;
   private suppressLazyLoad = false;
@@ -345,6 +351,7 @@ export class PrimeDataGridComponent<T = unknown> {
             resetMissingFields: true,
           });
           this.filterPanelVersion.update((version) => version + 1);
+          this.sortIconVersion.update((version) => version + 1);
           this.searchText.set(query.search ?? "");
         } finally {
           queueMicrotask(() => {

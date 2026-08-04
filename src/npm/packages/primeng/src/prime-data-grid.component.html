@@ -210,7 +210,9 @@
             <div class="qg-column-title">
               <span>{{ column.header }}</span>
               @if (isSortable(column)) {
-                <p-sort-icon [field]="column.field" />
+                @for (version of [sortIconVersion()]; track version) {
+                  <p-sort-icon [field]="column.field" />
+                }
               }
             </div>
             <div class="qg-column-header-actions">

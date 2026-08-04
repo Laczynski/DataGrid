@@ -42,8 +42,8 @@ NuGet `RepositoryUrl` links packages to this repo on first GitHub Packages publi
 4. Tag and push:
 
    ```powershell
-   git tag v0.1.0-preview.11
-   git push origin v0.1.0-preview.11
+   git tag v0.1.0-preview.12
+   git push origin v0.1.0-preview.12
    ```
 
    [publish.yml](../../.github/workflows/publish.yml) runs tests, then publishes NuGet (nuget.org + GitHub Packages), npm (npmjs.com), and creates a GitHub Release from `CHANGELOG.md`.
@@ -107,7 +107,7 @@ Prerelease tags (`v*-*`) publish npm with dist-tag `preview`; stable tags use `l
 ### NuGet (nuget.org)
 
 ```powershell
-dotnet add package QueryGrid.EntityFrameworkCore --version 0.1.0-preview.11
+dotnet add package QueryGrid.EntityFrameworkCore --version 0.1.0-preview.12
 ```
 
 ### NuGet (GitHub Packages)
@@ -116,7 +116,7 @@ Copy [`nuget.config.example`](nuget.config.example). Replace `OWNER` with `laczy
 
 ```powershell
 dotnet nuget add source --username YOUR_GITHUB_USERNAME --password YOUR_PAT --store-password-in-clear-text --name github "https://nuget.pkg.github.com/OWNER/index.json"
-dotnet add package QueryGrid.EntityFrameworkCore --version 0.1.0-preview.11
+dotnet add package QueryGrid.EntityFrameworkCore --version 0.1.0-preview.12
 ```
 
 In GitHub Actions on a consuming repo, use `GITHUB_TOKEN` with read access to the package.
