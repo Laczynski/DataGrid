@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, Injector, signal } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { buildGridQueryUrl, formatGridError } from '@query-grid/core';
 import { PrimeDataGridComponent, QgColumnDirective, QgEmptyDirective } from '@query-grid/primeng';
 import { Card } from 'primeng/card';
@@ -7,6 +8,7 @@ import { Message } from 'primeng/message';
 import { Tag } from 'primeng/tag';
 import { ShowcaseRow } from './models/showcase-row.model';
 import { ShowcaseApiService } from './services/showcase-api.service';
+import { ShowcaseLocaleService } from './services/showcase-locale.service';
 import { createPrimengShowcaseGrid } from './showcase-grid.factory';
 import { getShowcaseCategoryLabel, showcaseCategories } from './utils/showcase.utils';
 
@@ -20,6 +22,7 @@ import { getShowcaseCategoryLabel, showcaseCategories } from './utils/showcase.u
     PrimeDataGridComponent,
     QgColumnDirective,
     QgEmptyDirective,
+    TranslatePipe,
   ],
   templateUrl: './primeng-showcase-page.component.html',
   styleUrl: './showcase-page.shared.css',
@@ -27,9 +30,17 @@ import { getShowcaseCategoryLabel, showcaseCategories } from './utils/showcase.u
 export class PrimengShowcasePageComponent {
   private readonly api = inject(ShowcaseApiService);
   private readonly injector = inject(Injector);
+  private readonly translate = inject(TranslateService);
+  protected readonly locale = inject(ShowcaseLocaleService);
 
-  readonly showcaseCategories = showcaseCategories;
-  readonly getShowcaseCategoryLabel = getShowcaseCategoryLabel;
+  readonly showcaseCategories = () => {
+    this.locale.language();
+    return showcaseCategories(this.translate);
+  };
+  readonly getShowcaseCategoryLabel = (category: ShowcaseRow['category']) => {
+    this.locale.language();
+    return getShowcaseCategoryLabel(category, this.translate);
+  };
 
   readonly grid = createPrimengShowcaseGrid(this.injector, this.api);
 

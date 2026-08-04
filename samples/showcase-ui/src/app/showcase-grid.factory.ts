@@ -1,4 +1,5 @@
 import { Injector } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import type { GridExportColumnInput, GridQuery, GridViewPreset } from '@query-grid/core';
 import { createGridResource, type GridResource } from '@query-grid/primeng';
 import {
@@ -7,16 +8,6 @@ import {
 } from '@query-grid/ui';
 import { ShowcaseRow } from './models/showcase-row.model';
 import { ShowcaseApiService } from './services/showcase-api.service';
-
-const showcaseActiveView: GridViewPreset = {
-  id: 'showcase-active',
-  name: 'Active only',
-  builtin: true,
-  createdAt: '2026-01-01T00:00:00.000Z',
-  query: {
-    filter: { field: 'IsActive', operator: 'eq', value: true },
-  },
-};
 
 const showcaseExportColumns: readonly GridExportColumnInput[] = [
   { field: 'Id', header: 'Id' },
@@ -38,6 +29,17 @@ const showcaseExportColumns: readonly GridExportColumnInput[] = [
 ];
 
 function showcaseGridOptions(injector: Injector, api: ShowcaseApiService, persistKey: string) {
+  const translate = injector.get(TranslateService);
+  const showcaseActiveView: GridViewPreset = {
+    id: 'showcase-active',
+    name: translate.instant('showcase.views.activeOnly'),
+    builtin: true,
+    createdAt: '2026-01-01T00:00:00.000Z',
+    query: {
+      filter: { field: 'IsActive', operator: 'eq', value: true },
+    },
+  };
+
   return {
     injector,
     load: (query: GridQuery) => api.getRows(query),

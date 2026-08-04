@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, Injector, signal } from '@angular/core';
 import { CardComponent, MessageBarComponent, TagComponent } from '@laczynski/ui';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { buildGridQueryUrl, formatGridError } from '@query-grid/core';
 import { QgColumnDirective, QgEmptyDirective, UiDataGridComponent } from '@query-grid/ui';
 import { ShowcaseRow } from './models/showcase-row.model';
 import { ShowcaseApiService } from './services/showcase-api.service';
+import { ShowcaseLocaleService } from './services/showcase-locale.service';
 import { createUiShowcaseGrid } from './showcase-grid.factory';
 import { getShowcaseCategoryLabel, showcaseCategories } from './utils/showcase.utils';
 
@@ -18,6 +20,7 @@ import { getShowcaseCategoryLabel, showcaseCategories } from './utils/showcase.u
     UiDataGridComponent,
     QgColumnDirective,
     QgEmptyDirective,
+    TranslatePipe,
   ],
   templateUrl: './ui-showcase-page.component.html',
   styleUrl: './showcase-page.shared.css',
@@ -25,9 +28,17 @@ import { getShowcaseCategoryLabel, showcaseCategories } from './utils/showcase.u
 export class UiShowcasePageComponent {
   private readonly api = inject(ShowcaseApiService);
   private readonly injector = inject(Injector);
+  private readonly translate = inject(TranslateService);
+  protected readonly locale = inject(ShowcaseLocaleService);
 
-  readonly showcaseCategories = showcaseCategories;
-  readonly getShowcaseCategoryLabel = getShowcaseCategoryLabel;
+  readonly showcaseCategories = () => {
+    this.locale.language();
+    return showcaseCategories(this.translate);
+  };
+  readonly getShowcaseCategoryLabel = (category: ShowcaseRow['category']) => {
+    this.locale.language();
+    return getShowcaseCategoryLabel(category, this.translate);
+  };
 
   readonly grid = createUiShowcaseGrid(this.injector, this.api);
 
