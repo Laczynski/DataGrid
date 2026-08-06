@@ -1,0 +1,69 @@
+{
+  "name": "@query-grid/spartan",
+  "version": "0.1.0-preview.13",
+  "description": "Spartan UI data grid with column filters, search and clear for QueryGrid.",
+  "license": "MIT",
+  "type": "module",
+  "peerDependencies": {
+    "@angular/cdk": "^22.0.0",
+    "@angular/common": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/forms": "^22.0.0",
+    "@query-grid/core": "0.1.0-preview.13",
+    "rxjs": "^7.8.0"
+  },
+  "dependencies": {
+    "tslib": "^2.8.0"
+  },
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/laczynski/QueryGrid.git"
+  },
+  "homepage": "https://github.com/laczynski/QueryGrid#readme",
+  "bugs": {
+    "url": "https://github.com/laczynski/QueryGrid/issues"
+  },
+  "keywords": [
+    "querygrid",
+    "angular",
+    "spartan",
+    "datagrid",
+    "pagination",
+    "filtering",
+    "sorting"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "prebuild": "npm run build -w @query-grid/core",
+    "build": "node ../../../../scripts/build-ng-package.mjs .",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@angular/cdk": "^22.0.0",
+    "@angular/common": "^22.0.0",
+    "@angular/compiler": "^22.0.0",
+    "@angular/compiler-cli": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/forms": "^22.0.0",
+    "@query-grid/core": "file:../core",
+    "ng-packagr": "^22.0.0",
+    "rxjs": "~7.8.0",
+    "typescript": "~6.0.0",
+    "vitest": "^3.2.4"
+  },
+  "main": "./dist/fesm2022/query-grid-spartan.mjs",
+  "types": "./dist/types/query-grid-spartan.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/query-grid-spartan.d.ts",
+      "default": "./dist/fesm2022/query-grid-spartan.mjs"
+    },
+    "./ngx-translate": {
+      "types": "./dist/types/query-grid-spartan-ngx-translate.d.ts",
+      "default": "./dist/fesm2022/query-grid-spartan-ngx-translate.mjs"
+    }
+  }
+}

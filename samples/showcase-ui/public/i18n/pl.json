@@ -22,6 +22,17 @@
       "exportFormatCsv": "CSV (.csv)",
       "exportFormatXlsx": "Excel (.xlsx)"
     },
+    "pagination": {
+      "ariaLabel": "Paginacja",
+      "firstPage": "Pierwsza strona",
+      "previousPage": "Poprzednia strona",
+      "nextPage": "Następna strona",
+      "lastPage": "Ostatnia strona",
+      "rowsPerPage": "Wierszy",
+      "range": "{{start}}–{{end}} z {{total}}",
+      "empty": "0",
+      "page": "Strona {{page}}"
+    },
     "columnChooser": {
       "columns": "Kolumny",
       "showAll": "Pokaż wszystkie",
@@ -112,6 +123,7 @@
       "subtitle": "Macierz kompatybilności adapterów siatki",
       "navAria": "Adaptery showcase",
       "uiAdapter": "laczynski/ui",
+      "spartanAdapter": "Spartan",
       "primengAdapter": "PrimeNG",
       "languageAria": "Język",
       "languagePl": "PL",

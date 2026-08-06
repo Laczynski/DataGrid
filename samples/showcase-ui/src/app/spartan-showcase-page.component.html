@@ -1,0 +1,202 @@
+<div class="showcase-panel-card showcase-panel-card--spartan">
+  <div class="showcase-panel showcase-panel--spartan">
+    @if (errorMessage(); as message) {
+      <div class="error-banner spartan-alert spartan-alert--danger" role="alert">{{ message }}</div>
+    }
+
+    @if (exportError(); as exportMessage) {
+      <div class="error-banner spartan-alert spartan-alert--danger" role="alert">
+        {{ exportMessage }}
+      </div>
+    }
+
+    <qg-hlm-query-grid
+      [grid]="grid"
+      dataKey="id"
+      [bordered]="true"
+      [striped]="true"
+      [hoverable]="true"
+      [searchPlaceholder]="'showcase.searchPlaceholder' | translate"
+      [pageSizeOptions]="[10, 20, 50, 100]"
+      (exportError)="onExportError($event)"
+    >
+      <ng-template
+        qgColumn="Id"
+        [header]="'showcase.columns.id' | translate"
+        [filter]="{ type: 'number', placeholder: ('showcase.filters.id' | translate) }"
+        [qgColumnOf]="rowType"
+        let-row
+      >
+        {{ row.id }}
+      </ng-template>
+
+      <ng-template
+        qgColumn="Label"
+        [header]="'showcase.columns.label' | translate"
+        [filter]="{ type: 'text', placeholder: ('showcase.filters.contains' | translate) }"
+        [qgColumnOf]="rowType"
+        let-row
+      >
+        <strong>{{ row.label }}</strong>
+      </ng-template>
+
+      <ng-template
+        qgColumn="OptionalNote"
+        [header]="'showcase.columns.optionalNote' | translate"
+        [filter]="{
+          type: 'text',
+          placeholder: ('showcase.filters.noteContains' | translate),
+          nullable: true,
+        }"
+        [qgColumnOf]="rowType"
+        let-row
+      >
+        {{ row.optionalNote ?? '—' }}
+      </ng-template>
+
+      <ng-template
+        qgColumn="Quantity"
+        [header]="'showcase.columns.quantity' | translate"
+        [filter]="{ type: 'number', placeholder: ('showcase.filters.quantity' | translate) }"
+        [qgColumnOf]="rowType"
+        let-row
+      >
+        {{ row.quantity }}
+      </ng-template>
+
+      <ng-template
+        qgColumn="BigNumber"
+        [header]="'showcase.columns.bigNumber' | translate"
+        [filter]="{ type: 'number', placeholder: ('showcase.filters.value' | translate) }"
+        [qgColumnOf]="rowType"
+        let-row
+      >
+        {{ row.bigNumber | number: '' : locale.angularLocale() }}
+      </ng-template>
+
+      <ng-template
+        qgColumn="Price"
+        [header]="'showcase.columns.price' | translate"
+        [filter]="{ type: 'number', placeholder: ('showcase.filters.price' | translate) }"
+        [qgColumnOf]="rowType"
+        let-row
+      >
+        {{ row.price | number: '1.2-4' : locale.angularLocale() }}
+      </ng-template>
+
+      <ng-template
+        qgColumn="Score"
+        [header]="'showcase.columns.score' | translate"
+        [filter]="{ type: 'number', placeholder: ('showcase.filters.score' | translate) }"
+        [qgColumnOf]="rowType"
+        let-row
+      >
+        {{ row.score | number: '1.3-3' : locale.angularLocale() }}
+      </ng-template>
+
+      <ng-template
+        qgColumn="IsActive"
+        [header]="'showcase.columns.isActive' | translate"
+        [filter]="{ type: 'boolean' }"
+        [qgColumnOf]="rowType"
+        let-row
+      >
+        <span class="spartan-badge" [class.spartan-badge--success]="row.isActive">
+          {{
+            row.isActive
+              ? ('qg.filter.boolean.yes' | translate)
+              : ('qg.filter.boolean.no' | translate)
+          }}
+        </span>
+      </ng-template>
+
+      <ng-template
+        qgColumn="OccurredAt"
+        [header]="'showcase.columns.occurredAt' | translate"
+        [filter]="{ type: 'date' }"
+        [qgColumnOf]="rowType"
+        let-row
+      >
+        {{ row.occurredAt | date: 'yyyy-MM-dd HH:mm' : undefined : locale.angularLocale() }}
+      </ng-template>
+
+      <ng-template
+        qgColumn="OccurredAtOffset"
+        [header]="'showcase.columns.occurredAtOffset' | translate"
+        [filter]="{ type: 'date' }"
+        [qgColumnOf]="rowType"
+        let-row
+      >
+        {{ row.occurredAtOffset | date: 'yyyy-MM-dd HH:mm Z' : undefined : locale.angularLocale() }}
+      </ng-template>
+
+      <ng-template
+        qgColumn="OccurredOn"
+        [header]="'showcase.columns.occurredOn' | translate"
+        [filter]="{ type: 'date' }"
+        [qgColumnOf]="rowType"
+        let-row
+      >
+        {{ row.occurredOn }}
+      </ng-template>
+
+      <ng-template
+        qgColumn="Category"
+        [header]="'showcase.columns.category' | translate"
+        [filter]="{ type: 'enum', options: showcaseCategories() }"
+        [qgColumnOf]="rowType"
+        let-row
+      >
+        <span class="spartan-badge">{{ getShowcaseCategoryLabel(row.category) }}</span>
+      </ng-template>
+
+      <ng-template
+        qgColumn="ReferenceId"
+        [header]="'showcase.columns.referenceId' | translate"
+        [filter]="{ type: 'guid', placeholder: ('showcase.filters.guid' | translate) }"
+        [qgColumnOf]="rowType"
+        let-row
+      >
+        <code class="reference-id">{{ row.referenceId }}</code>
+      </ng-template>
+
+      <ng-template
+        qgColumn="SortDisabledField"
+        [header]="'showcase.columns.sortDisabledField' | translate"
+        [sortable]="false"
+        [filter]="{ type: 'text', placeholder: ('showcase.filters.filterOnly' | translate) }"
+        [qgColumnOf]="rowType"
+        let-row
+      >
+        {{ row.sortDisabledField }}
+      </ng-template>
+
+      <ng-template
+        qgColumn="FilterDisabledField"
+        [header]="'showcase.columns.filterDisabledField' | translate"
+        [qgColumnOf]="rowType"
+        let-row
+      >
+        {{ row.filterDisabledField }}
+      </ng-template>
+
+      <ng-template
+        qgColumn="NullableDate"
+        [header]="'showcase.columns.nullableDate' | translate"
+        [filter]="{ type: 'date', nullable: true }"
+        [qgColumnOf]="rowType"
+        let-row
+      >
+        {{
+          row.nullableDate
+            ? (row.nullableDate | date: 'yyyy-MM-dd' : undefined : locale.angularLocale())
+            : '—'
+        }}
+      </ng-template>
+
+      <ng-template qgEmpty>
+        <p class="empty-state">{{ 'showcase.emptyState' | translate }}</p>
+      </ng-template>
+    </qg-hlm-query-grid>
+  </div>
+</div>

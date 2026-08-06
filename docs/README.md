@@ -17,14 +17,15 @@ Commands shared across areas: [`AGENTS.md`](../AGENTS.md).
 
 Implementation conventions for library packages. Start with [guides/README.md](guides/README.md).
 
-| Document                                              | Description                                            |
-| ----------------------------------------------------- | ------------------------------------------------------ |
-| [README.md](guides/README.md)                         | Entry point — when to read each guide                  |
-| [repo-map.md](guides/repo-map.md)                     | Where code lives and which package owns what           |
-| [dotnet-guidelines.md](guides/dotnet-guidelines.md)   | .NET package conventions                               |
-| [npm-guidelines.md](guides/npm-guidelines.md)         | npm / Angular library conventions                      |
-| [testing-guidelines.md](guides/testing-guidelines.md) | Test ownership, anti-patterns, what to run before a PR |
-| [feature-recipes.md](guides/feature-recipes.md)       | Short recipes for common library changes               |
+| Document                                                  | Description                                            |
+| --------------------------------------------------------- | ------------------------------------------------------ |
+| [README.md](guides/README.md)                             | Entry point — when to read each guide                  |
+| [repo-map.md](guides/repo-map.md)                         | Where code lives and which package owns what           |
+| [dotnet-guidelines.md](guides/dotnet-guidelines.md)       | .NET package conventions                               |
+| [npm-guidelines.md](guides/npm-guidelines.md)             | npm / Angular library conventions                      |
+| [spartan-ui-alignment.md](guides/spartan-ui-alignment.md) | Spartan adapter (`@query-grid/spartan` L1 + CLI L2/L3) |
+| [testing-guidelines.md](guides/testing-guidelines.md)     | Test ownership, anti-patterns, what to run before a PR |
+| [feature-recipes.md](guides/feature-recipes.md)           | Short recipes for common library changes               |
 
 ## Consumer docs
 

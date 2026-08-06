@@ -89,6 +89,8 @@ jobs:
           npm publish "artifacts/npm/query-grid-core-${VERSION}.tgz" --access public --tag "$NPM_TAG" --provenance
           npm publish "artifacts/npm/query-grid-primeng-${VERSION}.tgz" --access public --tag "$NPM_TAG" --provenance
           npm publish "artifacts/npm/query-grid-ui-${VERSION}.tgz" --access public --tag "$NPM_TAG" --provenance
+          npm publish "artifacts/npm/query-grid-spartan-${VERSION}.tgz" --access public --tag "$NPM_TAG" --provenance
+          npm publish "artifacts/npm/query-grid-cli-${VERSION}.tgz" --access public --tag "$NPM_TAG" --provenance
 
       - name: Extract release notes
         run: node scripts/extract-changelog.mjs "${GITHUB_REF_NAME#v}" > release-notes.md

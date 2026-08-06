@@ -1,0 +1,73 @@
+@mixin qg-sh-transition {
+  transition:
+    color 150ms ease,
+    background-color 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    opacity 150ms ease;
+}
+
+@mixin qg-sh-focus-ring {
+  outline: none;
+  border-color: var(--ring, hsl(222 47% 11%));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring, hsl(222 47% 11%)) 20%, transparent);
+}
+
+@mixin qg-sh-input-surface {
+  width: 100%;
+  min-height: 2.25rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--input, var(--border, hsl(214 32% 91%)));
+  border-radius: calc(var(--radius, 0.5rem) - 2px);
+  background: var(--background, #fff);
+  color: var(--foreground, hsl(222 47% 11%));
+  font: inherit;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  box-shadow: 0 1px 2px 0 color-mix(in srgb, var(--foreground, #000) 4%, transparent);
+  @include qg-sh-transition;
+
+  &::placeholder {
+    color: var(--muted-foreground, hsl(215 16% 47%));
+  }
+
+  &:hover:not(:disabled) {
+    border-color: color-mix(
+      in srgb,
+      var(--ring, hsl(222 47% 11%)) 25%,
+      var(--border, hsl(214 32% 91%))
+    );
+  }
+
+  &:focus-visible {
+    @include qg-sh-focus-ring;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+@mixin qg-sh-control-size($selector) {
+  #{$selector}--small {
+    min-height: 1.875rem;
+    padding: 0 0.625rem;
+    font-size: 0.8125rem;
+  }
+
+  #{$selector}--large {
+    min-height: 2.5rem;
+    padding: 0 0.875rem;
+    font-size: 0.9375rem;
+  }
+}
+
+@mixin qg-sh-elevated-surface {
+  border: 1px solid var(--border, hsl(214 32% 91%));
+  border-radius: calc(var(--radius, 0.5rem) - 2px);
+  background: var(--popover, #fff);
+  box-shadow:
+    0 4px 6px -1px color-mix(in srgb, var(--foreground, #000) 8%, transparent),
+    0 2px 4px -2px color-mix(in srgb, var(--foreground, #000) 6%, transparent);
+}

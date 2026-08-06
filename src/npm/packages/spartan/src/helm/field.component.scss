@@ -1,0 +1,14 @@
+@use "./tokens" as *;
+
+.qg-sh-select,
+.qg-sh-field {
+  @include qg-sh-input-surface;
+}
+
+@include qg-sh-control-size(".qg-sh-select");
+@include qg-sh-control-size(".qg-sh-field");
+
+.qg-sh-select[multiple] {
+  min-height: 6rem;
+  padding-block: 0.375rem;
+}

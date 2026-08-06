@@ -1,0 +1,77 @@
+@if (viewsEnabled()) {
+  <div class="qg-grid-views-group">
+    <div class="qg-grid-views">
+      <qg-sh-select
+        class="qg-grid-views__select"
+        [items]="presetItems()"
+        [size]="size()"
+        [ngModel]="selectedPresetId()"
+        (selectionChange)="onPresetSelected($event)"
+        [placeholder]="viewsPlaceholder()"
+      />
+
+      @if (canUpdateSelected()) {
+        <qg-sh-btn
+          appearance="outline"
+          [size]="size()"
+          icon="save"
+          variant="secondary"
+          [ariaLabel]="updateViewLabel()"
+          [qgShTooltip]="updateViewLabel()"
+          qgShTooltipPosition="top"
+          (click)="updatePreset()"
+        />
+      }
+
+      <qg-sh-btn
+        appearance="outline"
+        [size]="size()"
+        icon="add"
+        variant="secondary"
+        [ariaLabel]="saveAsViewLabel()"
+        [qgShTooltip]="saveAsViewLabel()"
+        qgShTooltipPosition="top"
+        (click)="openSaveDialog()"
+      />
+
+      @if (canDeleteSelected()) {
+        <qg-sh-btn
+          appearance="outline"
+          [size]="size()"
+          icon="delete"
+          variant="danger"
+          [ariaLabel]="deleteViewLabel()"
+          [qgShTooltip]="deleteViewLabel()"
+          qgShTooltipPosition="top"
+          (click)="deleteSelected()"
+        />
+      }
+    </div>
+
+    <span class="qg-grid-views__divider" aria-hidden="true"></span>
+  </div>
+
+  <dialog #saveDialog class="qg-grid-views__dialog" (cancel)="closeSaveDialog()">
+    <form class="qg-grid-views__dialog-form" (submit)="onSaveSubmit($event)">
+      <h3 class="qg-grid-views__dialog-title">{{ saveViewTitle() }}</h3>
+      <qg-sh-text
+        [size]="size()"
+        [ngModel]="newPresetName()"
+        (ngModelChange)="newPresetName.set($event)"
+        name="viewName"
+        [placeholder]="viewNamePlaceholder()"
+      />
+      <div class="qg-grid-views__dialog-actions">
+        <qg-sh-btn
+          type="button"
+          [size]="size()"
+          [text]="cancelLabel()"
+          appearance="outline"
+          variant="secondary"
+          (click)="closeSaveDialog()"
+        />
+        <qg-sh-btn type="submit" [size]="size()" [text]="saveLabel()" variant="primary" />
+      </div>
+    </form>
+  </dialog>
+}

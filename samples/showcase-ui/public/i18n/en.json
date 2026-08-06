@@ -22,6 +22,17 @@
       "exportFormatCsv": "CSV (.csv)",
       "exportFormatXlsx": "Excel (.xlsx)"
     },
+    "pagination": {
+      "ariaLabel": "Pagination",
+      "firstPage": "First page",
+      "previousPage": "Previous page",
+      "nextPage": "Next page",
+      "lastPage": "Last page",
+      "rowsPerPage": "Rows",
+      "range": "{{start}}–{{end}} of {{total}}",
+      "empty": "0",
+      "page": "Page {{page}}"
+    },
     "columnChooser": {
       "columns": "Columns",
       "showAll": "Show all",
@@ -112,6 +123,7 @@
       "subtitle": "Compatibility matrix for grid adapters",
       "navAria": "Showcase adapters",
       "uiAdapter": "laczynski/ui",
+      "spartanAdapter": "Spartan",
       "primengAdapter": "PrimeNG",
       "languageAria": "Language",
       "languagePl": "PL",

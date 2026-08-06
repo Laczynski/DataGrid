@@ -20,7 +20,7 @@ Samples are **not** published and **not** part of the library API.
 ```
 samples/
   showcase-api/     # ASP.NET API + EF Core, seeded with diverse row shapes
-  showcase-ui/      # Angular + @query-grid/primeng — one screen, many column types
+  showcase-ui/      # Angular grids — /primeng, /ui, /spartan (L3 consumer layout)
 ```
 
 `GET /rows` returns rows from **ShowcaseRowDto** — a DTO designed only to expose grid behaviour.
@@ -58,7 +58,7 @@ The seed model includes at least one column per category the engine discovers:
 | Paging                 | skip/take, last page, empty page after filter                                |
 | Session persist        | `persistState` — refresh restores grid state from session storage            |
 | URL sync               | `syncRoute` — filter/sort/search reflected in `?grid=`; copy-link round-trip |
-| Saved views            | `views` + `<qg-grid-views>` — built-in and user presets in localStorage |
+| Saved views            | `views` + `<qg-grid-views>` — built-in and user presets in localStorage      |
 | Validation errors      | invalid operator for type → ProblemDetails / grid error state                |
 | Clear / reset          | toolbar clears filters and reloads                                           |
 | Large `in` list        | boundary below `GridOptions` limit                                           |
@@ -90,7 +90,7 @@ Unit tests in `src/dotnet` prove expression correctness; samples prove **wiring*
 ## Status
 
 - **showcase-api** — `GET /rows`, 300 seeded rows, full `ShowcaseRowDto` type matrix. Run: `npm run start:backend` (http://localhost:5180).
-- **showcase-ui** — Angular + `@query-grid/primeng` / `@query-grid/ui` grids. Routes `/primeng` and `/ui`. Proxies API to :5180.
+- **showcase-ui** — Angular grids: `/primeng`, `/ui`, `/spartan`. Spartan uses the **L3 consumer layout** (local `qg-hlm-query-grid` + `shared/spartan/` helm primitives; brain from `@query-grid/spartan`). Proxies API to :5180.
 
 ## Quick start (full stack)
 
@@ -114,4 +114,15 @@ From the repository root, rebuild and sync `@query-grid/*` into the UI sample wh
 npm run dev:frontend
 ```
 
-This runs `watch:core`, `watch:primeng`, `watch:ui`, and the Angular dev server together.
+This runs `watch:core`, `watch:primeng`, `watch:ui`, `watch:spartan`, and the Angular dev server together.
+
+### Spartan tab (`/spartan`)
+
+Same integration path as a consumer after `ng g @query-grid/cli:spartan-grid --level=full`, plus Spartan NG helm:
+
+1. **One-time** (from `samples/showcase-ui`): `npm run setup:spartan-helm` — installs `@spartan-ng/brain`, Tailwind v4 theme, and copies `hlm*` primitives to `src/app/shared/spartan/` (tsconfig paths `@spartan-ng/helm/*`).
+2. **L3 grid shell** — `src/app/shared/query-grid/grid-shell/` and `filter-editors/` use Spartan `hlm*` directly (no `qg-sh-*` adapter layer). Synced from the CLI schematic; not hand-edited in showcase.
+3. **Sync** — `scripts/sync-spartan-consumer.mjs` copies only `grid-shell/` + `filter-editors/` from the CLI schematic (runs on `prebuild` / `prestart`).
+4. Page imports `HlmQueryGridComponent` locally; brain (`createGridResource`, `QgColumnDirective`, i18n) stays on `@query-grid/spartan`.
+
+After editing Spartan grid shell in `src/npm/packages/spartan/`, re-run `node scripts/sync-spartan-consumer.mjs` from `samples/showcase-ui`.

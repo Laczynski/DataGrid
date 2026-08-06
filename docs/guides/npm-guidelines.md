@@ -14,8 +14,10 @@ For build, test, and lint commands, see [`AGENTS.md`](../../AGENTS.md).
 
 1. If shared contract changes, update `@query-grid/core` types first.
 2. Implement Angular state or PrimeNG UI in `@query-grid/primeng`.
-3. Add Vitest tests in the owning package; use `samples/showcase-ui` for component integration.
-4. Bump package version in `package.json` when releasing (keep aligned with NuGet preview version).
+3. Implement laczynski/ui UI in `@query-grid/ui`.
+4. Implement Spartan UI in `@query-grid/spartan` (L1) — follow [spartan-ui-alignment.md](spartan-ui-alignment.md). For L3 consumer copies, update the CLI schematic and run `scripts/sync-spartan-schematic-files.mjs`.
+5. Add Vitest tests in the owning package; use `samples/showcase-ui` for component integration.
+6. Bump package version in `package.json` when releasing (keep aligned with NuGet preview version).
 
 ## Angular library conventions
 

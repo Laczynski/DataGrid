@@ -12,6 +12,8 @@
 | `@query-grid/core`              | [npmjs.com](https://www.npmjs.com) | —                      |
 | `@query-grid/primeng`           | [npmjs.com](https://www.npmjs.com) | —                      |
 | `@query-grid/ui`                | [npmjs.com](https://www.npmjs.com) | —                      |
+| `@query-grid/spartan`           | [npmjs.com](https://www.npmjs.com) | —                      |
+| `@query-grid/cli`               | [npmjs.com](https://www.npmjs.com) | —                      |
 
 All packages publish on tag push `v*` via [publish.yml](../../.github/workflows/publish.yml) (trusted publishing / OIDC).
 
@@ -23,7 +25,8 @@ NuGet `RepositoryUrl` links packages to this repo on first GitHub Packages publi
 | --------------- | -------------------------------------------------------------- |
 | NuGet (shared)  | `src/dotnet/Directory.Build.props` → `<Version>`               |
 | npm per package | `src/npm/packages/*/package.json` → `"version"`                |
-| primeng / ui    | `peerDependencies["@query-grid/core"]` must match core version |
+| primeng / ui / spartan | `peerDependencies["@query-grid/core"]` must match core version |
+| cli             | no `@query-grid/core` peer — schematics only                   |
 
 ## Release checklist
 
@@ -42,8 +45,8 @@ NuGet `RepositoryUrl` links packages to this repo on first GitHub Packages publi
 4. Tag and push:
 
    ```powershell
-   git tag v0.1.0-preview.12
-   git push origin v0.1.0-preview.12
+   git tag v0.1.0-preview.13
+   git push origin v0.1.0-preview.13
    ```
 
    [publish.yml](../../.github/workflows/publish.yml) runs tests, then publishes NuGet (nuget.org + GitHub Packages), npm (npmjs.com), and creates a GitHub Release from `CHANGELOG.md`.
@@ -73,18 +76,20 @@ Settings → Secrets and variables → Actions:
 
 ### npm trusted publishing
 
-For each package (`@query-grid/core`, `@query-grid/primeng`, `@query-grid/ui`):
+For each package (`@query-grid/core`, `@query-grid/primeng`, `@query-grid/ui`, `@query-grid/spartan`, `@query-grid/cli`):
 
 npmjs.com → package → **Settings** → **Trusted Publisher** → **GitHub Actions**:
 
-| Field                | Value             |
-| -------------------- | ----------------- |
-| Organization or user | `laczynski`       |
-| Repository           | `QueryGrid`       |
-| Workflow filename    | `publish.yml`     |
-| Environment          | _(leave empty)_   |
+| Field                | Value           |
+| -------------------- | --------------- |
+| Organization or user | `laczynski`     |
+| Repository           | `QueryGrid`     |
+| Workflow filename    | `publish.yml`   |
+| Environment          | _(leave empty)_ |
 
 No `NPM_TOKEN` secret — CI uses OIDC (npm CLI ≥ 11.5.1, upgraded in the workflow).
+
+**New packages** (`@query-grid/spartan`, `@query-grid/cli`): create each package on npmjs.com (or let the first trusted publish create it), then add the trusted publisher **before** tagging a release that includes them.
 
 ### GitHub repository settings
 
@@ -107,7 +112,7 @@ Prerelease tags (`v*-*`) publish npm with dist-tag `preview`; stable tags use `l
 ### NuGet (nuget.org)
 
 ```powershell
-dotnet add package QueryGrid.EntityFrameworkCore --version 0.1.0-preview.12
+dotnet add package QueryGrid.EntityFrameworkCore --version 0.1.0-preview.13
 ```
 
 ### NuGet (GitHub Packages)
@@ -126,8 +131,19 @@ In GitHub Actions on a consuming repo, use `GITHUB_TOKEN` with read access to th
 Public packages — no special `.npmrc` required:
 
 ```powershell
-npm install @query-grid/core@preview @query-grid/primeng@preview @query-grid/ui@preview
+npm install @query-grid/core@preview @query-grid/primeng@preview @query-grid/ui@preview @query-grid/spartan@preview
+npm install -D @query-grid/cli@preview
 ```
+
+**Spartan L1** — `@query-grid/spartan` only (built-in `qg-sh-*` helm).
+
+**Spartan L3** — add `@query-grid/cli`, install Spartan helm in the app, then:
+
+```powershell
+ng generate @query-grid/cli:spartan-grid --level=full
+```
+
+See [spartan-l3-hlm.md](../guides/spartan-l3-hlm.md).
 
 ### App integration
 

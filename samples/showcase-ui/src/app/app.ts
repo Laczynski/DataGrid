@@ -42,6 +42,9 @@ import { ShowcaseLocaleService, type ShowcaseLanguage } from './services/showcas
             <a routerLink="/ui" routerLinkActive="is-active">{{
               'showcase.shell.uiAdapter' | translate
             }}</a>
+            <a routerLink="/spartan" routerLinkActive="is-active">{{
+              'showcase.shell.spartanAdapter' | translate
+            }}</a>
             <a routerLink="/primeng" routerLinkActive="is-active">{{
               'showcase.shell.primengAdapter' | translate
             }}</a>

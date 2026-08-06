@@ -26,8 +26,8 @@ Concurrent runs for the same branch are cancelled when a newer commit is pushed.
 
 - Node.js **24**
 - npm cache keyed on `package-lock.json`
-- Builds `@query-grid/core`, `@query-grid/primeng`
-- Runs Vitest in **both** `@query-grid/core` and `@query-grid/primeng`
+- Builds `@query-grid/core`, `@query-grid/primeng`, `@query-grid/ui`, `@query-grid/spartan`, and `@query-grid/cli`
+- Runs Vitest in **core**, **primeng**, **ui**, **spartan**, and schematic tests in **cli**
 
 ## Reproduce locally
 

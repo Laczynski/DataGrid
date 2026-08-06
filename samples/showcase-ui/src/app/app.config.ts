@@ -14,6 +14,7 @@ import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import Aura from '@primeuix/themes/aura';
 import { provideQgI18nWithNgxTranslate as provideQgPrimengI18nWithNgxTranslate } from '@query-grid/primeng/ngx-translate';
+import { provideQgI18nWithNgxTranslate as provideQgSpartanI18nWithNgxTranslate } from '@query-grid/spartan/ngx-translate';
 import { provideQgI18nWithNgxTranslate } from '@query-grid/ui/ngx-translate';
 import { pl } from 'primelocale/js/pl.js';
 import { providePrimeNG } from 'primeng/config';
@@ -45,6 +46,7 @@ export const appConfig: ApplicationConfig = {
       }),
     }),
     provideQgI18nWithNgxTranslate({ prefix: 'qg' }),
+    provideQgSpartanI18nWithNgxTranslate({ prefix: 'qg' }),
     provideQgPrimengI18nWithNgxTranslate({ prefix: 'qg' }),
     provideAppInitializer(() => inject(ShowcaseLocaleService).init()),
     providePrimeNG({

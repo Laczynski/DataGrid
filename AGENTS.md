@@ -45,15 +45,16 @@ From the repository root, run `npm install` once after clone or when workspace d
 
 ### npm packages (`src/npm/packages/`)
 
-- Build single package: `npm run build -w @query-grid/core` or `npm run build -w @query-grid/primeng` or `npm run build -w @query-grid/ui`
-- Test single package: `npm run test -w @query-grid/core` or `npm run test -w @query-grid/primeng` or `npm run test -w @query-grid/ui`
+- Build single package: `npm run build -w @query-grid/core` | `@query-grid/primeng` | `@query-grid/ui` | `@query-grid/spartan` | `@query-grid/cli`
+- Spartan helm copy schematic: `ng generate @query-grid/cli:spartan-grid --level=filter-editors` or `--level=full` (after `npm run build:cli`; syncs from `@query-grid/spartan` on CLI prebuild)
+- Test single package: `npm run test -w @query-grid/core` | `@query-grid/primeng` | `@query-grid/ui` | `@query-grid/spartan` | `@query-grid/cli`
 
 ## Change coupling checklist
 
 - If you change `GridQuery` / `GridResult` or filter/sort JSON shape, update **both** `QueryGrid.Abstractions` and `@query-grid/core`, plus `GridQueryContractTests`.
 - If you change `GridExportRequest` / export JSON shape, update **both** `QueryGrid.Abstractions` and `@query-grid/core` (`buildGridExportBody`), plus export tests in `QueryGrid.UnitTests` and `grid-export.spec.ts`.
-- If you add or change an operator or field-type rule, update `QueryGrid.Core` expression builders and unit tests; check whether `@query-grid/primeng` filter UI needs a matching control.
-- If you change Angular grid state or persistence (`persistState`), update `@query-grid/primeng` and verify in `samples/showcase-ui`.
+- If you add or change an operator or field-type rule, update `QueryGrid.Core` expression builders and unit tests; check whether `@query-grid/primeng`, `@query-grid/ui`, or `@query-grid/spartan` filter UI needs a matching control.
+- If you change Angular grid state or persistence (`persistState`), update UI adapters (`primeng`, `ui`, `spartan`) and verify in `samples/showcase-ui`.
 - Keep package versions in sync across NuGet (`Directory.Build.props`) and npm (`package.json` per package) when releasing.
 
 ## Working agreements

@@ -59,11 +59,13 @@ The npm grid shows **Export** and **Export selected** dropdowns (CSV and Excel) 
 
 ### Package responsibilities
 
-| Package               | Owns                                                                                                                                          |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `@query-grid/core`    | TypeScript models mirroring `GridQuery` / `GridResult`, `formatGridError`, `formatLocalDateTime`, `buildGridExportBody`, `downloadGridExport` |
-| `@query-grid/primeng` | `createGridResource()`, `GridResourceFactory`, `<qg-prime-data-grid>`, `qgColumn` / `qgEmpty` directives, filter feed                         |
-| `@query-grid/ui`      | `createGridResource()`, `GridResourceFactory`, `<qg-ui-data-grid>`, `qgColumn` / `qgEmpty` directives, filter feed (laczynski/ui)             |
+| Package               | Owns                                                                                                                                                        |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@query-grid/core`    | TypeScript models mirroring `GridQuery` / `GridResult`, `formatGridError`, `formatLocalDateTime`, `buildGridExportBody`, `downloadGridExport`               |
+| `@query-grid/primeng` | `createGridResource()`, `GridResourceFactory`, `<qg-prime-data-grid>`, `qgColumn` / `qgEmpty` directives, filter feed                                       |
+| `@query-grid/ui`      | `createGridResource()`, `GridResourceFactory`, `<qg-ui-data-grid>`, `qgColumn` / `qgEmpty` directives, filter feed (`@laczynski/ui`)                        |
+| `@query-grid/spartan` | `createGridResource()`, `GridResourceFactory`, `<qg-spartan-data-grid>`, column filters, export, views — [spartan-ui-alignment.md](spartan-ui-alignment.md) |
+| `@query-grid/cli`     | Angular schematics — `spartan-grid` (`filter-editors` L2 / `full` L3); see [spartan-l3-hlm.md](spartan-l3-hlm.md)                                           |
 
 ### PrimeNG package layout
 
@@ -95,7 +97,9 @@ QueryGrid.Abstractions
 @query-grid/core
         │
         ├── @query-grid/primeng
-        └── @query-grid/ui
+        ├── @query-grid/ui
+        ├── @query-grid/spartan
+        └── @query-grid/cli (schematics; devDependency in consumer apps)
 ```
 
 Transport contracts must stay aligned between `QueryGrid.Abstractions` and `@query-grid/core`.

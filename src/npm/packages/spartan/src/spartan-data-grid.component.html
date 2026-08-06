@@ -1,0 +1,382 @@
+<div class="qg-spartan-grid__layout">
+  <div class="qg-spartan-grid__toolbar">
+    <div class="qg-spartan-grid__toolbar-row">
+      @if (searchable()) {
+        <qg-sh-search
+          class="qg-spartan-grid__search"
+          [size]="size()"
+          [placeholder]="resolvedSearchPlaceholder()"
+          [ngModel]="searchText()"
+          (ngModelChange)="onSearchChange($event)"
+        />
+      }
+
+      <div class="qg-spartan-grid__toolbar-actions">
+        <qg-grid-column-chooser [grid]="grid()" [columns]="resolvedColumns()" [size]="size()" />
+        <qg-grid-views [grid]="grid()" [size]="size()" />
+
+        @if (toolbarTemplate()) {
+          <qg-sh-btn
+            appearance="outline"
+            [size]="size()"
+            icon="filter"
+            [text]="filtersLabel()"
+            [variant]="filtersExpanded() ? 'primary' : 'secondary'"
+            (click)="toggleFiltersExpanded()"
+          />
+        }
+
+        @if (exportEnabled()) {
+          <qg-sh-menu
+            triggerVariant="dropdown"
+            appearance="outline"
+            [size]="size()"
+            icon="arrow_download"
+            [text]="exportLabel()"
+            [disabled]="grid().loading() || exporting()"
+            [menuItems]="exportAllMenuItems()"
+            (menuItemClick)="onExportAllMenuItemClick($event)"
+          />
+        }
+
+        <qg-sh-btn
+          appearance="outline"
+          [size]="size()"
+          icon="filter_dismiss"
+          [text]="clearLabel()"
+          [disabled]="!hasActiveFilters()"
+          (click)="clear()"
+        />
+      </div>
+    </div>
+
+    @if (showBulkToolbar()) {
+      <div class="qg-spartan-grid__bulk-toolbar">
+        <span class="qg-spartan-grid__bulk-toolbar-count">{{ selectedCountText() }}</span>
+        <div class="qg-spartan-grid__bulk-toolbar-actions">
+          @if (exportSelectedEnabled()) {
+            <qg-sh-menu
+              triggerVariant="dropdown"
+              appearance="outline"
+              [size]="size()"
+              icon="arrow_download"
+              [text]="exportSelectedLabel()"
+              [disabled]="exporting()"
+              [menuItems]="exportSelectedMenuItems()"
+              (menuItemClick)="onExportSelectedMenuItemClick($event)"
+            />
+          }
+          @if (bulkToolbarTemplate(); as bulkToolbar) {
+            <ng-container [ngTemplateOutlet]="bulkToolbar" />
+          }
+        </div>
+        <qg-sh-btn
+          appearance="outline"
+          [size]="size()"
+          icon="dismiss"
+          variant="secondary"
+          [qgShTooltip]="clearSelectionLabel()"
+          qgShTooltipPosition="top"
+          [attr.aria-label]="clearSelectionLabel()"
+          (click)="clearRowSelection()"
+        />
+      </div>
+    }
+
+    @if (filtersExpanded() && toolbarTemplate(); as toolbar) {
+      <div class="qg-spartan-grid__toolbar-filters">
+        <ng-container [ngTemplateOutlet]="toolbar" />
+      </div>
+    }
+
+    @if (filterFeed().length > 0) {
+      <div class="qg-spartan-grid__feed" role="list" [attr.aria-label]="activeFiltersLabel()">
+        @for (segment of filterFeed(); track segment.id) {
+          @if (segment.removable) {
+            <span class="qg-spartan-grid__feed-token" role="listitem">
+              <span class="qg-spartan-grid__feed-token-text">{{ segment.text }}</span>
+              <button
+                type="button"
+                class="qg-spartan-grid__feed-remove"
+                [attr.aria-label]="removeFeedLabel(segment)"
+                (click)="removeFeedSegment(segment)"
+              >
+                ×
+              </button>
+            </span>
+          } @else {
+            <span class="qg-spartan-grid__feed-logic">{{ segment.text }}</span>
+          }
+        }
+      </div>
+    }
+  </div>
+
+  <div class="qg-spartan-grid__table-frame">
+    <div
+      #tableWrap
+      class="qg-spartan-grid__table-wrap"
+      [class.qg-spartan-grid__table-wrap--refreshing]="isRefreshing()"
+      [attr.aria-busy]="grid().loading() || null"
+    >
+      <table
+        class="qg-spartan-grid__table"
+        [class.qg-spartan-grid__table--layout]="columnLayoutEnabled()"
+      >
+        <thead class="qg-spartan-grid__head">
+          <tr
+            class="qg-spartan-grid__header-row"
+            cdkDropList
+            cdkDropListOrientation="horizontal"
+            [class.qg-spartan-grid__header-row--dragging]="columnDragActive()"
+            (cdkDropListDropped)="onColumnDropped($event)"
+          >
+            @if (rowSelectionEnabled()) {
+              <th
+                scope="col"
+                class="qg-spartan-grid__header-cell qg-spartan-grid__header-cell--selection"
+                [class.qg-spartan-grid__header-cell--selection-edge]="isSelectionColumnFrozenEdge()"
+                [class.qg-spartan-grid__header-cell--selection-separator]="
+                  isSelectionColumnSeparator()
+                "
+                [attr.aria-label]="isMultipleSelection() ? selectPageLabel() : selectRowLabel()"
+              >
+                @if (isMultipleSelection()) {
+                  <div class="qg-spartan-grid__selection-cell">
+                    <qg-sh-checkbox
+                      [size]="size()"
+                      [ngModel]="isPageSelectionChecked()"
+                      [indeterminate]="isPageSelectionIndeterminate()"
+                      (ngModelChange)="onPageSelectionChange($event)"
+                    />
+                  </div>
+                }
+              </th>
+            }
+            @for (column of displayedColumns(); track column.field) {
+              <th
+                scope="col"
+                cdkDrag
+                cdkDragLockAxis="x"
+                [cdkDragDisabled]="!isReorderable(column)"
+                class="qg-spartan-grid__header-cell"
+                [class.qg-spartan-grid__header-cell--reorderable]="isReorderable(column)"
+                [attr.data-field]="column.field"
+                [class.qg-spartan-grid__header-cell--sortable]="isSortable(column)"
+                [class.qg-spartan-grid__header-cell--sorted]="sortDirection(column.field) !== null"
+                [class.qg-spartan-grid__header-cell--pinned-left]="
+                  pinnedOffset(column.field)?.pin === 'left'
+                "
+                [class.qg-spartan-grid__header-cell--pinned-right]="
+                  pinnedOffset(column.field)?.pin === 'right'
+                "
+                [class.qg-spartan-grid__header-cell--pinned-left-separator]="
+                  isLeftPinnedSeparator(column.field)
+                "
+                [class.qg-spartan-grid__header-cell--pinned-left-edge]="
+                  isLeftPinnedEdge(column.field)
+                "
+                [class.qg-spartan-grid__header-cell--pinned-right-separator]="
+                  isRightPinnedSeparator(column.field)
+                "
+                [class.qg-spartan-grid__header-cell--pinned-right-edge]="
+                  isRightPinnedEdge(column.field)
+                "
+                [attr.aria-sort]="ariaSort(column)"
+                [style.minWidth]="columnWidth(column)"
+                [style.width]="columnWidth(column)"
+                [style.left.px]="pinnedLeftPx(column.field)"
+                [style.right.px]="pinnedOffset(column.field)?.right"
+                [style.z-index]="
+                  pinnedZIndex(column.field, 'header') ?? scrollableZIndex(column.field)
+                "
+                [style.textAlign]="column.align ?? 'left'"
+              >
+                <div
+                  class="qg-spartan-grid__header"
+                  [class.qg-spartan-grid__header--sortable]="isSortable(column)"
+                  (click)="onSortClick(column, $event)"
+                >
+                  @if (isReorderable(column)) {
+                    <span
+                      class="qg-spartan-grid__drag-handle"
+                      cdkDragHandle
+                      [attr.aria-label]="reorderHandleLabel(column)"
+                      (mousedown)="onColumnDragStarted()"
+                      (touchstart)="onColumnDragStarted()"
+                    >
+                      <qg-sh-icon icon="re_order_dots_vertical" [size]="size()" />
+                    </span>
+                  }
+                  <div class="qg-spartan-grid__header-label">{{ column.header }}</div>
+                  <div class="qg-spartan-grid__header-actions">
+                    @if (isSortable(column)) {
+                      <span class="qg-spartan-grid__sort">
+                        <button
+                          type="button"
+                          class="qg-spartan-grid__sort-button"
+                          [class.qg-spartan-grid__sort-button--active]="
+                            sortDirection(column.field) !== null
+                          "
+                          [attr.aria-label]="sortAriaLabel(column)"
+                          (click)="onSortClick(column, $event)"
+                        >
+                          <qg-sh-icon
+                            [icon]="sortIcon(column)"
+                            [size]="size()"
+                            [variant]="sortDirection(column.field) !== null ? 'filled' : 'regular'"
+                          />
+                        </button>
+                        @if (showSortPriority(column.field)) {
+                          <span class="qg-spartan-grid__sort-index">{{
+                            sortIndex(column.field)
+                          }}</span>
+                        }
+                      </span>
+                    }
+                    @if (isPinnable(column)) {
+                      <button
+                        type="button"
+                        class="qg-spartan-grid__pin-button"
+                        [class.qg-spartan-grid__pin-button--active]="!!currentPin(column)"
+                        [attr.aria-label]="pinAriaLabel(column)"
+                        (click)="cycleColumnPin(column, $event)"
+                      >
+                        <qg-sh-icon
+                          [icon]="pinIcon(column)"
+                          [size]="size()"
+                          [variant]="currentPin(column) ? 'filled' : 'regular'"
+                        />
+                      </button>
+                    }
+                    @if (column.filter) {
+                      <qg-column-filter
+                        [column]="column"
+                        [size]="size()"
+                        [conditions]="columnConditions(column.field)"
+                        [logic]="columnFilterLogic(column.field)"
+                        (applyFilter)="onColumnFilterChange(column.field, $event)"
+                      />
+                    }
+                  </div>
+                </div>
+                @if (isResizable(column)) {
+                  <span
+                    qgColumnResize
+                    [minWidth]="column.minWidth ?? 48"
+                    (resized)="onColumnResized(column, $event)"
+                  ></span>
+                }
+                <ng-template cdkDragPreview>
+                  <div
+                    class="qg-spartan-grid__column-drag-preview"
+                    [style.minWidth]="columnWidth(column)"
+                  >
+                    {{ column.header }}
+                  </div>
+                </ng-template>
+              </th>
+            }
+          </tr>
+        </thead>
+        <tbody class="qg-spartan-grid__body">
+          @if (hasRows()) {
+            @for (row of grid().items(); track trackRow(row, $index)) {
+              <tr
+                class="qg-spartan-grid__row"
+                [class.qg-spartan-grid__row--selected]="isRowSelected(row)"
+              >
+                @if (rowSelectionEnabled()) {
+                  <td
+                    class="qg-spartan-grid__cell qg-spartan-grid__cell--selection"
+                    [class.qg-spartan-grid__cell--selection-edge]="isSelectionColumnFrozenEdge()"
+                    [class.qg-spartan-grid__cell--selection-separator]="
+                      isSelectionColumnSeparator()
+                    "
+                  >
+                    <div class="qg-spartan-grid__selection-cell">
+                      <qg-sh-checkbox
+                        [size]="size()"
+                        [ngModel]="isRowSelected(row)"
+                        (ngModelChange)="onRowSelectionChange(row, $event)"
+                      />
+                    </div>
+                  </td>
+                }
+                @for (column of displayedColumns(); track column.field) {
+                  <td
+                    class="qg-spartan-grid__cell"
+                    [class.qg-spartan-grid__cell--pinned-left]="
+                      pinnedOffset(column.field)?.pin === 'left'
+                    "
+                    [class.qg-spartan-grid__cell--pinned-right]="
+                      pinnedOffset(column.field)?.pin === 'right'
+                    "
+                    [class.qg-spartan-grid__cell--pinned-left-separator]="
+                      isLeftPinnedSeparator(column.field)
+                    "
+                    [class.qg-spartan-grid__cell--pinned-left-edge]="isLeftPinnedEdge(column.field)"
+                    [class.qg-spartan-grid__cell--pinned-right-separator]="
+                      isRightPinnedSeparator(column.field)
+                    "
+                    [class.qg-spartan-grid__cell--pinned-right-edge]="
+                      isRightPinnedEdge(column.field)
+                    "
+                    [style.minWidth]="columnWidth(column)"
+                    [style.width]="columnWidth(column)"
+                    [style.left.px]="pinnedLeftPx(column.field)"
+                    [style.right.px]="pinnedOffset(column.field)?.right"
+                    [style.z-index]="
+                      pinnedZIndex(column.field, 'body') ?? scrollableZIndex(column.field)
+                    "
+                    [style.textAlign]="column.align ?? 'left'"
+                  >
+                    @if (cellTemplate(column.field); as template) {
+                      <ng-container
+                        [ngTemplateOutlet]="template"
+                        [ngTemplateOutletContext]="cellContext(row, column.field)"
+                      />
+                    } @else {
+                      {{ formatCell(column, row) }}
+                    }
+                  </td>
+                }
+              </tr>
+            }
+          } @else if (grid().loading()) {
+            <tr class="qg-spartan-grid__loading-row">
+              <td class="qg-spartan-grid__loading-cell" [attr.colspan]="tableColumnCount()">
+                <qg-sh-spinner [size]="size()" [ariaLabel]="loadingDataLabel()" />
+              </td>
+            </tr>
+          } @else {
+            <tr class="qg-spartan-grid__empty-row">
+              <td class="qg-spartan-grid__empty-cell" [attr.colspan]="tableColumnCount()">
+                @if (emptyTemplate(); as template) {
+                  <ng-container [ngTemplateOutlet]="template" />
+                } @else {
+                  {{ noDataLabel() }}
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (showRefreshOverlay()) {
+      <div class="qg-spartan-grid__table-overlay" aria-hidden="true">
+        <qg-sh-spinner [size]="size()" [ariaLabel]="loadingDataLabel()" />
+      </div>
+    }
+  </div>
+
+  <div class="qg-spartan-grid__footer">
+    <qg-sh-pagination
+      [config]="paginationConfig()"
+      [size]="size()"
+      (pageChange)="onPageChange($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
+    />
+  </div>
+</div>

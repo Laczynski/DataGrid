@@ -3,6 +3,10 @@ import { TranslateService } from '@ngx-translate/core';
 import type { GridExportColumnInput, GridQuery, GridViewPreset } from '@query-grid/core';
 import { createGridResource, type GridResource } from '@query-grid/primeng';
 import {
+  createGridResource as createSpartanGridResource,
+  type GridResource as SpartanGridResource,
+} from '@query-grid/spartan';
+import {
   createGridResource as createUiGridResource,
   type GridResource as UiGridResource,
 } from '@query-grid/ui';
@@ -81,4 +85,13 @@ export function createUiShowcaseGrid(
   api: ShowcaseApiService,
 ): UiGridResource<ShowcaseRow> {
   return createUiGridResource(showcaseGridOptions(injector, api, 'querygrid.showcase-ui'));
+}
+
+export function createSpartanShowcaseGrid(
+  injector: Injector,
+  api: ShowcaseApiService,
+): SpartanGridResource<ShowcaseRow> {
+  return createSpartanGridResource(
+    showcaseGridOptions(injector, api, 'querygrid.showcase-spartan'),
+  );
 }

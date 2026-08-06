@@ -1,0 +1,164 @@
+@let column = this.column();
+@if (column.filter) {
+  <ng-template #filterPanel>
+    <div class="popover-panel qg-column-filter__panel">
+      <div class="popover-panel__body qg-column-filter__body">
+        @if (column.filter.type === "boolean") {
+          <div class="qg-column-filter__boolean">
+            <qg-sh-checkbox
+              labelPosition="after"
+              [size]="size()"
+              [label]="booleanFilterTrueLabel()"
+              [ngModel]="draftBooleanTrue()"
+              (ngModelChange)="onBooleanTrueChange($event)"
+            />
+            <qg-sh-checkbox
+              labelPosition="after"
+              [size]="size()"
+              [label]="booleanFilterFalseLabel()"
+              [ngModel]="draftBooleanFalse()"
+              (ngModelChange)="onBooleanFalseChange($event)"
+            />
+          </div>
+        } @else {
+          @if (showLogicSelect()) {
+            <qg-sh-select
+              class="qg-column-filter__control"
+              [items]="logicItems()"
+              [size]="size()"
+              [ngModel]="draftLogic()"
+              (selectionChange)="onLogicChange($event)"
+              [placeholder]="matchAllPlaceholder()"
+            />
+          }
+
+          @for (rule of draftRules(); track rule.id) {
+            <div class="qg-column-filter__rule">
+              @if (showOperatorSelect()) {
+                <qg-sh-select
+                  class="qg-column-filter__control"
+                  [items]="operatorItems()"
+                  [size]="size()"
+                  [ngModel]="rule.operator"
+                  (selectionChange)="onOperatorChange(rule.id, $event)"
+                  [placeholder]="operatorPlaceholder()"
+                />
+              }
+
+              @if (!isNullOperator(rule.operator)) {
+                @switch (column.filter.type) {
+                  @case ("text") {
+                    <qg-sh-text
+                      class="qg-column-filter__control"
+                      [size]="size()"
+                      [placeholder]="column.filter.placeholder ?? valuePlaceholder()"
+                      [ngModel]="rule.value"
+                      (ngModelChange)="onRuleValueChange(rule.id, $event)"
+                    />
+                  }
+                  @case ("guid") {
+                    <qg-sh-text
+                      class="qg-column-filter__control"
+                      [size]="size()"
+                      [placeholder]="column.filter.placeholder ?? guidPlaceholder()"
+                      [ngModel]="rule.value"
+                      (ngModelChange)="onRuleValueChange(rule.id, $event)"
+                    />
+                  }
+                  @case ("number") {
+                    <qg-sh-number
+                      class="qg-column-filter__control"
+                      [size]="size()"
+                      [placeholder]="
+                        isBetweenOperator(rule.operator)
+                          ? fromPlaceholder()
+                          : (column.filter.placeholder ?? valuePlaceholder())
+                      "
+                      [ngModel]="rule.value"
+                      (ngModelChange)="onRuleValueChange(rule.id, $event)"
+                    />
+                    @if (isBetweenOperator(rule.operator)) {
+                      <qg-sh-number
+                        class="qg-column-filter__control"
+                        [size]="size()"
+                        [placeholder]="toPlaceholder()"
+                        [ngModel]="rule.valueEnd"
+                        (ngModelChange)="onRuleValueEndChange(rule.id, $event)"
+                      />
+                    }
+                  }
+                  @case ("date") {
+                    <qg-sh-date
+                      class="qg-column-filter__control"
+                      [size]="size()"
+                      [placeholder]="column.filter.placeholder ?? datePlaceholder()"
+                      [ngModel]="rule.value"
+                      (ngModelChange)="onRuleValueChange(rule.id, $event)"
+                    />
+                  }
+                  @case ("enum") {
+                    <qg-sh-select
+                      class="qg-column-filter__control"
+                      mode="multi"
+                      [items]="enumItems()"
+                      [size]="size()"
+                      [placeholder]="anyPlaceholder()"
+                      [ngModel]="rule.value"
+                      (ngModelChange)="onRuleValueChange(rule.id, $event)"
+                    />
+                  }
+                }
+              }
+
+              @if (allowMultipleRules() && draftRules().length > 1) {
+                <qg-sh-btn
+                  class="qg-column-filter__rule-remove"
+                  appearance="transparent"
+                  variant="danger"
+                  [size]="size()"
+                  [fullWidth]="true"
+                  icon="delete"
+                  [text]="removeRuleLabel()"
+                  (click)="removeRule(rule.id)"
+                />
+              }
+            </div>
+          }
+
+          @if (canAddRule()) {
+            <qg-sh-btn
+              class="qg-column-filter__add-rule"
+              appearance="transparent"
+              variant="primary"
+              [size]="size()"
+              [fullWidth]="true"
+              icon="add"
+              [text]="addRuleLabel()"
+              (click)="addRule()"
+            />
+          }
+        }
+      </div>
+
+      <div class="popover-panel__footer qg-column-filter__footer">
+        <qg-sh-btn appearance="outline" [size]="size()" [text]="clearLabel()" (click)="clear()" />
+        <qg-sh-btn variant="primary" [size]="size()" [text]="applyLabel()" (click)="apply()" />
+      </div>
+    </div>
+  </ng-template>
+
+  <qg-sh-btn
+    class="qg-column-filter__trigger"
+    [class.qg-column-filter__trigger--active]="isActive()"
+    appearance="subtle"
+    [size]="size()"
+    [icon]="isActive() ? 'filter' : 'filter_add'"
+    [selected]="isActive()"
+    [ariaLabel]="filterAriaLabel()"
+    [qgShPopover]="filterPanel"
+    [qgShPopoverOpen]="popoverOpen()"
+    (qgShPopoverOpenChange)="onPopoverOpenChange($event)"
+    qgShPopoverPosition="bottom"
+    qgShPopoverSize="large"
+  />
+}

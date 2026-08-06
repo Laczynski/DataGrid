@@ -1,0 +1,87 @@
+@if (viewsEnabled()) {
+  <div class="qg-grid-views-group">
+    <div class="qg-grid-views">
+      <hlm-select
+        class="qg-grid-views__select"
+        [value]="selectedPresetId()"
+        [itemToString]="presetItemToString"
+        (valueChange)="onPresetSelected($event)"
+      >
+        <hlm-select-trigger size="sm" [class]="qgSelectTriggerClass(size(), 'w-full min-w-48')">
+          <hlm-select-value [placeholder]="viewsPlaceholder()" />
+        </hlm-select-trigger>
+        <hlm-select-content *hlmSelectPortal>
+          <hlm-select-item [value]="nonePresetValue">{{ viewsPlaceholder() }}</hlm-select-item>
+          @for (item of presetItems(); track item.value) {
+            <hlm-select-item [value]="item.value">{{ item.label }}</hlm-select-item>
+          }
+        </hlm-select-content>
+      </hlm-select>
+
+      @if (canUpdateSelected()) {
+        <button
+          hlmBtn
+          variant="outline"
+          [size]="qgIconBtnSize(size())"
+          [hlmTooltip]="updateViewLabel()"
+          [attr.aria-label]="updateViewLabel()"
+          (click)="updatePreset()"
+        >
+          <ng-icon [name]="resolveQgGridIcon('save')" />
+        </button>
+      }
+
+      <button
+        hlmBtn
+        variant="outline"
+        [size]="qgIconBtnSize(size())"
+        [hlmTooltip]="saveAsViewLabel()"
+        [attr.aria-label]="saveAsViewLabel()"
+        (click)="openSaveDialog()"
+      >
+        <ng-icon [name]="resolveQgGridIcon('add')" />
+      </button>
+
+      @if (canDeleteSelected()) {
+        <button
+          hlmBtn
+          variant="destructive"
+          [size]="qgIconBtnSize(size())"
+          [hlmTooltip]="deleteViewLabel()"
+          [attr.aria-label]="deleteViewLabel()"
+          (click)="deleteSelected()"
+        >
+          <ng-icon [name]="resolveQgGridIcon('delete')" />
+        </button>
+      }
+    </div>
+
+    <span class="qg-grid-views__divider" aria-hidden="true"></span>
+  </div>
+
+  <dialog #saveDialog class="qg-grid-views__dialog" (cancel)="closeSaveDialog()">
+    <form class="qg-grid-views__dialog-form" (submit)="onSaveSubmit($event)">
+      <h3 class="qg-grid-views__dialog-title">{{ saveViewTitle() }}</h3>
+      <input
+        hlmInput
+        [class]="qgFieldClass(size())"
+        [ngModel]="newPresetName()"
+        (ngModelChange)="newPresetName.set($event)"
+        name="viewName"
+        [placeholder]="viewNamePlaceholder()"
+      />
+      <div class="qg-grid-views__dialog-actions">
+        <button
+          hlmBtn
+          type="button"
+          variant="outline"
+          [size]="qgBtnSize(size())"
+          (click)="closeSaveDialog()"
+        >
+          {{ cancelLabel() }}
+        </button>
+        <button hlmBtn type="submit" [size]="qgBtnSize(size())">{{ saveLabel() }}</button>
+      </div>
+    </form>
+  </dialog>
+}

@@ -1,0 +1,52 @@
+@if (chooserEnabled()) {
+  <ng-template #columnChooserPanel>
+    <div class="popover-panel qg-grid-column-chooser__panel">
+      <div class="popover-panel__body qg-grid-column-chooser__list">
+        @for (column of hideableColumns(); track column.field) {
+          <qg-sh-checkbox
+            labelPosition="after"
+            [size]="size()"
+            [label]="column.header"
+            [ngModel]="isColumnVisible(column.field)"
+            [disabled]="!canUncheck(column.field)"
+            (ngModelChange)="onVisibilityChange(column.field, $event)"
+          />
+        }
+      </div>
+
+      @if (hasHiddenColumns() || hasLayoutChanges()) {
+        <div class="popover-panel__footer qg-grid-column-chooser__footer">
+          @if (hasHiddenColumns()) {
+            <qg-sh-btn
+              appearance="outline"
+              [size]="size()"
+              [text]="showAllLabel()"
+              (click)="showAllColumns()"
+            />
+          }
+          @if (hasLayoutChanges()) {
+            <qg-sh-btn
+              appearance="outline"
+              [size]="size()"
+              [text]="resetLayoutLabel()"
+              (click)="resetColumnLayout()"
+            />
+          }
+        </div>
+      }
+    </div>
+  </ng-template>
+
+  <qg-sh-btn
+    appearance="outline"
+    [size]="size()"
+    icon="column"
+    [ariaLabel]="columnsLabel()"
+    [qgShTooltip]="columnsLabel()"
+    [qgShPopover]="columnChooserPanel"
+    [qgShPopoverOpen]="popoverOpen()"
+    (qgShPopoverOpenChange)="popoverOpen.set($event)"
+    qgShPopoverPosition="bottom"
+    qgShPopoverSize="medium"
+  />
+}

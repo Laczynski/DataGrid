@@ -2,6 +2,22 @@
 
 All notable changes to this project are documented here.
 
+## 0.1.0-preview.13 — 2026-08-06
+
+### Added
+
+- **@query-grid/spartan** — Spartan-aligned grid adapter (`<qg-spartan-data-grid>`) with toolbar, filter feed, column filters, multi-sort, full pagination parity with `@query-grid/ui`, export, saved views, column chooser, row selection, and scroll persistence; default `qg-sh-*` helm with Spartan CSS tokens; optional `@query-grid/spartan/ngx-translate` entry point
+- **@query-grid/cli** — `spartan-grid` schematic (`filter-editors` L2 / `full` L3); `scripts/sync-spartan-schematic-files.mjs` keeps schematic files aligned with `@query-grid/spartan` source
+- **showcase-ui** — `/spartan` route using L3 consumer path (`qg-hlm-query-grid` with Spartan `hlm*` via `setup:spartan-helm`; synced `grid-shell` + `filter-editors`; brain from npm)
+- Documentation: [spartan-ui-alignment.md](docs/guides/spartan-ui-alignment.md), [spartan-l3-hlm.md](docs/guides/spartan-l3-hlm.md)
+
+### Fixed (L3 consumer shell)
+
+- Pagination page-size selector stays in sync with `take` via `hlm-select`
+- Saved-views `<dialog>` centers correctly under Tailwind preflight
+- `hlm-select-item` uses `QG_SELECT_EMPTY_VALUE` sentinel instead of empty `value`
+- Search field and select trigger layout aligned with Spartan helm sizing helpers
+
 ## 0.1.0-preview.12 — 2026-08-04
 
 ### Fixed

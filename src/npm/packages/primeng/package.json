@@ -1,6 +1,6 @@
 {
   "name": "@query-grid/primeng",
-  "version": "0.1.0-preview.12",
+  "version": "0.1.0-preview.13",
   "description": "PrimeNG lazy data grid with column filters, search and clear for QueryGrid.",
   "license": "MIT",
   "type": "module",
@@ -9,7 +9,7 @@
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0",
     "@angular/forms": "^22.0.0",
-    "@query-grid/core": "0.1.0-preview.12",
+    "@query-grid/core": "0.1.0-preview.13",
     "primeng": "^22.0.0",
     "rxjs": "^7.8.0"
   },

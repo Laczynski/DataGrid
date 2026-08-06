@@ -1,0 +1,31 @@
+:host {
+  display: contents;
+}
+
+.qg-grid-column-chooser__panel {
+  min-width: 14rem;
+}
+
+.qg-grid-column-chooser__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 20rem;
+  overflow: auto;
+  padding: 0.75rem;
+}
+
+.qg-grid-column-chooser__item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.qg-grid-column-chooser__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-top: 1px solid var(--border, hsl(214 32% 91%));
+}

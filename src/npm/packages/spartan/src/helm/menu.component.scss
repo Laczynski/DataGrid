@@ -1,0 +1,44 @@
+@use "./tokens" as *;
+
+.qg-sh-menu {
+  position: relative;
+  display: inline-flex;
+}
+
+.qg-sh-menu__panel {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  right: 0;
+  z-index: 30;
+  min-width: 10rem;
+  padding: 0.25rem;
+  @include qg-sh-elevated-surface;
+}
+
+.qg-sh-menu__item {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 0;
+  border-radius: calc(var(--radius, 0.5rem) - 4px);
+  background: transparent;
+  color: var(--foreground, hsl(222 47% 11%));
+  font: inherit;
+  font-size: 0.875rem;
+  text-align: left;
+  cursor: pointer;
+  @include qg-sh-transition;
+}
+
+.qg-sh-menu__item:hover:not(:disabled) {
+  background: var(--accent, hsl(210 40% 96%));
+}
+
+.qg-sh-menu__item:focus-visible {
+  @include qg-sh-focus-ring;
+}
+
+.qg-sh-menu__item:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

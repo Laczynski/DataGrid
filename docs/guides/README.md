@@ -6,23 +6,26 @@
 
 ## Documents
 
-| Document                                       | Read when you need to…                                      |
-| ---------------------------------------------- | ----------------------------------------------------------- |
-| [repo-map.md](repo-map.md)                     | Find where code lives and which package owns what           |
-| [dotnet-guidelines.md](dotnet-guidelines.md)   | C# packages, expression builders, transport, EF integration |
-| [npm-guidelines.md](npm-guidelines.md)         | TypeScript packages, Angular libraries, PrimeNG grid        |
-| [testing-guidelines.md](testing-guidelines.md) | Test layer ownership, anti-patterns, when to skip tests     |
-| [feature-recipes.md](feature-recipes.md)       | Step-by-step recipes for common library work                |
+| Document                                           | Read when you need to…                                      |
+| -------------------------------------------------- | ----------------------------------------------------------- |
+| [repo-map.md](repo-map.md)                         | Find where code lives and which package owns what           |
+| [dotnet-guidelines.md](dotnet-guidelines.md)       | C# packages, expression builders, transport, EF integration |
+| [npm-guidelines.md](npm-guidelines.md)             | TypeScript packages, Angular libraries, PrimeNG grid        |
+| [spartan-ui-alignment.md](spartan-ui-alignment.md) | Spartan UI adapter design (`@query-grid/spartan`)           |
+| [spartan-l3-hlm.md](spartan-l3-hlm.md)             | L3 full grid copy with Spartan `hlm*` (consumer helm setup) |
+| [testing-guidelines.md](testing-guidelines.md)     | Test layer ownership, anti-patterns, when to skip tests     |
+| [feature-recipes.md](feature-recipes.md)           | Step-by-step recipes for common library work                |
 
 ## Start here by task
 
-| Task                                | Documents                                                                                                                              |
-| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| First orientation in the codebase   | [repo-map.md](repo-map.md)                                                                                                             |
-| .NET package change                 | [repo-map.md](repo-map.md) + [dotnet-guidelines.md](dotnet-guidelines.md)                                                              |
-| npm package change                  | [repo-map.md](repo-map.md) + [npm-guidelines.md](npm-guidelines.md)                                                                    |
-| Transport or shared contract change | [dotnet-guidelines.md](dotnet-guidelines.md) + [npm-guidelines.md](npm-guidelines.md) + [testing-guidelines.md](testing-guidelines.md) |
-| Verify before PR                    | [testing-guidelines.md](testing-guidelines.md) + [`AGENTS.md`](../../AGENTS.md)                                                        |
-| End-to-end check                    | [`samples/README.md`](../../samples/README.md) + relevant guide                                                                        |
+| Task                                       | Documents                                                                                                                              |
+| ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| First orientation in the codebase          | [repo-map.md](repo-map.md)                                                                                                             |
+| .NET package change                        | [repo-map.md](repo-map.md) + [dotnet-guidelines.md](dotnet-guidelines.md)                                                              |
+| npm package change                         | [repo-map.md](repo-map.md) + [npm-guidelines.md](npm-guidelines.md)                                                                    |
+| Spartan UI adapter (`@query-grid/spartan`) | [spartan-ui-alignment.md](spartan-ui-alignment.md) + [npm-guidelines.md](npm-guidelines.md)                                            |
+| Transport or shared contract change        | [dotnet-guidelines.md](dotnet-guidelines.md) + [npm-guidelines.md](npm-guidelines.md) + [testing-guidelines.md](testing-guidelines.md) |
+| Verify before PR                           | [testing-guidelines.md](testing-guidelines.md) + [`AGENTS.md`](../../AGENTS.md)                                                        |
+| End-to-end check                           | [`samples/README.md`](../../samples/README.md) + relevant guide                                                                        |
 
 Commands shared across areas: [`AGENTS.md`](../../AGENTS.md).
