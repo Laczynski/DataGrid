@@ -392,8 +392,8 @@ export const GRID_TABLE_STYLES = `
   :host .qg-column-resize-handle {
     position: absolute;
     top: 0;
-    right: 0;
-    width: 0.375rem;
+    right: -0.25rem;
+    width: 0.75rem;
     height: 100%;
     cursor: col-resize;
     touch-action: none;

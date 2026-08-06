@@ -54,9 +54,35 @@ export class QgColumnResizeDirective {
       this.active = false;
       globalThis.removeEventListener("mousemove", onMouseMove);
       globalThis.removeEventListener("mouseup", onMouseUp);
+      this.suppressTrailingHeaderClick(header);
     };
 
     globalThis.addEventListener("mousemove", onMouseMove);
     globalThis.addEventListener("mouseup", onMouseUp);
+  }
+
+  /**
+   * Depending on where the pointer is released, the synthetic click can target
+   * the sortable header rather than the handle. Capture it before PrimeNG's
+   * `pSortableColumn` listener receives it.
+   */
+  private suppressTrailingHeaderClick(header: HTMLElement): void {
+    const onClick = (event: MouseEvent) => {
+      const target = event.target;
+      if (!(target instanceof Node) || !header.contains(target)) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      globalThis.removeEventListener("click", onClick, true);
+      globalThis.clearTimeout(timeout);
+    };
+
+    const timeout = globalThis.setTimeout(() => {
+      globalThis.removeEventListener("click", onClick, true);
+    }, 0);
+
+    globalThis.addEventListener("click", onClick, true);
   }
 }
