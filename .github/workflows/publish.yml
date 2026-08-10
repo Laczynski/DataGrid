@@ -83,9 +83,11 @@ jobs:
       - name: Publish npm to npmjs.com
         run: |
           npm install -g npm@latest
+          NPM_CONFIG_USERCONFIG="${RUNNER_TEMP}/.npmrc"
           OIDC_TOKEN=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
             "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=npm:registry.npmjs.org" | jq -r '.value')
           printf "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=%s\n" "$OIDC_TOKEN" > "$NPM_CONFIG_USERCONFIG"
+          export NPM_CONFIG_USERCONFIG
           VERSION="${GITHUB_REF_NAME#v}"
           if [[ "$VERSION" == *-* ]]; then
             NPM_TAG=preview
