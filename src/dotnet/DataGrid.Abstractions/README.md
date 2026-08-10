@@ -5,10 +5,10 @@ Transport contracts for [DataGrid](https://github.com/laczynski/DataGrid): `Grid
 ## Install
 
 ```powershell
-dotnet add package DataGrid.Abstractions
+dotnet add package Laczynski.DataGrid.Abstractions
 ```
 
-Most apps reference `DataGrid.EntityFrameworkCore` instead, which pulls this package in transitively.
+Most apps reference `Laczynski.DataGrid.EntityFrameworkCore` instead, which pulls this package in transitively.
 
 ## Example
 

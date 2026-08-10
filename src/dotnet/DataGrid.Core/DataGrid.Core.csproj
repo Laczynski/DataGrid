@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <RootNamespace>DataGrid.Core</RootNamespace>
-    <PackageId>DataGrid.Core</PackageId>
+    <PackageId>Laczynski.DataGrid.Core</PackageId>
     <Description>DataGrid engine: field discovery, filter/sort/search expression building, IQueryable shaping, and CSV/Excel export.</Description>
   </PropertyGroup>
 

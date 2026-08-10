@@ -5,7 +5,7 @@
 ### .NET
 
 ```powershell
-dotnet add package DataGrid.EntityFrameworkCore
+dotnet add package Laczynski.DataGrid.EntityFrameworkCore
 ```
 
 ### npm

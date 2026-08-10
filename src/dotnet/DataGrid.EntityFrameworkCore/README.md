@@ -5,7 +5,7 @@ EF Core integration for [DataGrid](https://github.com/laczynski/DataGrid): `ToGr
 ## Install
 
 ```powershell
-dotnet add package DataGrid.EntityFrameworkCore
+dotnet add package Laczynski.DataGrid.EntityFrameworkCore
 ```
 
 ## Full guide

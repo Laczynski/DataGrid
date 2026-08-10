@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <RootNamespace>DataGrid.EntityFrameworkCore</RootNamespace>
-    <PackageId>DataGrid.EntityFrameworkCore</PackageId>
+    <PackageId>Laczynski.DataGrid.EntityFrameworkCore</PackageId>
     <Description>Entity Framework Core integration for DataGrid: ApplyGridAsync executes filtering, multi-sort, total count and paging asynchronously and returns a GridResult.</Description>
   </PropertyGroup>
 

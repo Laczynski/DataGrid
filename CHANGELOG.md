@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here.
 
+## 0.1.0-preview.16 — 2026-08-10
+
+### Changed (breaking)
+
+- NuGet package IDs: `DataGrid.*` → `Laczynski.DataGrid.Abstractions`, `Laczynski.DataGrid.Core`, `Laczynski.DataGrid.EntityFrameworkCore` (C# namespaces unchanged)
+
 ## 0.1.0-preview.15 — 2026-08-10
 
 ### Fixed

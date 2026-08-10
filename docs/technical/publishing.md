@@ -4,16 +4,16 @@
 
 ## Registries
 
-| Package                        | Primary registry                   | Secondary (NuGet only) |
-| ------------------------------ | ---------------------------------- | ---------------------- |
-| `DataGrid.Abstractions`        | [nuget.org](https://www.nuget.org) | GitHub Packages        |
-| `DataGrid.Core`                | [nuget.org](https://www.nuget.org) | GitHub Packages        |
-| `DataGrid.EntityFrameworkCore` | [nuget.org](https://www.nuget.org) | GitHub Packages        |
-| `@laczynski/datagrid`          | [npmjs.com](https://www.npmjs.com) | —                      |
-| `@laczynski/datagrid-primeng`  | [npmjs.com](https://www.npmjs.com) | —                      |
-| `@laczynski/datagrid-ui`       | [npmjs.com](https://www.npmjs.com) | —                      |
-| `@laczynski/datagrid-spartan`  | [npmjs.com](https://www.npmjs.com) | —                      |
-| `@laczynski/datagrid-cli`      | [npmjs.com](https://www.npmjs.com) | —                      |
+| Package                                  | Primary registry                   | Secondary (NuGet only) |
+| ---------------------------------------- | ---------------------------------- | ---------------------- |
+| `Laczynski.DataGrid.Abstractions`        | [nuget.org](https://www.nuget.org) | GitHub Packages        |
+| `Laczynski.DataGrid.Core`                | [nuget.org](https://www.nuget.org) | GitHub Packages        |
+| `Laczynski.DataGrid.EntityFrameworkCore` | [nuget.org](https://www.nuget.org) | GitHub Packages        |
+| `@laczynski/datagrid`                    | [npmjs.com](https://www.npmjs.com) | —                      |
+| `@laczynski/datagrid-primeng`            | [npmjs.com](https://www.npmjs.com) | —                      |
+| `@laczynski/datagrid-ui`                 | [npmjs.com](https://www.npmjs.com) | —                      |
+| `@laczynski/datagrid-spartan`            | [npmjs.com](https://www.npmjs.com) | —                      |
+| `@laczynski/datagrid-cli`                | [npmjs.com](https://www.npmjs.com) | —                      |
 
 All packages publish on tag push `v*` via [publish.yml](../../.github/workflows/publish.yml) (trusted publishing / OIDC).
 
@@ -112,7 +112,7 @@ Prerelease tags (`v*-*`) publish npm with dist-tag `preview`; stable tags use `l
 ### NuGet (nuget.org)
 
 ```powershell
-dotnet add package DataGrid.EntityFrameworkCore --version 0.1.0-preview.13
+dotnet add package Laczynski.DataGrid.EntityFrameworkCore --version 0.1.0-preview.13
 ```
 
 ### NuGet (GitHub Packages)
@@ -121,7 +121,7 @@ Copy [`nuget.config.example`](nuget.config.example). Replace `OWNER` with `laczy
 
 ```powershell
 dotnet nuget add source --username YOUR_GITHUB_USERNAME --password YOUR_PAT --store-password-in-clear-text --name github "https://nuget.pkg.github.com/OWNER/index.json"
-dotnet add package DataGrid.EntityFrameworkCore --version 0.1.0-preview.12
+dotnet add package Laczynski.DataGrid.EntityFrameworkCore --version 0.1.0-preview.12
 ```
 
 In GitHub Actions on a consuming repo, use `GITHUB_TOKEN` with read access to the package.
@@ -155,5 +155,5 @@ Trusted publishing works in CI only. For a local push without OIDC:
 
 ```powershell
 $apiKey = "<nuget.org-api-key>"
-dotnet nuget push artifacts/nuget/DataGrid.EntityFrameworkCore.*.nupkg --api-key $apiKey --source https://api.nuget.org/v3/index.json
+dotnet nuget push artifacts/nuget/Laczynski.DataGrid.EntityFrameworkCore.*.nupkg --api-key $apiKey --source https://api.nuget.org/v3/index.json
 ```

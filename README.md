@@ -6,11 +6,11 @@ Server-driven pagination, filtering, and sorting for .NET and Angular — as a s
 
 ### NuGet (.NET 10)
 
-| Package                        | Description                                                                    |
-| ------------------------------ | ------------------------------------------------------------------------------ |
-| `DataGrid.Abstractions`        | Transport contracts (`GridQuery`, `GridResult`, filter/sort types, attributes) |
-| `DataGrid.Core`                | Engine: auto field discovery, expression building, `IQueryable` extensions     |
-| `DataGrid.EntityFrameworkCore` | `ToGridResultAsync` for EF Core                                                |
+| Package                                  | Description                                                                    |
+| ---------------------------------------- | ------------------------------------------------------------------------------ |
+| `Laczynski.DataGrid.Abstractions`        | Transport contracts (`GridQuery`, `GridResult`, filter/sort types, attributes) |
+| `Laczynski.DataGrid.Core`                | Engine: auto field discovery, expression building, `IQueryable` extensions     |
+| `Laczynski.DataGrid.EntityFrameworkCore` | `ToGridResultAsync` for EF Core                                                |
 
 ### npm
 

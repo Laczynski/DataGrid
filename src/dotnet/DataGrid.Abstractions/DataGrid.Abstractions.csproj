@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <RootNamespace>DataGrid.Abstractions</RootNamespace>
-    <PackageId>DataGrid.Abstractions</PackageId>
+    <PackageId>Laczynski.DataGrid.Abstractions</PackageId>
     <Description>Transport contracts for DataGrid: GridQuery, GridResult, filter and sort descriptors, and field attributes. Pure POCOs with zero dependencies.</Description>
   </PropertyGroup>
 

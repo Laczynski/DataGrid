@@ -5,10 +5,10 @@ Query engine for [DataGrid](https://github.com/laczynski/DataGrid): automatic DT
 ## Install
 
 ```powershell
-dotnet add package DataGrid.Core
+dotnet add package Laczynski.DataGrid.Core
 ```
 
-For EF Core apps, use `DataGrid.EntityFrameworkCore` instead.
+For EF Core apps, use `Laczynski.DataGrid.EntityFrameworkCore` instead.
 
 ## Full guide
 
