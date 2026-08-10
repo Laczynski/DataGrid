@@ -3,7 +3,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const source = resolve(root, "../../node_modules/@laczynski/ui/assets/icons");
+const source = resolve(root, "../../node_modules/@laczynski/lui/assets/icons");
 const target = resolve(root, "public/assets/icons");
 
 if (!existsSync(source)) {
@@ -13,4 +13,4 @@ if (!existsSync(source)) {
 
 mkdirSync(target, { recursive: true });
 cpSync(source, target, { recursive: true });
-console.log(`Copied laczynski/ui icons to ${target}`);
+console.log(`Copied @laczynski/lui icons to ${target}`);

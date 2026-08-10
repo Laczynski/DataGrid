@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { UiI18nService } from '@laczynski/ui';
+import { UiI18nService } from '@laczynski/lui';
 import { TranslateService } from '@ngx-translate/core';
 import { DgI18nService as DgPrimengI18nService } from '@laczynski/datagrid-primeng';
 import { DgI18nService as DgUiI18nService } from '@laczynski/datagrid-ui';

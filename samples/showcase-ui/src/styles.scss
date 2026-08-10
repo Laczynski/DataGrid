@@ -1,4 +1,4 @@
-@use '@laczynski/ui/src/lib/scss/main';
+@use '@laczynski/lui/src/lib/scss/main';
 @layer theme, base, components, utilities;
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/preflight.css' layer(base);

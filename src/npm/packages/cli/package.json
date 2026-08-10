@@ -1,6 +1,6 @@
 {
   "name": "@laczynski/datagrid-cli",
-  "version": "0.1.0-preview.17",
+  "version": "0.1.0-preview.18",
   "description": "Angular schematics for DataGrid Spartan helm customization.",
   "license": "MIT",
   "type": "commonjs",

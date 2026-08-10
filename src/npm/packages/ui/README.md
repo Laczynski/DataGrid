@@ -1,14 +1,14 @@
 # @laczynski/datagrid-ui
 
-laczynski/ui adapter for [DataGrid](https://github.com/laczynski/DataGrid): `<dg-ui-data-grid>` with column filters (multi-rule, Match All / Match Any), global search, removable filter chips, multi-sort, pagination, and optional state persistence.
+@laczynski/lui adapter for [DataGrid](https://github.com/laczynski/DataGrid): `<dg-ui-data-grid>` with column filters (multi-rule, Match All / Match Any), global search, removable filter chips, multi-sort, pagination, and optional state persistence.
 
 ## Install
 
 ```powershell
-npm install @laczynski/datagrid @laczynski/datagrid-ui @laczynski/ui
+npm install @laczynski/datagrid @laczynski/datagrid-ui @laczynski/lui
 ```
 
-Peer dependencies: Angular 22.1+, `@laczynski/ui` 2.0.0-preview.6+, `@angular/cdk` 22.1+, RxJS 7+.
+Peer dependencies: Angular 22.1+, `@laczynski/lui` 2.0.0-preview.6+, `@angular/cdk` 22.1+, RxJS 7+.
 
 ## Usage
 

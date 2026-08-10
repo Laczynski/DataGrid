@@ -122,7 +122,7 @@
       "title": "DataGrid Showcase",
       "subtitle": "Compatibility matrix for grid adapters",
       "navAria": "Showcase adapters",
-      "uiAdapter": "laczynski/ui",
+      "uiAdapter": "@laczynski/lui",
       "spartanAdapter": "Spartan",
       "primengAdapter": "PrimeNG",
       "languageAria": "Language",

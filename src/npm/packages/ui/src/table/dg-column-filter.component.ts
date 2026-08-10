@@ -18,7 +18,7 @@ import {
   SelectComponent,
   TextComponent,
   type SelectItem,
-} from "@laczynski/ui";
+} from "@laczynski/lui";
 import type { FilterCondition, FilterLogic, FilterOperator } from "@laczynski/datagrid";
 import { coerceOperatorForColumnType } from "@laczynski/datagrid";
 import { defaultOperatorForType, hasFilterValue } from "../filter-mapper";

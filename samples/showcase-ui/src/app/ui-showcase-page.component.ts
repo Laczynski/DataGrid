@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, Injector, signal } from '@angular/core';
-import { CardComponent, MessageBarComponent, TagComponent } from '@laczynski/ui';
+import { CardComponent, MessageBarComponent, TagComponent } from '@laczynski/lui';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { buildGridQueryUrl, formatGridError } from '@laczynski/datagrid';
 import { DgColumnDirective, DgEmptyDirective, UiDataGridComponent } from '@laczynski/datagrid-ui';

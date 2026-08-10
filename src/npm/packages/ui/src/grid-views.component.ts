@@ -16,7 +16,7 @@ import {
   TextComponent,
   TooltipDirective,
   type SelectItem,
-} from "@laczynski/ui";
+} from "@laczynski/lui";
 import type { GridResource } from "./create-grid-resource";
 import { hasGridViews, type GridResourceWithViews } from "./grid-views-controls";
 import { DgI18nService } from "./i18n";

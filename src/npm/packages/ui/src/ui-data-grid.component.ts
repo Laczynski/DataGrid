@@ -29,7 +29,7 @@ import {
   SearchComponent,
   SpinnerComponent,
   TooltipDirective,
-} from "@laczynski/ui";
+} from "@laczynski/lui";
 import type { FilterCondition, FilterLogic } from "@laczynski/datagrid";
 import {
   computePinnedColumnOffsets,

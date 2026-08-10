@@ -9,7 +9,7 @@ import {
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideUiI18n, UI_TRANSLATE_FN } from '@laczynski/ui';
+import { provideUiI18n, UI_TRANSLATE_FN } from '@laczynski/lui';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import Aura from '@primeuix/themes/aura';

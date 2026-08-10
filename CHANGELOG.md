@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here.
 
+## 0.1.0-preview.18 — 2026-08-10
+
+### Changed
+
+- **@laczynski/datagrid-ui** — peer dependency renamed from `@laczynski/ui` to `@laczynski/lui` (`2.0.0-preview.7+`).
+
 ## 0.1.0-preview.17 — 2026-08-10
 
 ### Added
@@ -59,7 +65,7 @@ All notable changes to this project are documented here.
 ### Changed
 
 - **@laczynski/datagrid-primeng / showcase-ui** — upgraded to Angular 22.1, TypeScript 6.0, ng-packagr 22.1, and PrimeNG 22.
-- **@laczynski/datagrid-ui / showcase-ui** — upgraded `@laczynski/ui` to `2.0.0-preview.6`, with Angular 22.1 peer dependencies.
+- **@laczynski/datagrid-ui / showcase-ui** — upgraded `@laczynski/lui` to `2.0.0-preview.6`, with Angular 22.1 peer dependencies.
 - **@laczynski/datagrid-primeng** — the export controls now use `p-splitbutton`; clicking the main action exports CSV and the arrow exposes CSV and Excel choices.
 - Package READMEs and publishing examples now state the Angular 22 / PrimeNG 22 requirements and the current preview version.
 
@@ -105,8 +111,8 @@ All notable changes to this project are documented here.
 ### Changed
 
 - **@laczynski/datagrid-ui** — lighter table loading UX (tbody-only refresh overlay, deferred spinner, stable row tracking via `dataKey`)
-- **@laczynski/datagrid-ui** — peer dependency `@laczynski/ui` `^2.0.0-preview`
-- **showcase-ui** — uses `@laczynski/ui` `2.0.0-preview`
+- **@laczynski/datagrid-ui** — peer dependency `@laczynski/lui` `^2.0.0-preview`
+- **showcase-ui** — uses `@laczynski/lui` `2.0.0-preview`
 - Showcase `Category` column demonstrates `[GridEnumOrder]`
 - Docs: dotnet guidelines, feature recipes, testing guidelines (multi-provider integration coverage)
 
@@ -137,7 +143,7 @@ All notable changes to this project are documented here.
 
 ### Added
 
-- **@laczynski/datagrid-ui** — `<dg-ui-data-grid>` adapter on `@laczynski/ui` (column filters with Add Rule, search, chips, multi-sort, persistence)
+- **@laczynski/datagrid-ui** — `<dg-ui-data-grid>` adapter on `@laczynski/lui` (column filters with Add Rule, search, chips, multi-sort, persistence)
 
 ### Changed
 

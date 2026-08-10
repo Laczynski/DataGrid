@@ -14,7 +14,7 @@ For build, test, and lint commands, see [`AGENTS.md`](../../AGENTS.md).
 
 1. If shared contract changes, update `@laczynski/datagrid` types first.
 2. Implement Angular state or PrimeNG UI in `@laczynski/datagrid-primeng`.
-3. Implement laczynski/ui UI in `@laczynski/datagrid-ui`.
+3. Implement `@laczynski/datagrid-ui` adapter on `@laczynski/lui`.
 4. Implement Spartan UI in `@laczynski/datagrid-spartan` (L1) — follow [spartan-ui-alignment.md](spartan-ui-alignment.md). For L3 consumer copies, update the CLI schematic and run `scripts/sync-spartan-schematic-files.mjs`.
 5. Add Vitest tests in the owning package; use `samples/showcase-ui` for component integration.
 6. Bump package version in `package.json` when releasing (keep aligned with NuGet preview version).

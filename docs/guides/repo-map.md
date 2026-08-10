@@ -63,7 +63,7 @@ The npm grid shows **Export** and **Export selected** dropdowns (CSV and Excel) 
 | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `@laczynski/datagrid`         | TypeScript models mirroring `GridQuery` / `GridResult`, `formatGridError`, `formatLocalDateTime`, `buildGridExportBody`, `downloadGridExport`               |
 | `@laczynski/datagrid-primeng` | `createGridResource()`, `GridResourceFactory`, `<dg-prime-data-grid>`, `dgColumn` / `dgEmpty` directives, filter feed                                       |
-| `@laczynski/datagrid-ui`      | `createGridResource()`, `GridResourceFactory`, `<dg-ui-data-grid>`, `dgColumn` / `dgEmpty` directives, filter feed (`@laczynski/ui`)                        |
+| `@laczynski/datagrid-ui`      | `createGridResource()`, `GridResourceFactory`, `<dg-ui-data-grid>`, `dgColumn` / `dgEmpty` directives, filter feed (`@laczynski/lui`)                        |
 | `@laczynski/datagrid-spartan` | `createGridResource()`, `GridResourceFactory`, `<dg-spartan-data-grid>`, column filters, export, views — [spartan-ui-alignment.md](spartan-ui-alignment.md) |
 | `@laczynski/datagrid-cli`     | Angular schematics — `spartan-grid` (`filter-editors` L2 / `full` L3); see [spartan-l3-hlm.md](spartan-l3-hlm.md)                                           |
 

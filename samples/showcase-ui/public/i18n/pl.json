@@ -122,7 +122,7 @@
       "title": "DataGrid Showcase",
       "subtitle": "Macierz kompatybilności adapterów siatki",
       "navAria": "Adaptery showcase",
-      "uiAdapter": "laczynski/ui",
+      "uiAdapter": "@laczynski/lui",
       "spartanAdapter": "Spartan",
       "primengAdapter": "PrimeNG",
       "languageAria": "Język",

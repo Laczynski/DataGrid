@@ -6,7 +6,7 @@ import {
   CheckboxComponent,
   PopoverDirective,
   TooltipDirective,
-} from "@laczynski/ui";
+} from "@laczynski/lui";
 import { isColumnHideable } from "@laczynski/datagrid";
 import type { GridResource } from "./create-grid-resource";
 import { hasColumnLayout } from "./grid-column-layout-controls";

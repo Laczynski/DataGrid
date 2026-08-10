@@ -21,7 +21,7 @@ Consumers migrating from PrimeNG to [spartan/ui](https://www.spartan.ng) use `@l
 @laczynski/datagrid          ← transport + models (framework-agnostic)
         │
         ├── @laczynski/datagrid-primeng   ← PrimeNG adapter (<dg-prime-data-grid>)
-        ├── @laczynski/datagrid-ui        ← laczynski/ui adapter (<dg-ui-data-grid>)
+        ├── @laczynski/datagrid-ui        ← @laczynski/lui adapter (<dg-ui-data-grid>)
         ├── @laczynski/datagrid-spartan   ← Spartan adapter (<dg-spartan-data-grid>, L1)
         └── @laczynski/datagrid-cli       ← spartan-grid schematic (L2/L3 consumer copies)
 ```
@@ -77,7 +77,7 @@ Reference implementations. Spartan work must **not** break their public API.
 **Must not:**
 
 - Change `GridQuery` JSON shape
-- Require PrimeNG or `@laczynski/ui`
+- Require PrimeNG or `@laczynski/lui`
 - Leak Spartan types into `@laczynski/datagrid`
 - Depend on any specific downstream application
 
