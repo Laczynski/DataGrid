@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented here.
 
+## 0.1.0-preview.15 — 2026-08-10
+
+### Fixed
+
+- CI: `nuget.config` uses nuget.org only (no local feed path required in GitHub Actions)
+- CI: symbol package push no longer fails the release when the base package is not yet indexed
+
 ## 0.1.0-preview.14 — 2026-08-10
 
 ### Changed (breaking)

@@ -61,6 +61,10 @@ jobs:
             --source https://api.nuget.org/v3/index.json \
             --api-key ${{ steps.nuget_login.outputs.NUGET_API_KEY }} \
             --skip-duplicate
+
+      - name: Publish NuGet symbols to nuget.org
+        continue-on-error: true
+        run: |
           dotnet nuget push artifacts/nuget/*.snupkg \
             --source https://api.nuget.org/v3/index.json \
             --api-key ${{ steps.nuget_login.outputs.NUGET_API_KEY }} \
