@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here.
 
+## 0.1.0-preview.17 — 2026-08-10
+
+### Added
+
+- CI publishes npm packages to GitHub Packages (`npm.pkg.github.com`) alongside npmjs.com
+
 ## 0.1.0-preview.16 — 2026-08-10
 
 ### Changed (breaking)

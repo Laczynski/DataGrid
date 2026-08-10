@@ -9,15 +9,15 @@
 | `Laczynski.DataGrid.Abstractions`        | [nuget.org](https://www.nuget.org) | GitHub Packages        |
 | `Laczynski.DataGrid.Core`                | [nuget.org](https://www.nuget.org) | GitHub Packages        |
 | `Laczynski.DataGrid.EntityFrameworkCore` | [nuget.org](https://www.nuget.org) | GitHub Packages        |
-| `@laczynski/datagrid`                    | [npmjs.com](https://www.npmjs.com) | —                      |
-| `@laczynski/datagrid-primeng`            | [npmjs.com](https://www.npmjs.com) | —                      |
-| `@laczynski/datagrid-ui`                 | [npmjs.com](https://www.npmjs.com) | —                      |
-| `@laczynski/datagrid-spartan`            | [npmjs.com](https://www.npmjs.com) | —                      |
-| `@laczynski/datagrid-cli`                | [npmjs.com](https://www.npmjs.com) | —                      |
+| `@laczynski/datagrid`                    | [npmjs.com](https://www.npmjs.com) | GitHub Packages (npm)  |
+| `@laczynski/datagrid-primeng`            | [npmjs.com](https://www.npmjs.com) | GitHub Packages (npm)  |
+| `@laczynski/datagrid-ui`                 | [npmjs.com](https://www.npmjs.com) | GitHub Packages (npm)  |
+| `@laczynski/datagrid-spartan`            | [npmjs.com](https://www.npmjs.com) | GitHub Packages (npm)  |
+| `@laczynski/datagrid-cli`                | [npmjs.com](https://www.npmjs.com) | GitHub Packages (npm)  |
 
 All packages publish on tag push `v*` via [publish.yml](../../.github/workflows/publish.yml) (trusted publishing / OIDC).
 
-NuGet `RepositoryUrl` links packages to this repo on first GitHub Packages publish.
+NuGet `RepositoryUrl` and npm `repository` in `package.json` link packages to this repo on GitHub Packages.
 
 ## Where versions live
 
@@ -49,7 +49,7 @@ NuGet `RepositoryUrl` links packages to this repo on first GitHub Packages publi
    git push origin v0.1.0-preview.13
    ```
 
-   [publish.yml](../../.github/workflows/publish.yml) runs tests, then publishes NuGet (nuget.org + GitHub Packages), npm (npmjs.com), and creates a GitHub Release from `CHANGELOG.md`.
+   [publish.yml](../../.github/workflows/publish.yml) runs tests, then publishes NuGet (nuget.org + GitHub Packages), npm (npmjs.com + GitHub Packages), and creates a GitHub Release from `CHANGELOG.md`.
 
 ## One-time setup
 
@@ -102,7 +102,7 @@ Actions enabled; workflow permissions allow `packages: write` and OIDC (`id-toke
 1. Test + lint
 2. Pack NuGet + npm
 3. Publish NuGet to **nuget.org** and **GitHub Packages** (OIDC + `GITHUB_TOKEN`)
-4. Publish npm to **npmjs.com** with `--provenance` (OIDC)
+4. Publish npm to **npmjs.com** with `--provenance` (OIDC) and **GitHub Packages** (`GITHUB_TOKEN`)
 5. Create GitHub Release from `CHANGELOG.md`
 
 Prerelease tags (`v*-*`) publish npm with dist-tag `preview`; stable tags use `latest`.
@@ -125,6 +125,23 @@ dotnet add package Laczynski.DataGrid.EntityFrameworkCore --version 0.1.0-previe
 ```
 
 In GitHub Actions on a consuming repo, use `GITHUB_TOKEN` with read access to the package.
+
+### npm (GitHub Packages)
+
+Scoped packages use the `@laczynski` namespace on `npm.pkg.github.com`. Add `.npmrc` (or project-level config):
+
+```ini
+@laczynski:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=YOUR_GITHUB_PAT
+```
+
+Use a [personal access token (classic)](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) with at least `read:packages`. In GitHub Actions on a consuming repo, use `GITHUB_TOKEN` with `packages: read`.
+
+```powershell
+npm install @laczynski/datagrid@preview
+```
+
+See [Working with the npm registry on GitHub Packages](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry).
 
 ### npm (npmjs.com)
 

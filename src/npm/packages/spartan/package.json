@@ -1,6 +1,6 @@
 {
   "name": "@laczynski/datagrid-spartan",
-  "version": "0.1.0-preview.16",
+  "version": "0.1.0-preview.17",
   "description": "Spartan UI data grid with column filters, search and clear for DataGrid.",
   "license": "MIT",
   "type": "module",
@@ -9,7 +9,7 @@
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0",
     "@angular/forms": "^22.0.0",
-    "@laczynski/datagrid": "0.1.0-preview.16",
+    "@laczynski/datagrid": "0.1.0-preview.17",
     "rxjs": "^7.8.0"
   },
   "dependencies": {

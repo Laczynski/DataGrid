@@ -100,6 +100,23 @@ jobs:
           npm publish "artifacts/npm/laczynski-datagrid-spartan-${VERSION}.tgz" --access public --tag "$NPM_TAG" --provenance
           npm publish "artifacts/npm/laczynski-datagrid-cli-${VERSION}.tgz" --access public --tag "$NPM_TAG" --provenance
 
+      - name: Publish npm to GitHub Packages
+        run: |
+          NPM_CONFIG_USERCONFIG="${RUNNER_TEMP}/.npmrc-ghp"
+          printf "@laczynski:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=%s\n" "${{ secrets.GITHUB_TOKEN }}" > "$NPM_CONFIG_USERCONFIG"
+          export NPM_CONFIG_USERCONFIG
+          VERSION="${GITHUB_REF_NAME#v}"
+          if [[ "$VERSION" == *-* ]]; then
+            NPM_TAG=preview
+          else
+            NPM_TAG=latest
+          fi
+          npm publish "artifacts/npm/laczynski-datagrid-${VERSION}.tgz" --tag "$NPM_TAG"
+          npm publish "artifacts/npm/laczynski-datagrid-primeng-${VERSION}.tgz" --tag "$NPM_TAG"
+          npm publish "artifacts/npm/laczynski-datagrid-ui-${VERSION}.tgz" --tag "$NPM_TAG"
+          npm publish "artifacts/npm/laczynski-datagrid-spartan-${VERSION}.tgz" --tag "$NPM_TAG"
+          npm publish "artifacts/npm/laczynski-datagrid-cli-${VERSION}.tgz" --tag "$NPM_TAG"
+
       - name: Extract release notes
         run: node scripts/extract-changelog.mjs "${GITHUB_REF_NAME#v}" > release-notes.md
 
