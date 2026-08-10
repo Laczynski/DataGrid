@@ -19,7 +19,7 @@
     "@angular/forms": "^22.0.0",
     "@angular/platform-browser": "^22.0.0",
     "@angular/router": "^22.0.0",
-    "@laczynski/lui": "2.0.0-preview.7",
+    "@laczynski/lui": "2.0.0-preview.8",
     "@ng-icons/core": "^34.0.0",
     "@ng-icons/lucide": "^34.0.0",
     "@ngx-translate/core": "^17.0.0",

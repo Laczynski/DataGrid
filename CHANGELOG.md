@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here.
 
+## 0.1.0-preview.19 — 2026-08-10
+
+### Fixed
+
+- CI: `package-lock.json` resolves `@laczynski/lui` from npm registry (not local `file:` path).
+
 ## 0.1.0-preview.18 — 2026-08-10
 
 ### Changed
