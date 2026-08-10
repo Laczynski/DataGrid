@@ -1,0 +1,62 @@
+:host {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.dg-column-filter__panel {
+  min-width: 16rem;
+  max-width: min(20rem, 90vw);
+}
+
+.dg-column-filter__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dg-column-filter__control {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.dg-column-filter__boolean {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.dg-column-filter__rule {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.dg-column-filter__rule-remove,
+.dg-column-filter__add-rule {
+  display: block;
+  width: 100%;
+}
+
+:host ::ng-deep .dg-column-filter__rule-remove dg-sh-btn,
+:host ::ng-deep .dg-column-filter__add-rule dg-sh-btn {
+  width: 100%;
+}
+
+.dg-column-filter__footer.popover-panel__footer {
+  justify-content: space-between;
+}
+
+.dg-column-filter__trigger {
+  flex-shrink: 0;
+  color: var(--muted-foreground, hsl(215 16% 47%));
+  transition:
+    color 150ms ease,
+    background-color 150ms ease;
+}
+
+.dg-column-filter__trigger--active {
+  color: var(--primary, hsl(222 47% 11%));
+}

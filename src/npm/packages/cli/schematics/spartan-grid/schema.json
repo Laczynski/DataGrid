@@ -1,18 +1,18 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "$id": "QueryGridSpartanGridSchematic",
-  "title": "QueryGrid Spartan grid helm options",
+  "$id": "DataGridSpartanGridSchematic",
+  "title": "DataGrid Spartan grid helm options",
   "type": "object",
   "properties": {
     "path": {
       "type": "string",
       "description": "Directory where helm files are created.",
-      "default": "src/app/shared/query-grid",
+      "default": "src/app/shared/datagrid",
       "x-prompt": "Where should the Spartan helm files be created?"
     },
     "level": {
       "type": "string",
-      "description": "filter-editors (L2) | full (L3 hlm-query-grid shell).",
+      "description": "filter-editors (L2) | full (L3 hlm-data-grid shell).",
       "enum": ["filter-editors", "full"],
       "default": "filter-editors",
       "x-prompt": "Which files should be copied?"

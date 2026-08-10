@@ -10,7 +10,7 @@ import {
   type GridQuery,
   type GridViewPreset,
   type GridViewsConfig,
-} from "@query-grid/core";
+} from "@laczynski/datagrid";
 
 export interface GridViewsControls {
   presets: ReturnType<typeof signal<readonly GridViewPreset[]>>;

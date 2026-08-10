@@ -30,7 +30,7 @@ import {
   SpinnerComponent,
   TooltipDirective,
 } from "@laczynski/ui";
-import type { FilterCondition, FilterLogic } from "@query-grid/core";
+import type { FilterCondition, FilterLogic } from "@laczynski/datagrid";
 import {
   computePinnedColumnOffsets,
   DEFAULT_GRID_OPTIONS,
@@ -48,31 +48,31 @@ import {
   resolveColumnPin,
   resolveColumnWidthPx,
   resolveRowKey,
-} from "@query-grid/core";
-import { QgBulkToolbarDirective } from "./bulk-toolbar.directive";
+} from "@laczynski/datagrid";
+import { DgBulkToolbarDirective } from "./bulk-toolbar.directive";
 import type { GridResource } from "./create-grid-resource";
 import { buildGridFilterFeed, type FilterFeedSegment } from "./filter-feed";
 import { getFieldFilterConditions, getFieldFilterLogic, upsertFieldFilter } from "./filter-mapper";
-import { QgGridColumnChooserComponent } from "./grid-column-chooser.component";
+import { DgGridColumnChooserComponent } from "./grid-column-chooser.component";
 import { hasColumnLayout } from "./grid-column-layout-controls";
 import { hasColumnChooser } from "./grid-column-visibility-controls";
 import { hasExport } from "./grid-export-controls";
 import { hasRowSelection } from "./grid-row-selection-controls";
 import { bindHorizontalScrollPersistence, hasScrollPersistence } from "./grid-scroll-controls";
-import { QgGridViewsComponent } from "./grid-views.component";
-import { QgI18nService } from "./i18n";
+import { DgGridViewsComponent } from "./grid-views.component";
+import { DgI18nService } from "./i18n";
 import { getSortDirection, toggleSortField } from "./sort-mapper";
-import type { QgColumnContext } from "./table/column-context";
-import { QgColumnResizeDirective } from "./table/column-resize.directive";
-import { QgColumnDirective } from "./table/column.directive";
-import { QgEmptyDirective } from "./table/empty.directive";
+import type { DgColumnContext } from "./table/column-context";
+import { DgColumnResizeDirective } from "./table/column-resize.directive";
+import { DgColumnDirective } from "./table/column.directive";
+import { DgEmptyDirective } from "./table/empty.directive";
 import type { GridColumn } from "./table/grid-column";
 import {
   type ColumnFilterApplyEvent,
-  QgColumnFilterComponent,
-} from "./table/qg-column-filter.component";
+  DgColumnFilterComponent,
+} from "./table/dg-column-filter.component";
 import { resolveGridColumns } from "./table/resolve-grid-columns";
-import { QgToolbarDirective } from "./toolbar.directive";
+import { DgToolbarDirective } from "./toolbar.directive";
 import type { GridSize } from "./types";
 
 export type GridExtraChip = {
@@ -98,34 +98,34 @@ const GRID_IMPORTS = [
   TooltipDirective,
   PaginationComponent,
   SpinnerComponent,
-  QgColumnFilterComponent,
-  QgColumnResizeDirective,
-  QgGridColumnChooserComponent,
-  QgGridViewsComponent,
+  DgColumnFilterComponent,
+  DgColumnResizeDirective,
+  DgGridColumnChooserComponent,
+  DgGridViewsComponent,
   MenuComponent,
-  QgBulkToolbarDirective,
+  DgBulkToolbarDirective,
 ];
 
 @Component({
-  selector: "qg-ui-data-grid",
+  selector: "dg-ui-data-grid",
   standalone: true,
   imports: GRID_IMPORTS,
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./ui-data-grid.component.html",
   styleUrl: "./ui-data-grid.component.scss",
   host: {
-    class: "qg-ui-grid",
-    "[class.qg-ui-grid--small]": 'size() === "small"',
-    "[class.qg-ui-grid--medium]": 'size() === "medium"',
-    "[class.qg-ui-grid--large]": 'size() === "large"',
-    "[class.qg-ui-grid--striped]": "striped()",
-    "[class.qg-ui-grid--hoverable]": "hoverable()",
-    "[class.qg-ui-grid--bordered]": "hasGridlines()",
+    class: "dg-ui-grid",
+    "[class.dg-ui-grid--small]": 'size() === "small"',
+    "[class.dg-ui-grid--medium]": 'size() === "medium"',
+    "[class.dg-ui-grid--large]": 'size() === "large"',
+    "[class.dg-ui-grid--striped]": "striped()",
+    "[class.dg-ui-grid--hoverable]": "hoverable()",
+    "[class.dg-ui-grid--bordered]": "hasGridlines()",
   },
 })
 export class UiDataGridComponent<T = unknown> {
   private readonly injector = inject(Injector);
-  private readonly i18n = inject(QgI18nService);
+  private readonly i18n = inject(DgI18nService);
 
   readonly grid = input.required<GridResource<T>>();
   readonly columns = input<GridColumn<T>[]>();
@@ -146,10 +146,10 @@ export class UiDataGridComponent<T = unknown> {
   readonly cleared = output<void>();
   readonly exportError = output<string>();
 
-  private readonly columnDirectives = contentChildren(QgColumnDirective);
-  private readonly emptyDirective = contentChildren(QgEmptyDirective);
-  private readonly toolbar = contentChildren(QgToolbarDirective);
-  private readonly bulkToolbar = contentChildren(QgBulkToolbarDirective);
+  private readonly columnDirectives = contentChildren(DgColumnDirective);
+  private readonly emptyDirective = contentChildren(DgEmptyDirective);
+  private readonly toolbar = contentChildren(DgToolbarDirective);
+  private readonly bulkToolbar = contentChildren(DgBulkToolbarDirective);
   private readonly tableWrap = viewChild<ElementRef<HTMLElement>>("tableWrap");
 
   protected readonly searchText = signal("");
@@ -246,7 +246,7 @@ export class UiDataGridComponent<T = unknown> {
 
         const measured: Record<string, number> = {};
         for (const header of Array.from(
-          wrap.querySelectorAll<HTMLElement>(".qg-ui-grid__header-cell[data-field]"),
+          wrap.querySelectorAll<HTMLElement>(".dg-ui-grid__header-cell[data-field]"),
         )) {
           const field = header.dataset["field"];
           if (field && header.offsetWidth > 0) {
@@ -267,15 +267,15 @@ export class UiDataGridComponent<T = unknown> {
     );
   }
 
-  protected columnDirectiveQueries(): readonly QgColumnDirective<T>[] {
-    return this.columnDirectives() as QgColumnDirective<T>[];
+  protected columnDirectiveQueries(): readonly DgColumnDirective<T>[] {
+    return this.columnDirectives() as DgColumnDirective<T>[];
   }
 
-  protected emptyDirectiveQueries(): readonly QgEmptyDirective[] {
+  protected emptyDirectiveQueries(): readonly DgEmptyDirective[] {
     return this.emptyDirective();
   }
 
-  protected toolbarDirectiveQueries(): readonly QgToolbarDirective[] {
+  protected toolbarDirectiveQueries(): readonly DgToolbarDirective[] {
     return this.toolbar();
   }
 
@@ -380,7 +380,7 @@ export class UiDataGridComponent<T = unknown> {
   });
 
   private readonly cellMap = computed(() => {
-    const map = new Map<string, TemplateRef<QgColumnContext<T>>>();
+    const map = new Map<string, TemplateRef<DgColumnContext<T>>>();
     for (const column of this.columnDirectiveQueries()) {
       map.set(column.field(), column.template);
     }
@@ -519,7 +519,7 @@ export class UiDataGridComponent<T = unknown> {
     return this.bulkToolbarDirectiveQueries()[0]?.template;
   }
 
-  protected bulkToolbarDirectiveQueries(): readonly QgBulkToolbarDirective[] {
+  protected bulkToolbarDirectiveQueries(): readonly DgBulkToolbarDirective[] {
     return this.bulkToolbar();
   }
 
@@ -606,7 +606,7 @@ export class UiDataGridComponent<T = unknown> {
     return this.toolbarDirectiveQueries()[0]?.template;
   }
 
-  protected cellTemplate(field: string): TemplateRef<QgColumnContext<T>> | undefined {
+  protected cellTemplate(field: string): TemplateRef<DgColumnContext<T>> | undefined {
     return this.cellMap().get(field);
   }
 
@@ -614,7 +614,7 @@ export class UiDataGridComponent<T = unknown> {
     return this.emptyDirectiveQueries()[0]?.template;
   }
 
-  protected cellContext(row: T, column: string): QgColumnContext<T> {
+  protected cellContext(row: T, column: string): DgColumnContext<T> {
     return { $implicit: row, row, column };
   }
 

@@ -1,4 +1,4 @@
-import type { GridQuery } from "@query-grid/core";
+import type { GridQuery } from "@laczynski/datagrid";
 
 export type GridStateStorageType = "session" | "local";
 
@@ -28,7 +28,7 @@ function resolvePersistence(
   }
 
   if (persistState === true) {
-    return { key: "query-grid", storage: "session" };
+    return { key: "datagrid", storage: "session" };
   }
 
   return {

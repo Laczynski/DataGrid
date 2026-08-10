@@ -1,7 +1,7 @@
 {
-  "name": "@query-grid/core",
-  "version": "0.1.0-preview.13",
-  "description": "Framework-agnostic GridQuery/GridResult types for QueryGrid.",
+  "name": "@laczynski/datagrid",
+  "version": "0.1.0-preview.14",
+  "description": "Framework-agnostic GridQuery/GridResult types for DataGrid.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
@@ -18,14 +18,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/laczynski/QueryGrid.git"
+    "url": "git+https://github.com/laczynski/DataGrid.git"
   },
-  "homepage": "https://github.com/laczynski/QueryGrid#readme",
+  "homepage": "https://github.com/laczynski/DataGrid#readme",
   "bugs": {
-    "url": "https://github.com/laczynski/QueryGrid/issues"
+    "url": "https://github.com/laczynski/DataGrid/issues"
   },
   "keywords": [
-    "querygrid",
+    "datagrid",
     "grid",
     "pagination",
     "filtering",

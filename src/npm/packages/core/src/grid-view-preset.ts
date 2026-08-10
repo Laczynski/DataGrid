@@ -22,7 +22,7 @@ export interface StoredGridViews {
   activePresetId: string | null;
 }
 
-const STORAGE_PREFIX = "query-grid.views.";
+const STORAGE_PREFIX = "datagrid.views.";
 
 export function createGridViewPresetId(): string {
   if (typeof globalThis.crypto?.randomUUID === "function") {

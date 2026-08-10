@@ -1,4 +1,4 @@
-@mixin qg-sh-transition {
+@mixin dg-sh-transition {
   transition:
     color 150ms ease,
     background-color 150ms ease,
@@ -7,13 +7,13 @@
     opacity 150ms ease;
 }
 
-@mixin qg-sh-focus-ring {
+@mixin dg-sh-focus-ring {
   outline: none;
   border-color: var(--ring, hsl(222 47% 11%));
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring, hsl(222 47% 11%)) 20%, transparent);
 }
 
-@mixin qg-sh-input-surface {
+@mixin dg-sh-input-surface {
   width: 100%;
   min-height: 2.25rem;
   padding: 0 0.75rem;
@@ -25,7 +25,7 @@
   font-size: 0.875rem;
   line-height: 1.25rem;
   box-shadow: 0 1px 2px 0 color-mix(in srgb, var(--foreground, #000) 4%, transparent);
-  @include qg-sh-transition;
+  @include dg-sh-transition;
 
   &::placeholder {
     color: var(--muted-foreground, hsl(215 16% 47%));
@@ -40,7 +40,7 @@
   }
 
   &:focus-visible {
-    @include qg-sh-focus-ring;
+    @include dg-sh-focus-ring;
   }
 
   &:disabled {
@@ -49,7 +49,7 @@
   }
 }
 
-@mixin qg-sh-control-size($selector) {
+@mixin dg-sh-control-size($selector) {
   #{$selector}--small {
     min-height: 1.875rem;
     padding: 0 0.625rem;
@@ -63,7 +63,7 @@
   }
 }
 
-@mixin qg-sh-elevated-surface {
+@mixin dg-sh-elevated-surface {
   border: 1px solid var(--border, hsl(214 32% 91%));
   border-radius: calc(var(--radius, 0.5rem) - 2px);
   background: var(--popover, #fff);

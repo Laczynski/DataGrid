@@ -119,7 +119,7 @@
   },
   "showcase": {
     "shell": {
-      "title": "QueryGrid Showcase",
+      "title": "DataGrid Showcase",
       "subtitle": "Compatibility matrix for grid adapters",
       "navAria": "Showcase adapters",
       "uiAdapter": "laczynski/ui",

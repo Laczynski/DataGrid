@@ -12,7 +12,7 @@ import { noop } from "./control-value-accessor.util";
 import type { HelmSize, SelectItem } from "./types";
 
 @Component({
-  selector: "qg-sh-select",
+  selector: "dg-sh-select",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
@@ -25,9 +25,9 @@ import type { HelmSize, SelectItem } from "./types";
   template: `
     @if (mode() === "multi") {
       <select
-        class="qg-sh-select"
-        [class.qg-sh-select--small]="size() === 'small'"
-        [class.qg-sh-select--large]="size() === 'large'"
+        class="dg-sh-select"
+        [class.dg-sh-select--small]="size() === 'small'"
+        [class.dg-sh-select--large]="size() === 'large'"
         multiple
         [disabled]="isDisabled"
         [value]="selectedValues()"
@@ -42,9 +42,9 @@ import type { HelmSize, SelectItem } from "./types";
       </select>
     } @else {
       <select
-        class="qg-sh-select"
-        [class.qg-sh-select--small]="size() === 'small'"
-        [class.qg-sh-select--large]="size() === 'large'"
+        class="dg-sh-select"
+        [class.dg-sh-select--small]="size() === 'small'"
+        [class.dg-sh-select--large]="size() === 'large'"
         [disabled]="isDisabled"
         [value]="stringValue(value)"
         (change)="onSingleChange($event)"
@@ -137,7 +137,7 @@ export class SelectComponent implements ControlValueAccessor {
 }
 
 @Component({
-  selector: "qg-sh-text",
+  selector: "dg-sh-text",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
@@ -149,9 +149,9 @@ export class SelectComponent implements ControlValueAccessor {
   ],
   template: `
     <input
-      class="qg-sh-field"
-      [class.qg-sh-field--small]="size() === 'small'"
-      [class.qg-sh-field--large]="size() === 'large'"
+      class="dg-sh-field"
+      [class.dg-sh-field--small]="size() === 'small'"
+      [class.dg-sh-field--large]="size() === 'large'"
       type="text"
       [placeholder]="placeholder() ?? ''"
       [value]="displayValue()"
@@ -208,7 +208,7 @@ export class TextComponent implements ControlValueAccessor {
 }
 
 @Component({
-  selector: "qg-sh-number",
+  selector: "dg-sh-number",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
@@ -220,9 +220,9 @@ export class TextComponent implements ControlValueAccessor {
   ],
   template: `
     <input
-      class="qg-sh-field"
-      [class.qg-sh-field--small]="size() === 'small'"
-      [class.qg-sh-field--large]="size() === 'large'"
+      class="dg-sh-field"
+      [class.dg-sh-field--small]="size() === 'small'"
+      [class.dg-sh-field--large]="size() === 'large'"
       type="number"
       [placeholder]="placeholder() ?? ''"
       [value]="displayValue()"
@@ -280,7 +280,7 @@ export class NumberComponent implements ControlValueAccessor {
 }
 
 @Component({
-  selector: "qg-sh-date",
+  selector: "dg-sh-date",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
@@ -292,9 +292,9 @@ export class NumberComponent implements ControlValueAccessor {
   ],
   template: `
     <input
-      class="qg-sh-field"
-      [class.qg-sh-field--small]="size() === 'small'"
-      [class.qg-sh-field--large]="size() === 'large'"
+      class="dg-sh-field"
+      [class.dg-sh-field--small]="size() === 'small'"
+      [class.dg-sh-field--large]="size() === 'large'"
       type="date"
       [placeholder]="placeholder() ?? ''"
       [value]="displayValue()"

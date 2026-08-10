@@ -19,9 +19,9 @@ jobs:
         with:
           dotnet-version: "10.0.x"
       - name: Restore
-        run: dotnet restore src/dotnet/QueryGrid.slnx
+        run: dotnet restore src/dotnet/DataGrid.slnx
       - name: Test
-        run: dotnet test src/dotnet/QueryGrid.slnx -c Release --no-restore
+        run: dotnet test src/dotnet/DataGrid.slnx -c Release --no-restore
 
   npm:
     runs-on: ubuntu-latest

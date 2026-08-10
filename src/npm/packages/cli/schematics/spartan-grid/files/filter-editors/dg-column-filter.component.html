@@ -1,0 +1,204 @@
+@let column = this.column();
+@if (column.filter) {
+  <hlm-popover
+    [state]="popoverOpen() ? 'open' : 'closed'"
+    (stateChanged)="onPopoverStateChanged($event)"
+  >
+    <button
+      hlmBtn
+      variant="ghost"
+      [size]="dgIconBtnSize(size())"
+      hlmPopoverTrigger
+      class="dg-column-filter__trigger"
+      [class.dg-column-filter__trigger--active]="isActive()"
+      [attr.aria-label]="filterAriaLabel()"
+    >
+      <ng-icon [name]="resolveDgGridIcon(isActive() ? 'filter' : 'filter_add')" />
+    </button>
+
+    <ng-template hlmPopoverPortal>
+      <div hlmPopoverContent class="dg-column-filter__panel w-auto p-0">
+        <div class="dg-column-filter__body">
+          @if (column.filter.type === "boolean") {
+            <div class="dg-column-filter__boolean">
+              <label class="dg-column-filter__boolean-item">
+                <hlm-checkbox
+                  [ngModel]="draftBooleanTrue()"
+                  (ngModelChange)="onBooleanTrueChange($event)"
+                />
+                <span>{{ booleanFilterTrueLabel() }}</span>
+              </label>
+              <label class="dg-column-filter__boolean-item">
+                <hlm-checkbox
+                  [ngModel]="draftBooleanFalse()"
+                  (ngModelChange)="onBooleanFalseChange($event)"
+                />
+                <span>{{ booleanFilterFalseLabel() }}</span>
+              </label>
+            </div>
+          } @else {
+            @if (showLogicSelect()) {
+              <hlm-select
+                class="dg-column-filter__control"
+                [value]="draftLogic()"
+                [itemToString]="logicItemToString"
+                (valueChange)="onLogicChange($event)"
+              >
+                <hlm-select-trigger size="sm" [class]="qgSelectTriggerClass(size())">
+                  <hlm-select-value [placeholder]="matchAllPlaceholder()" />
+                </hlm-select-trigger>
+                <hlm-select-content *hlmSelectPortal>
+                  @for (item of logicItems(); track item.value) {
+                    <hlm-select-item [value]="qgSelectItemValue(item.value)">{{
+                      item.label
+                    }}</hlm-select-item>
+                  }
+                </hlm-select-content>
+              </hlm-select>
+            }
+
+            @for (rule of draftRules(); track rule.id) {
+              <div class="dg-column-filter__rule">
+                @if (showOperatorSelect()) {
+                  <hlm-select
+                    class="dg-column-filter__control"
+                    [value]="rule.operator"
+                    [itemToString]="operatorItemToString"
+                    (valueChange)="onOperatorChange(rule.id, $event)"
+                  >
+                    <hlm-select-trigger size="sm" [class]="qgSelectTriggerClass(size())">
+                      <hlm-select-value [placeholder]="operatorPlaceholder()" />
+                    </hlm-select-trigger>
+                    <hlm-select-content *hlmSelectPortal>
+                      @for (item of operatorItems(); track item.value) {
+                        <hlm-select-item [value]="qgSelectItemValue(item.value)">{{
+                          item.label
+                        }}</hlm-select-item>
+                      }
+                    </hlm-select-content>
+                  </hlm-select>
+                }
+
+                @if (!isNullOperator(rule.operator)) {
+                  @switch (column.filter.type) {
+                    @case ("text") {
+                      <input
+                        hlmInput
+                        class="dg-column-filter__control"
+                        [class]="qgFieldClass(size())"
+                        type="text"
+                        [placeholder]="column.filter.placeholder ?? valuePlaceholder()"
+                        [ngModel]="rule.value"
+                        (ngModelChange)="onRuleValueChange(rule.id, $event)"
+                      />
+                    }
+                    @case ("guid") {
+                      <input
+                        hlmInput
+                        class="dg-column-filter__control"
+                        [class]="qgFieldClass(size())"
+                        type="text"
+                        [placeholder]="column.filter.placeholder ?? guidPlaceholder()"
+                        [ngModel]="rule.value"
+                        (ngModelChange)="onRuleValueChange(rule.id, $event)"
+                      />
+                    }
+                    @case ("number") {
+                      <input
+                        hlmInput
+                        class="dg-column-filter__control"
+                        [class]="qgFieldClass(size())"
+                        type="number"
+                        [placeholder]="
+                          isBetweenOperator(rule.operator)
+                            ? fromPlaceholder()
+                            : (column.filter.placeholder ?? valuePlaceholder())
+                        "
+                        [ngModel]="rule.value"
+                        (ngModelChange)="onRuleValueChange(rule.id, $event)"
+                      />
+                      @if (isBetweenOperator(rule.operator)) {
+                        <input
+                          hlmInput
+                          class="dg-column-filter__control"
+                          [class]="qgFieldClass(size())"
+                          type="number"
+                          [placeholder]="toPlaceholder()"
+                          [ngModel]="rule.valueEnd"
+                          (ngModelChange)="onRuleValueEndChange(rule.id, $event)"
+                        />
+                      }
+                    }
+                    @case ("date") {
+                      <input
+                        hlmInput
+                        class="dg-column-filter__control"
+                        [class]="qgFieldClass(size())"
+                        type="date"
+                        [placeholder]="column.filter.placeholder ?? datePlaceholder()"
+                        [ngModel]="rule.value"
+                        (ngModelChange)="onRuleValueChange(rule.id, $event)"
+                      />
+                    }
+                    @case ("enum") {
+                      <hlm-select-multiple
+                        class="dg-column-filter__control"
+                        [value]="enumRuleValue(rule)"
+                        [itemToString]="enumItemToString"
+                        (valueChange)="onRuleValueChange(rule.id, $event)"
+                      >
+                        <hlm-select-trigger size="sm" [class]="qgSelectTriggerClass(size())">
+                          <hlm-select-value [placeholder]="anyPlaceholder()" />
+                        </hlm-select-trigger>
+                        <hlm-select-content *hlmSelectPortal>
+                          @for (item of enumItems(); track item.value) {
+                            <hlm-select-item [value]="qgSelectItemValue(item.value)">{{
+                              item.label
+                            }}</hlm-select-item>
+                          }
+                        </hlm-select-content>
+                      </hlm-select-multiple>
+                    }
+                  }
+                }
+
+                @if (allowMultipleRules() && draftRules().length > 1) {
+                  <button
+                    hlmBtn
+                    variant="ghost"
+                    class="dg-column-filter__rule-remove w-full"
+                    [size]="dgBtnSize(size())"
+                    (click)="removeRule(rule.id)"
+                  >
+                    <ng-icon [name]="resolveDgGridIcon('delete')" />
+                    <span>{{ removeRuleLabel() }}</span>
+                  </button>
+                }
+              </div>
+            }
+
+            @if (canAddRule()) {
+              <button
+                hlmBtn
+                variant="ghost"
+                class="dg-column-filter__add-rule w-full"
+                [size]="dgBtnSize(size())"
+                (click)="addRule()"
+              >
+                <ng-icon [name]="resolveDgGridIcon('add')" />
+                <span>{{ addRuleLabel() }}</span>
+              </button>
+            }
+          }
+        </div>
+
+        <div class="dg-column-filter__footer">
+          <button hlmBtn variant="outline" [size]="dgBtnSize(size())" (click)="clear()">
+            {{ clearLabel() }}
+          </button>
+          <button hlmBtn [size]="dgBtnSize(size())" (click)="apply()">{{ applyLabel() }}</button>
+        </div>
+      </div>
+    </ng-template>
+  </hlm-popover>
+}

@@ -1,23 +1,23 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from "@angular/core";
-import { QgI18nService } from "../i18n";
+import { DgI18nService } from "../i18n";
 import { buildPageTokens } from "./pagination.util";
 import type { HelmSize, PaginationConfig } from "./types";
 
 @Component({
-  selector: "qg-sh-pagination",
+  selector: "dg-sh-pagination",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <nav class="qg-sh-pagination" [attr.aria-label]="ariaLabel()">
+    <nav class="dg-sh-pagination" [attr.aria-label]="ariaLabel()">
       @if (config().showInfo) {
-        <div class="qg-sh-pagination__info">{{ rangeLabel() }}</div>
+        <div class="dg-sh-pagination__info">{{ rangeLabel() }}</div>
       }
 
-      <div class="qg-sh-pagination__controls">
+      <div class="dg-sh-pagination__controls">
         @if (config().showFirstLast) {
           <button
             type="button"
-            class="qg-sh-pagination__btn"
+            class="dg-sh-pagination__btn"
             [disabled]="isFirstPage()"
             (click)="goToPage(1)"
             [attr.aria-label]="firstPageLabel()"
@@ -28,7 +28,7 @@ import type { HelmSize, PaginationConfig } from "./types";
 
         <button
           type="button"
-          class="qg-sh-pagination__btn"
+          class="dg-sh-pagination__btn"
           [disabled]="isFirstPage()"
           (click)="goToPage(config().currentPage - 1)"
           [attr.aria-label]="previousPageLabel()"
@@ -39,12 +39,12 @@ import type { HelmSize, PaginationConfig } from "./types";
         @if (config().showPageNumbers) {
           @for (token of pageTokens(); track token) {
             @if (token === "ellipsis") {
-              <span class="qg-sh-pagination__ellipsis" aria-hidden="true">…</span>
+              <span class="dg-sh-pagination__ellipsis" aria-hidden="true">…</span>
             } @else {
               <button
                 type="button"
-                class="qg-sh-pagination__btn"
-                [class.qg-sh-pagination__btn--active]="token === config().currentPage"
+                class="dg-sh-pagination__btn"
+                [class.dg-sh-pagination__btn--active]="token === config().currentPage"
                 [attr.aria-current]="token === config().currentPage ? 'page' : null"
                 [attr.aria-label]="pageLabel(token)"
                 (click)="goToPage(token)"
@@ -57,7 +57,7 @@ import type { HelmSize, PaginationConfig } from "./types";
 
         <button
           type="button"
-          class="qg-sh-pagination__btn"
+          class="dg-sh-pagination__btn"
           [disabled]="isLastPage()"
           (click)="goToPage(config().currentPage + 1)"
           [attr.aria-label]="nextPageLabel()"
@@ -68,7 +68,7 @@ import type { HelmSize, PaginationConfig } from "./types";
         @if (config().showFirstLast) {
           <button
             type="button"
-            class="qg-sh-pagination__btn"
+            class="dg-sh-pagination__btn"
             [disabled]="isLastPage()"
             (click)="goToPage(config().totalPages)"
             [attr.aria-label]="lastPageLabel()"
@@ -79,10 +79,10 @@ import type { HelmSize, PaginationConfig } from "./types";
       </div>
 
       @if (config().showPageSizeSelector) {
-        <label class="qg-sh-pagination__size">
-          <span class="qg-sh-pagination__size-label">{{ rowsPerPageLabel() }}</span>
+        <label class="dg-sh-pagination__size">
+          <span class="dg-sh-pagination__size-label">{{ rowsPerPageLabel() }}</span>
           <select
-            class="qg-sh-pagination__size-select"
+            class="dg-sh-pagination__size-select"
             [value]="config().pageSize"
             (change)="onPageSizeChange($event)"
           >
@@ -97,7 +97,7 @@ import type { HelmSize, PaginationConfig } from "./types";
   styleUrl: "./pagination.component.scss",
 })
 export class PaginationComponent {
-  private readonly i18n = inject(QgI18nService);
+  private readonly i18n = inject(DgI18nService);
 
   readonly config = input.required<PaginationConfig>();
   readonly size = input<HelmSize>("medium");

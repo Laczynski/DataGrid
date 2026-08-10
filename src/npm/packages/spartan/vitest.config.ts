@@ -7,7 +7,7 @@ const dir = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   resolve: {
     alias: {
-      "@query-grid/core": path.resolve(dir, "../core/src/index.ts"),
+      "@laczynski/datagrid": path.resolve(dir, "../core/src/index.ts"),
     },
   },
   test: {

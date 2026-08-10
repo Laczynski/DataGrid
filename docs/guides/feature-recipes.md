@@ -4,8 +4,8 @@
 
 ## Add a filter operator
 
-1. Add enum value to `FilterOperator` in `QueryGrid.Abstractions`.
-2. Extend `TypeClassifier` / allowed operators per field category in `QueryGrid.Core`.
+1. Add enum value to `FilterOperator` in `DataGrid.Abstractions`.
+2. Extend `TypeClassifier` / allowed operators per field category in `DataGrid.Core`.
 3. Implement expression in `FilterExpressionBuilder`.
 4. Add cases in `FilterTests` and `ValidationAndLimitsTests`.
 5. If the operator appears in column filters, add PrimeNG UI mapping in `filter-mapper.ts` / `match-mode-options.ts`.
@@ -15,15 +15,15 @@
 
 See [Change coupling checklist](../../AGENTS.md#change-coupling-checklist). Steps:
 
-1. Update types in `QueryGrid.Abstractions` and `FilterNodeJsonConverter` if needed.
-2. Update `GridQueryContractTests` in `QueryGrid.UnitTests`.
-3. Mirror types in `@query-grid/core`.
+1. Update types in `DataGrid.Abstractions` and `FilterNodeJsonConverter` if needed.
+2. Update `GridQueryContractTests` in `DataGrid.UnitTests`.
+3. Mirror types in `@laczynski/datagrid`.
 4. Update `GridQueryJson.CreateOptions()` / `samples/showcase-api/GridQueryBinding.cs` if serializer options change.
 5. Run `npm run test:all`.
 
 ## Custom sort semantics (enum order, sort key, companions)
 
-1. Add or apply attributes in `QueryGrid.Abstractions`: `GridEnumOrderAttribute`, `GridSortKeyAttribute`, `GridSortWithAttribute`.
+1. Add or apply attributes in `DataGrid.Abstractions`: `GridEnumOrderAttribute`, `GridSortKeyAttribute`, `GridSortWithAttribute`.
 2. Extend schema discovery in `GridSchemaProvider` and sorting in `SortExpressionBuilder`.
 3. Add unit tests in `SortExtensionTests` and schema tests in `SchemaDiscoveryTests`.
 4. Add PostgreSQL integration coverage in `PostgreSqlSortExtensionTests`.
@@ -33,13 +33,13 @@ See [Change coupling checklist](../../AGENTS.md#change-coupling-checklist). Step
 
 1. Add property to `GridQuery` (Abstractions + core TS model).
 2. Apply in `GridQueryableExtensions` or relevant builder in Core.
-3. Extend `createGridResource()` state and load pipeline in `@query-grid/primeng`.
-4. Map UI control in `@query-grid/primeng` if user-facing.
+3. Extend `createGridResource()` state and load pipeline in `@laczynski/datagrid-primeng`.
+4. Map UI control in `@laczynski/datagrid-primeng` if user-facing.
 5. Update [getting-started.md](../getting-started.md) example payload if user-visible.
 
 ## Add row selection or bulk toolbar behavior
 
-1. Extend `@query-grid/core` helpers in `grid-row-selection.ts` if selection rules change.
+1. Extend `@laczynski/datagrid` helpers in `grid-row-selection.ts` if selection rules change.
 2. Wire controls in `grid-row-selection-controls.ts` and `createGridResource()` (ui + primeng).
 3. Update checkbox column and `[qgBulkToolbar]` in `ui-data-grid` / `prime-data-grid` templates.
 4. Require `dataKey` on the grid component; document in [getting-started.md](../getting-started.md).
@@ -47,7 +47,7 @@ See [Change coupling checklist](../../AGENTS.md#change-coupling-checklist). Step
 
 ## Add client persist extra (scroll, layout, …)
 
-1. Add helpers in `@query-grid/core` (`pick*Extra` / `read*Extra`).
+1. Add helpers in `@laczynski/datagrid` (`pick*Extra` / `read*Extra`).
 2. Add controls module and merge in `createGridResource()` `getExtraState` / `applyExtraState`.
 3. Bind DOM state in grid component (`bindHorizontalScrollPersistence` pattern for scroll).
 4. Document what is / is not stored in saved views — see [getting-started.md](../getting-started.md#persist-extra-state-summary).
@@ -60,15 +60,15 @@ Server-first CSV and Excel export is implemented. See [getting-started.md](../ge
 1. **Abstractions** — `GridExportRequest`, `GridExportResult`, `GridExportFormats`.
 2. **Core** — `GridExportExecutor`, `GridExportPipeline`, `BuiltInGridExportWriters`, `Export` / `ExportAsync`, nested `GridExportOptions`.
 3. **EF** — `ExportAsync` (facade), `ExportToCsvAsync`, `ExportToXlsxAsync`.
-4. **npm** — `buildGridExportBody`, `downloadGridExport` in `@query-grid/core`; `export` on `createGridResource`.
+4. **npm** — `buildGridExportBody`, `downloadGridExport` in `@laczynski/datagrid`; `export` on `createGridResource`.
 5. **UI** — built-in Export toolbar buttons; Export selected in bulk toolbar when `rowSelection` is enabled.
 6. Showcase reference: `samples/showcase-api/Program.cs` (`POST /rows/export`, `GridExportBinding.cs`).
 
 ## Add a new NuGet integration package
 
-1. Create project under `src/dotnet/QueryGrid.<Name>/`.
-2. Add to `QueryGrid.slnx` under `/packages/`.
-3. Reference only the minimal existing packages (usually `QueryGrid.Core`).
+1. Create project under `src/dotnet/DataGrid.<Name>/`.
+2. Add to `DataGrid.slnx` under `/packages/`.
+3. Reference only the minimal existing packages (usually `DataGrid.Core`).
 4. Add `PackageId`, `Description` in `.csproj`; version inherits from `Directory.Build.props`.
 5. Add focused unit tests or sample usage in `samples/`.
 

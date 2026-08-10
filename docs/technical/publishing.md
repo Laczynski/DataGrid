@@ -1,19 +1,19 @@
 # Publishing
 
-> Scope: versioning and releasing `QueryGrid.*` NuGet packages and `@query-grid/*` npm packages.
+> Scope: versioning and releasing `DataGrid.*` NuGet packages and `@laczynski/datagrid*` npm packages.
 
 ## Registries
 
-| Package                         | Primary registry                   | Secondary (NuGet only) |
-| ------------------------------- | ---------------------------------- | ---------------------- |
-| `QueryGrid.Abstractions`        | [nuget.org](https://www.nuget.org) | GitHub Packages        |
-| `QueryGrid.Core`                | [nuget.org](https://www.nuget.org) | GitHub Packages        |
-| `QueryGrid.EntityFrameworkCore` | [nuget.org](https://www.nuget.org) | GitHub Packages        |
-| `@query-grid/core`              | [npmjs.com](https://www.npmjs.com) | —                      |
-| `@query-grid/primeng`           | [npmjs.com](https://www.npmjs.com) | —                      |
-| `@query-grid/ui`                | [npmjs.com](https://www.npmjs.com) | —                      |
-| `@query-grid/spartan`           | [npmjs.com](https://www.npmjs.com) | —                      |
-| `@query-grid/cli`               | [npmjs.com](https://www.npmjs.com) | —                      |
+| Package                        | Primary registry                   | Secondary (NuGet only) |
+| ------------------------------ | ---------------------------------- | ---------------------- |
+| `DataGrid.Abstractions`        | [nuget.org](https://www.nuget.org) | GitHub Packages        |
+| `DataGrid.Core`                | [nuget.org](https://www.nuget.org) | GitHub Packages        |
+| `DataGrid.EntityFrameworkCore` | [nuget.org](https://www.nuget.org) | GitHub Packages        |
+| `@laczynski/datagrid`          | [npmjs.com](https://www.npmjs.com) | —                      |
+| `@laczynski/datagrid-primeng`  | [npmjs.com](https://www.npmjs.com) | —                      |
+| `@laczynski/datagrid-ui`       | [npmjs.com](https://www.npmjs.com) | —                      |
+| `@laczynski/datagrid-spartan`  | [npmjs.com](https://www.npmjs.com) | —                      |
+| `@laczynski/datagrid-cli`      | [npmjs.com](https://www.npmjs.com) | —                      |
 
 All packages publish on tag push `v*` via [publish.yml](../../.github/workflows/publish.yml) (trusted publishing / OIDC).
 
@@ -21,12 +21,12 @@ NuGet `RepositoryUrl` links packages to this repo on first GitHub Packages publi
 
 ## Where versions live
 
-| Stack           | Location                                                       |
-| --------------- | -------------------------------------------------------------- |
-| NuGet (shared)  | `src/dotnet/Directory.Build.props` → `<Version>`               |
-| npm per package | `src/npm/packages/*/package.json` → `"version"`                |
-| primeng / ui / spartan | `peerDependencies["@query-grid/core"]` must match core version |
-| cli             | no `@query-grid/core` peer — schematics only                   |
+| Stack                  | Location                                                          |
+| ---------------------- | ----------------------------------------------------------------- |
+| NuGet (shared)         | `src/dotnet/Directory.Build.props` → `<Version>`                  |
+| npm per package        | `src/npm/packages/*/package.json` → `"version"`                   |
+| primeng / ui / spartan | `peerDependencies["@laczynski/datagrid"]` must match core version |
+| cli                    | no `@laczynski/datagrid` peer — schematics only                   |
 
 ## Release checklist
 
@@ -70,26 +70,26 @@ Settings → Secrets and variables → Actions:
    | ---------------- | ---------------------- |
    | Package Owner    | your nuget.org account |
    | Repository Owner | `laczynski`            |
-   | Repository       | `QueryGrid`            |
+   | Repository       | `DataGrid`             |
    | Workflow File    | `publish.yml`          |
    | Environment      | _(leave empty)_        |
 
 ### npm trusted publishing
 
-For each package (`@query-grid/core`, `@query-grid/primeng`, `@query-grid/ui`, `@query-grid/spartan`, `@query-grid/cli`):
+For each package (`@laczynski/datagrid`, `@laczynski/datagrid-primeng`, `@laczynski/datagrid-ui`, `@laczynski/datagrid-spartan`, `@laczynski/datagrid-cli`):
 
 npmjs.com → package → **Settings** → **Trusted Publisher** → **GitHub Actions**:
 
 | Field                | Value           |
 | -------------------- | --------------- |
 | Organization or user | `laczynski`     |
-| Repository           | `QueryGrid`     |
+| Repository           | `DataGrid`      |
 | Workflow filename    | `publish.yml`   |
 | Environment          | _(leave empty)_ |
 
 No `NPM_TOKEN` secret — CI uses OIDC (npm CLI ≥ 11.5.1, upgraded in the workflow).
 
-**New packages** (`@query-grid/spartan`, `@query-grid/cli`): create each package on npmjs.com (or let the first trusted publish create it), then add the trusted publisher **before** tagging a release that includes them.
+**New packages** (`@laczynski/datagrid-spartan`, `@laczynski/datagrid-cli`): create each package on npmjs.com (or let the first trusted publish create it), then add the trusted publisher **before** tagging a release that includes them.
 
 ### GitHub repository settings
 
@@ -112,7 +112,7 @@ Prerelease tags (`v*-*`) publish npm with dist-tag `preview`; stable tags use `l
 ### NuGet (nuget.org)
 
 ```powershell
-dotnet add package QueryGrid.EntityFrameworkCore --version 0.1.0-preview.13
+dotnet add package DataGrid.EntityFrameworkCore --version 0.1.0-preview.13
 ```
 
 ### NuGet (GitHub Packages)
@@ -121,7 +121,7 @@ Copy [`nuget.config.example`](nuget.config.example). Replace `OWNER` with `laczy
 
 ```powershell
 dotnet nuget add source --username YOUR_GITHUB_USERNAME --password YOUR_PAT --store-password-in-clear-text --name github "https://nuget.pkg.github.com/OWNER/index.json"
-dotnet add package QueryGrid.EntityFrameworkCore --version 0.1.0-preview.12
+dotnet add package DataGrid.EntityFrameworkCore --version 0.1.0-preview.12
 ```
 
 In GitHub Actions on a consuming repo, use `GITHUB_TOKEN` with read access to the package.
@@ -131,16 +131,16 @@ In GitHub Actions on a consuming repo, use `GITHUB_TOKEN` with read access to th
 Public packages — no special `.npmrc` required:
 
 ```powershell
-npm install @query-grid/core@preview @query-grid/primeng@preview @query-grid/ui@preview @query-grid/spartan@preview
-npm install -D @query-grid/cli@preview
+npm install @laczynski/datagrid@preview @laczynski/datagrid-primeng@preview @laczynski/datagrid-ui@preview @laczynski/datagrid-spartan@preview
+npm install -D @laczynski/datagrid-cli@preview
 ```
 
-**Spartan L1** — `@query-grid/spartan` only (built-in `qg-sh-*` helm).
+**Spartan L1** — `@laczynski/datagrid-spartan` only (built-in `dg-sh-*` helm).
 
-**Spartan L3** — add `@query-grid/cli`, install Spartan helm in the app, then:
+**Spartan L3** — add `@laczynski/datagrid-cli`, install Spartan helm in the app, then:
 
 ```powershell
-ng generate @query-grid/cli:spartan-grid --level=full
+ng generate @laczynski/datagrid-cli:spartan-grid --level=full
 ```
 
 See [spartan-l3-hlm.md](../guides/spartan-l3-hlm.md).
@@ -155,5 +155,5 @@ Trusted publishing works in CI only. For a local push without OIDC:
 
 ```powershell
 $apiKey = "<nuget.org-api-key>"
-dotnet nuget push artifacts/nuget/QueryGrid.EntityFrameworkCore.*.nupkg --api-key $apiKey --source https://api.nuget.org/v3/index.json
+dotnet nuget push artifacts/nuget/DataGrid.EntityFrameworkCore.*.nupkg --api-key $apiKey --source https://api.nuget.org/v3/index.json
 ```

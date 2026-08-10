@@ -7,7 +7,7 @@
       "type": "process",
       "args": [
         "build",
-        "${workspaceFolder}/src/dotnet/QueryGrid.slnx",
+        "${workspaceFolder}/src/dotnet/DataGrid.slnx",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary;ForceNoAlign"
       ],
@@ -27,7 +27,7 @@
       "type": "process",
       "args": [
         "test",
-        "${workspaceFolder}/src/dotnet/QueryGrid.slnx",
+        "${workspaceFolder}/src/dotnet/DataGrid.slnx",
         "--no-build"
       ],
       "options": {
@@ -44,7 +44,7 @@
       "label": "querygrid: format dotnet",
       "type": "process",
       "command": "dotnet",
-      "args": ["format", "${workspaceFolder}/src/dotnet/QueryGrid.slnx"],
+      "args": ["format", "${workspaceFolder}/src/dotnet/DataGrid.slnx"],
       "options": {
         "cwd": "${workspaceFolder}/src/dotnet"
       },
@@ -102,7 +102,7 @@
       "type": "process",
       "args": [
         "build",
-        "${workspaceFolder}/samples/showcase-api/QueryGrid.Samples.ShowcaseApi.csproj",
+        "${workspaceFolder}/samples/showcase-api/DataGrid.Samples.ShowcaseApi.csproj",
         "-c",
         "Debug",
         "/property:GenerateFullPaths=true",

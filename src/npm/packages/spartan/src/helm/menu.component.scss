@@ -1,21 +1,21 @@
 @use "./tokens" as *;
 
-.qg-sh-menu {
+.dg-sh-menu {
   position: relative;
   display: inline-flex;
 }
 
-.qg-sh-menu__panel {
+.dg-sh-menu__panel {
   position: absolute;
   top: calc(100% + 0.25rem);
   right: 0;
   z-index: 30;
   min-width: 10rem;
   padding: 0.25rem;
-  @include qg-sh-elevated-surface;
+  @include dg-sh-elevated-surface;
 }
 
-.qg-sh-menu__item {
+.dg-sh-menu__item {
   display: block;
   width: 100%;
   padding: 0.5rem 0.75rem;
@@ -27,18 +27,18 @@
   font-size: 0.875rem;
   text-align: left;
   cursor: pointer;
-  @include qg-sh-transition;
+  @include dg-sh-transition;
 }
 
-.qg-sh-menu__item:hover:not(:disabled) {
+.dg-sh-menu__item:hover:not(:disabled) {
   background: var(--accent, hsl(210 40% 96%));
 }
 
-.qg-sh-menu__item:focus-visible {
-  @include qg-sh-focus-ring;
+.dg-sh-menu__item:focus-visible {
+  @include dg-sh-focus-ring;
 }
 
-.qg-sh-menu__item:disabled {
+.dg-sh-menu__item:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }

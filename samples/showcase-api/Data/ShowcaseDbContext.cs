@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace QueryGrid.Samples.ShowcaseApi.Data;
+namespace DataGrid.Samples.ShowcaseApi.Data;
 
 public sealed class ShowcaseDbContext(DbContextOptions<ShowcaseDbContext> options) : DbContext(options)
 {

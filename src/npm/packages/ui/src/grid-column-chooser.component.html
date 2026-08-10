@@ -1,7 +1,7 @@
 @if (chooserEnabled()) {
   <ng-template #columnChooserPanel>
-    <div class="popover-panel qg-grid-column-chooser__panel">
-      <div class="popover-panel__body qg-grid-column-chooser__list">
+    <div class="popover-panel dg-grid-column-chooser__panel">
+      <div class="popover-panel__body dg-grid-column-chooser__list">
         @for (column of hideableColumns(); track column.field) {
           <ui-checkbox
             labelPosition="after"
@@ -15,7 +15,7 @@
       </div>
 
       @if (hasHiddenColumns() || hasLayoutChanges()) {
-        <div class="popover-panel__footer qg-grid-column-chooser__footer">
+        <div class="popover-panel__footer dg-grid-column-chooser__footer">
           @if (hasHiddenColumns()) {
             <ui-button
               appearance="outline"

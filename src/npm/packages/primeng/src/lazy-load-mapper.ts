@@ -1,12 +1,12 @@
-import type { GridQuery } from "@query-grid/core";
-import { areSortDescriptorsEqual, DEFAULT_GRID_OPTIONS, sameFilterNode } from "@query-grid/core";
+import type { GridQuery } from "@laczynski/datagrid";
+import { areSortDescriptorsEqual, DEFAULT_GRID_OPTIONS, sameFilterNode } from "@laczynski/datagrid";
 import type { FilterMetadata } from "primeng/api";
 import type { Table, TableLazyLoadEvent } from "primeng/table";
 import { mapPrimeFiltersToGridFilter } from "./filter-mapper";
 import { mapLazyLoadSort } from "./sort-mapper";
 import type { GridColumn } from "./table/grid-column";
 
-export { coerceOperatorForColumnType } from "@query-grid/core";
+export { coerceOperatorForColumnType } from "@laczynski/datagrid";
 export {
   applyGridQueryToPrimeTable,
   buildPrimeTableFilters,

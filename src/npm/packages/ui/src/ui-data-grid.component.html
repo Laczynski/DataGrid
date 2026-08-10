@@ -1,9 +1,9 @@
-<div class="qg-ui-grid__layout">
-  <div class="qg-ui-grid__toolbar">
-    <div class="qg-ui-grid__toolbar-row">
+<div class="dg-ui-grid__layout">
+  <div class="dg-ui-grid__toolbar">
+    <div class="dg-ui-grid__toolbar-row">
       @if (searchable()) {
         <ui-search
-          class="qg-ui-grid__search"
+          class="dg-ui-grid__search"
           [size]="size()"
           [placeholder]="resolvedSearchPlaceholder()"
           [ngModel]="searchText()"
@@ -11,9 +11,9 @@
         />
       }
 
-      <div class="qg-ui-grid__toolbar-actions">
-        <qg-grid-column-chooser [grid]="grid()" [columns]="resolvedColumns()" [size]="size()" />
-        <qg-grid-views [grid]="grid()" [size]="size()" />
+      <div class="dg-ui-grid__toolbar-actions">
+        <dg-grid-column-chooser [grid]="grid()" [columns]="resolvedColumns()" [size]="size()" />
+        <dg-grid-views [grid]="grid()" [size]="size()" />
 
         @if (toolbarTemplate()) {
           <ui-button
@@ -51,9 +51,9 @@
     </div>
 
     @if (showBulkToolbar()) {
-      <div class="qg-ui-grid__bulk-toolbar">
-        <span class="qg-ui-grid__bulk-toolbar-count">{{ selectedCountText() }}</span>
-        <div class="qg-ui-grid__bulk-toolbar-actions">
+      <div class="dg-ui-grid__bulk-toolbar">
+        <span class="dg-ui-grid__bulk-toolbar-count">{{ selectedCountText() }}</span>
+        <div class="dg-ui-grid__bulk-toolbar-actions">
           @if (exportSelectedEnabled()) {
             <ui-menu
               triggerVariant="dropdown"
@@ -84,20 +84,20 @@
     }
 
     @if (filtersExpanded() && toolbarTemplate(); as toolbar) {
-      <div class="qg-ui-grid__toolbar-filters">
+      <div class="dg-ui-grid__toolbar-filters">
         <ng-container [ngTemplateOutlet]="toolbar" />
       </div>
     }
 
     @if (filterFeed().length > 0) {
-      <div class="qg-ui-grid__feed" role="list" [attr.aria-label]="activeFiltersLabel()">
+      <div class="dg-ui-grid__feed" role="list" [attr.aria-label]="activeFiltersLabel()">
         @for (segment of filterFeed(); track segment.id) {
           @if (segment.removable) {
-            <span class="qg-ui-grid__feed-token" role="listitem">
-              <span class="qg-ui-grid__feed-token-text">{{ segment.text }}</span>
+            <span class="dg-ui-grid__feed-token" role="listitem">
+              <span class="dg-ui-grid__feed-token-text">{{ segment.text }}</span>
               <button
                 type="button"
-                class="qg-ui-grid__feed-remove"
+                class="dg-ui-grid__feed-remove"
                 [attr.aria-label]="removeFeedLabel(segment)"
                 (click)="removeFeedSegment(segment)"
               >
@@ -105,39 +105,39 @@
               </button>
             </span>
           } @else {
-            <span class="qg-ui-grid__feed-logic">{{ segment.text }}</span>
+            <span class="dg-ui-grid__feed-logic">{{ segment.text }}</span>
           }
         }
       </div>
     }
   </div>
 
-  <div class="qg-ui-grid__table-frame">
+  <div class="dg-ui-grid__table-frame">
     <div
       #tableWrap
-      class="qg-ui-grid__table-wrap"
-      [class.qg-ui-grid__table-wrap--refreshing]="isRefreshing()"
+      class="dg-ui-grid__table-wrap"
+      [class.dg-ui-grid__table-wrap--refreshing]="isRefreshing()"
       [attr.aria-busy]="grid().loading() || null"
     >
-      <table class="qg-ui-grid__table" [class.qg-ui-grid__table--layout]="columnLayoutEnabled()">
-        <thead class="qg-ui-grid__head">
+      <table class="dg-ui-grid__table" [class.dg-ui-grid__table--layout]="columnLayoutEnabled()">
+        <thead class="dg-ui-grid__head">
           <tr
-            class="qg-ui-grid__header-row"
+            class="dg-ui-grid__header-row"
             cdkDropList
             cdkDropListOrientation="horizontal"
-            [class.qg-ui-grid__header-row--dragging]="columnDragActive()"
+            [class.dg-ui-grid__header-row--dragging]="columnDragActive()"
             (cdkDropListDropped)="onColumnDropped($event)"
           >
             @if (rowSelectionEnabled()) {
               <th
                 scope="col"
-                class="qg-ui-grid__header-cell qg-ui-grid__header-cell--selection"
-                [class.qg-ui-grid__header-cell--selection-edge]="isSelectionColumnFrozenEdge()"
-                [class.qg-ui-grid__header-cell--selection-separator]="isSelectionColumnSeparator()"
+                class="dg-ui-grid__header-cell dg-ui-grid__header-cell--selection"
+                [class.dg-ui-grid__header-cell--selection-edge]="isSelectionColumnFrozenEdge()"
+                [class.dg-ui-grid__header-cell--selection-separator]="isSelectionColumnSeparator()"
                 [attr.aria-label]="isMultipleSelection() ? selectPageLabel() : selectRowLabel()"
               >
                 @if (isMultipleSelection()) {
-                  <div class="qg-ui-grid__selection-cell">
+                  <div class="dg-ui-grid__selection-cell">
                     <ui-checkbox
                       [size]="size()"
                       [ngModel]="isPageSelectionChecked()"
@@ -154,25 +154,25 @@
                 cdkDrag
                 cdkDragLockAxis="x"
                 [cdkDragDisabled]="!isReorderable(column)"
-                class="qg-ui-grid__header-cell"
-                [class.qg-ui-grid__header-cell--reorderable]="isReorderable(column)"
+                class="dg-ui-grid__header-cell"
+                [class.dg-ui-grid__header-cell--reorderable]="isReorderable(column)"
                 [attr.data-field]="column.field"
-                [class.qg-ui-grid__header-cell--sortable]="isSortable(column)"
-                [class.qg-ui-grid__header-cell--sorted]="sortDirection(column.field) !== null"
-                [class.qg-ui-grid__header-cell--pinned-left]="
+                [class.dg-ui-grid__header-cell--sortable]="isSortable(column)"
+                [class.dg-ui-grid__header-cell--sorted]="sortDirection(column.field) !== null"
+                [class.dg-ui-grid__header-cell--pinned-left]="
                   pinnedOffset(column.field)?.pin === 'left'
                 "
-                [class.qg-ui-grid__header-cell--pinned-right]="
+                [class.dg-ui-grid__header-cell--pinned-right]="
                   pinnedOffset(column.field)?.pin === 'right'
                 "
-                [class.qg-ui-grid__header-cell--pinned-left-separator]="
+                [class.dg-ui-grid__header-cell--pinned-left-separator]="
                   isLeftPinnedSeparator(column.field)
                 "
-                [class.qg-ui-grid__header-cell--pinned-left-edge]="isLeftPinnedEdge(column.field)"
-                [class.qg-ui-grid__header-cell--pinned-right-separator]="
+                [class.dg-ui-grid__header-cell--pinned-left-edge]="isLeftPinnedEdge(column.field)"
+                [class.dg-ui-grid__header-cell--pinned-right-separator]="
                   isRightPinnedSeparator(column.field)
                 "
-                [class.qg-ui-grid__header-cell--pinned-right-edge]="isRightPinnedEdge(column.field)"
+                [class.dg-ui-grid__header-cell--pinned-right-edge]="isRightPinnedEdge(column.field)"
                 [attr.aria-sort]="ariaSort(column)"
                 [style.minWidth]="columnWidth(column)"
                 [style.width]="columnWidth(column)"
@@ -184,13 +184,13 @@
                 [style.textAlign]="column.align ?? 'left'"
               >
                 <div
-                  class="qg-ui-grid__header"
-                  [class.qg-ui-grid__header--sortable]="isSortable(column)"
+                  class="dg-ui-grid__header"
+                  [class.dg-ui-grid__header--sortable]="isSortable(column)"
                   (click)="onSortClick(column, $event)"
                 >
                   @if (isReorderable(column)) {
                     <span
-                      class="qg-ui-grid__drag-handle"
+                      class="dg-ui-grid__drag-handle"
                       cdkDragHandle
                       [attr.aria-label]="reorderHandleLabel(column)"
                       (mousedown)="onColumnDragStarted()"
@@ -199,14 +199,14 @@
                       <ui-icon icon="re_order_dots_vertical" [size]="size()" />
                     </span>
                   }
-                  <div class="qg-ui-grid__header-label">{{ column.header }}</div>
-                  <div class="qg-ui-grid__header-actions">
+                  <div class="dg-ui-grid__header-label">{{ column.header }}</div>
+                  <div class="dg-ui-grid__header-actions">
                     @if (isSortable(column)) {
-                      <span class="qg-ui-grid__sort">
+                      <span class="dg-ui-grid__sort">
                         <button
                           type="button"
-                          class="qg-ui-grid__sort-button"
-                          [class.qg-ui-grid__sort-button--active]="
+                          class="dg-ui-grid__sort-button"
+                          [class.dg-ui-grid__sort-button--active]="
                             sortDirection(column.field) !== null
                           "
                           [attr.aria-label]="sortAriaLabel(column)"
@@ -219,15 +219,15 @@
                           />
                         </button>
                         @if (showSortPriority(column.field)) {
-                          <span class="qg-ui-grid__sort-index">{{ sortIndex(column.field) }}</span>
+                          <span class="dg-ui-grid__sort-index">{{ sortIndex(column.field) }}</span>
                         }
                       </span>
                     }
                     @if (isPinnable(column)) {
                       <button
                         type="button"
-                        class="qg-ui-grid__pin-button"
-                        [class.qg-ui-grid__pin-button--active]="!!currentPin(column)"
+                        class="dg-ui-grid__pin-button"
+                        [class.dg-ui-grid__pin-button--active]="!!currentPin(column)"
                         [attr.aria-label]="pinAriaLabel(column)"
                         (click)="cycleColumnPin(column, $event)"
                       >
@@ -239,7 +239,7 @@
                       </button>
                     }
                     @if (column.filter) {
-                      <qg-column-filter
+                      <dg-column-filter
                         [column]="column"
                         [size]="size()"
                         [conditions]="columnConditions(column.field)"
@@ -251,14 +251,14 @@
                 </div>
                 @if (isResizable(column)) {
                   <span
-                    qgColumnResize
+                    dgColumnResize
                     [minWidth]="column.minWidth ?? 48"
                     (resized)="onColumnResized(column, $event)"
                   ></span>
                 }
                 <ng-template cdkDragPreview>
                   <div
-                    class="qg-ui-grid__column-drag-preview"
+                    class="dg-ui-grid__column-drag-preview"
                     [style.minWidth]="columnWidth(column)"
                   >
                     {{ column.header }}
@@ -268,17 +268,17 @@
             }
           </tr>
         </thead>
-        <tbody class="qg-ui-grid__body">
+        <tbody class="dg-ui-grid__body">
           @if (hasRows()) {
             @for (row of grid().items() ?? []; track trackRow(row, $index)) {
-              <tr class="qg-ui-grid__row" [class.qg-ui-grid__row--selected]="isRowSelected(row)">
+              <tr class="dg-ui-grid__row" [class.dg-ui-grid__row--selected]="isRowSelected(row)">
                 @if (rowSelectionEnabled()) {
                   <td
-                    class="qg-ui-grid__cell qg-ui-grid__cell--selection"
-                    [class.qg-ui-grid__cell--selection-edge]="isSelectionColumnFrozenEdge()"
-                    [class.qg-ui-grid__cell--selection-separator]="isSelectionColumnSeparator()"
+                    class="dg-ui-grid__cell dg-ui-grid__cell--selection"
+                    [class.dg-ui-grid__cell--selection-edge]="isSelectionColumnFrozenEdge()"
+                    [class.dg-ui-grid__cell--selection-separator]="isSelectionColumnSeparator()"
                   >
-                    <div class="qg-ui-grid__selection-cell">
+                    <div class="dg-ui-grid__selection-cell">
                       <ui-checkbox
                         [size]="size()"
                         [ngModel]="isRowSelected(row)"
@@ -289,21 +289,21 @@
                 }
                 @for (column of displayedColumns(); track column.field) {
                   <td
-                    class="qg-ui-grid__cell"
-                    [class.qg-ui-grid__cell--pinned-left]="
+                    class="dg-ui-grid__cell"
+                    [class.dg-ui-grid__cell--pinned-left]="
                       pinnedOffset(column.field)?.pin === 'left'
                     "
-                    [class.qg-ui-grid__cell--pinned-right]="
+                    [class.dg-ui-grid__cell--pinned-right]="
                       pinnedOffset(column.field)?.pin === 'right'
                     "
-                    [class.qg-ui-grid__cell--pinned-left-separator]="
+                    [class.dg-ui-grid__cell--pinned-left-separator]="
                       isLeftPinnedSeparator(column.field)
                     "
-                    [class.qg-ui-grid__cell--pinned-left-edge]="isLeftPinnedEdge(column.field)"
-                    [class.qg-ui-grid__cell--pinned-right-separator]="
+                    [class.dg-ui-grid__cell--pinned-left-edge]="isLeftPinnedEdge(column.field)"
+                    [class.dg-ui-grid__cell--pinned-right-separator]="
                       isRightPinnedSeparator(column.field)
                     "
-                    [class.qg-ui-grid__cell--pinned-right-edge]="isRightPinnedEdge(column.field)"
+                    [class.dg-ui-grid__cell--pinned-right-edge]="isRightPinnedEdge(column.field)"
                     [style.minWidth]="columnWidth(column)"
                     [style.width]="columnWidth(column)"
                     [style.left.px]="pinnedLeftPx(column.field)"
@@ -326,14 +326,14 @@
               </tr>
             }
           } @else if (grid().loading()) {
-            <tr class="qg-ui-grid__loading-row">
-              <td class="qg-ui-grid__loading-cell" [attr.colspan]="tableColumnCount()">
+            <tr class="dg-ui-grid__loading-row">
+              <td class="dg-ui-grid__loading-cell" [attr.colspan]="tableColumnCount()">
                 <ui-spinner [size]="size()" [ariaLabel]="loadingDataLabel()" />
               </td>
             </tr>
           } @else {
-            <tr class="qg-ui-grid__empty-row">
-              <td class="qg-ui-grid__empty-cell" [attr.colspan]="tableColumnCount()">
+            <tr class="dg-ui-grid__empty-row">
+              <td class="dg-ui-grid__empty-cell" [attr.colspan]="tableColumnCount()">
                 @if (emptyTemplate(); as template) {
                   <ng-container [ngTemplateOutlet]="template" />
                 } @else {
@@ -347,13 +347,13 @@
     </div>
 
     @if (showRefreshOverlay()) {
-      <div class="qg-ui-grid__table-overlay" aria-hidden="true">
+      <div class="dg-ui-grid__table-overlay" aria-hidden="true">
         <ui-spinner [size]="size()" [ariaLabel]="loadingDataLabel()" />
       </div>
     }
   </div>
 
-  <div class="qg-ui-grid__footer">
+  <div class="dg-ui-grid__footer">
     <ui-pagination
       [config]="paginationConfig()"
       [size]="size()"

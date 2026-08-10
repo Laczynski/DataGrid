@@ -4,19 +4,19 @@
       <button
         hlmBtn
         variant="outline"
-        [size]="qgIconBtnSize(size())"
+        [size]="dgIconBtnSize(size())"
         hlmPopoverTrigger
         [attr.aria-label]="columnsLabel()"
       >
-        <ng-icon [name]="resolveQgGridIcon('column')" />
+        <ng-icon [name]="resolveDgGridIcon('column')" />
       </button>
     </span>
 
     <ng-template hlmPopoverPortal>
-      <div hlmPopoverContent class="qg-grid-column-chooser__panel w-auto p-0">
-        <div class="qg-grid-column-chooser__list">
+      <div hlmPopoverContent class="dg-grid-column-chooser__panel w-auto p-0">
+        <div class="dg-grid-column-chooser__list">
           @for (column of hideableColumns(); track column.field) {
-            <label class="qg-grid-column-chooser__item">
+            <label class="dg-grid-column-chooser__item">
               <hlm-checkbox
                 [ngModel]="isColumnVisible(column.field)"
                 [disabled]="!canUncheck(column.field)"
@@ -28,12 +28,12 @@
         </div>
 
         @if (hasHiddenColumns() || hasLayoutChanges()) {
-          <div class="qg-grid-column-chooser__footer">
+          <div class="dg-grid-column-chooser__footer">
             @if (hasHiddenColumns()) {
               <button
                 hlmBtn
                 variant="outline"
-                [size]="qgBtnSize(size())"
+                [size]="dgBtnSize(size())"
                 (click)="showAllColumns()"
               >
                 {{ showAllLabel() }}
@@ -43,7 +43,7 @@
               <button
                 hlmBtn
                 variant="outline"
-                [size]="qgBtnSize(size())"
+                [size]="dgBtnSize(size())"
                 (click)="resetColumnLayout()"
               >
                 {{ resetLayoutLabel() }}

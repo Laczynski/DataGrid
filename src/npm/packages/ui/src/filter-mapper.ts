@@ -6,7 +6,7 @@ import {
   type FilterNode,
   type FilterOperator,
   type GridQuery,
-} from "@query-grid/core";
+} from "@laczynski/datagrid";
 import type { GridColumnFilterType } from "./table/grid-column";
 
 export function defaultOperatorForType(type: GridColumnFilterType): FilterOperator {

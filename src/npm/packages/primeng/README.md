@@ -1,11 +1,11 @@
-# @query-grid/primeng
+# @laczynski/datagrid-primeng
 
-PrimeNG lazy data grid for [QueryGrid](https://github.com/laczynski/QueryGrid) — column filters, global search, multi-sort, and optional session persistence.
+PrimeNG lazy data grid for [DataGrid](https://github.com/laczynski/DataGrid) — column filters, global search, multi-sort, and optional session persistence.
 
 ## Install
 
 ```powershell
-npm install @query-grid/core @query-grid/primeng primeng
+npm install @laczynski/datagrid @laczynski/datagrid-primeng primeng
 ```
 
 Peer dependencies: Angular 22+, PrimeNG 22+, RxJS 7+.
@@ -13,7 +13,7 @@ Peer dependencies: Angular 22+, PrimeNG 22+, RxJS 7+.
 ## Example
 
 ```typescript
-import { GridResourceFactory } from "@query-grid/primeng";
+import { GridResourceFactory } from "@laczynski/datagrid-primeng";
 
 readonly grid = this.gridFactory.create<IssueDto>({
   destroyRef: this.destroyRef,
@@ -23,11 +23,11 @@ readonly grid = this.gridFactory.create<IssueDto>({
 ```
 
 ```html
-<qg-prime-data-grid [grid]="grid" dataKey="id">
-  <ng-template qgColumn="Title" header="Title" let-row>{{ row.title }}</ng-template>
-</qg-prime-data-grid>
+<dg-prime-data-grid [grid]="grid" dataKey="id">
+  <ng-template dgColumn="Title" header="Title" let-row>{{ row.title }}</ng-template>
+</dg-prime-data-grid>
 ```
 
 ## Full guide
 
-[Getting started](https://github.com/laczynski/QueryGrid/blob/main/docs/getting-started.md) — backend setup, JSON transport, column templates, and field naming.
+[Getting started](https://github.com/laczynski/DataGrid/blob/main/docs/getting-started.md) — backend setup, JSON transport, column templates, and field naming.

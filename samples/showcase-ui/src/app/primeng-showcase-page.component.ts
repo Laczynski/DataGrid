@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, Injector, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { buildGridQueryUrl, formatGridError } from '@query-grid/core';
-import { PrimeDataGridComponent, QgColumnDirective, QgEmptyDirective } from '@query-grid/primeng';
+import { buildGridQueryUrl, formatGridError } from '@laczynski/datagrid';
+import { PrimeDataGridComponent, DgColumnDirective, DgEmptyDirective } from '@laczynski/datagrid-primeng';
 import { Card } from 'primeng/card';
 import { Message } from 'primeng/message';
 import { Tag } from 'primeng/tag';
@@ -20,8 +20,8 @@ import { getShowcaseCategoryLabel, showcaseCategories } from './utils/showcase.u
     Message,
     Tag,
     PrimeDataGridComponent,
-    QgColumnDirective,
-    QgEmptyDirective,
+    DgColumnDirective,
+    DgEmptyDirective,
     TranslatePipe,
   ],
   templateUrl: './primeng-showcase-page.component.html',

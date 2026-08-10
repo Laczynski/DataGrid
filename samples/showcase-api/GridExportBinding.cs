@@ -1,8 +1,8 @@
 using System.Text.Json;
-using QueryGrid.Abstractions;
-using QueryGrid.Abstractions.Serialization;
+using DataGrid.Abstractions;
+using DataGrid.Abstractions.Serialization;
 
-namespace QueryGrid.Samples.ShowcaseApi;
+namespace DataGrid.Samples.ShowcaseApi;
 
 /// <summary>
 /// Showcase JSON binding for <see cref="GridExportRequest"/> — copy or adapt in your API project.

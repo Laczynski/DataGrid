@@ -4,7 +4,7 @@ import {
   clampScrollLeft,
   pickScrollExtra,
   readScrollExtra,
-} from "@query-grid/core";
+} from "@laczynski/datagrid";
 
 export interface GridScrollControls {
   scrollLeft: ReturnType<typeof signal<number>>;

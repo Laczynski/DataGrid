@@ -11,7 +11,7 @@ import { noop } from "./control-value-accessor.util";
 import type { HelmSize } from "./types";
 
 @Component({
-  selector: "qg-sh-checkbox",
+  selector: "dg-sh-checkbox",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
@@ -22,10 +22,10 @@ import type { HelmSize } from "./types";
     },
   ],
   template: `
-    <label class="qg-sh-checkbox" [class.qg-sh-checkbox--after]="labelPosition() === 'after'">
+    <label class="dg-sh-checkbox" [class.dg-sh-checkbox--after]="labelPosition() === 'after'">
       <input
         type="checkbox"
-        class="qg-sh-checkbox__input"
+        class="dg-sh-checkbox__input"
         [checked]="value"
         [disabled]="isDisabled"
         [indeterminate]="indeterminate()"
@@ -34,7 +34,7 @@ import type { HelmSize } from "./types";
         (blur)="handleBlur()"
       />
       @if (label(); as text) {
-        <span class="qg-sh-checkbox__label">{{ text }}</span>
+        <span class="dg-sh-checkbox__label">{{ text }}</span>
       }
     </label>
   `,

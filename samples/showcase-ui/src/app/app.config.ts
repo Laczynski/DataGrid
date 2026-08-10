@@ -13,9 +13,9 @@ import { provideUiI18n, UI_TRANSLATE_FN } from '@laczynski/ui';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import Aura from '@primeuix/themes/aura';
-import { provideQgI18nWithNgxTranslate as provideQgPrimengI18nWithNgxTranslate } from '@query-grid/primeng/ngx-translate';
-import { provideQgI18nWithNgxTranslate as provideQgSpartanI18nWithNgxTranslate } from '@query-grid/spartan/ngx-translate';
-import { provideQgI18nWithNgxTranslate } from '@query-grid/ui/ngx-translate';
+import { provideDgI18nWithNgxTranslate as provideDgPrimengI18nWithNgxTranslate } from '@laczynski/datagrid-primeng/ngx-translate';
+import { provideDgI18nWithNgxTranslate as provideDgSpartanI18nWithNgxTranslate } from '@laczynski/datagrid-spartan/ngx-translate';
+import { provideDgI18nWithNgxTranslate } from '@laczynski/datagrid-ui/ngx-translate';
 import { pl } from 'primelocale/js/pl.js';
 import { providePrimeNG } from 'primeng/config';
 import { routes } from './app.routes';
@@ -45,9 +45,9 @@ export const appConfig: ApplicationConfig = {
         suffix: '.json',
       }),
     }),
-    provideQgI18nWithNgxTranslate({ prefix: 'qg' }),
-    provideQgSpartanI18nWithNgxTranslate({ prefix: 'qg' }),
-    provideQgPrimengI18nWithNgxTranslate({ prefix: 'qg' }),
+    provideDgI18nWithNgxTranslate({ prefix: 'dg' }),
+    provideDgSpartanI18nWithNgxTranslate({ prefix: 'dg' }),
+    provideDgPrimengI18nWithNgxTranslate({ prefix: 'dg' }),
     provideAppInitializer(() => inject(ShowcaseLocaleService).init()),
     providePrimeNG({
       ripple: true,

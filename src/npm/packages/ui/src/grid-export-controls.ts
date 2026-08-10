@@ -8,7 +8,7 @@ import {
   type GridExportFormat,
   type GridExportRequest,
   type GridQuery,
-} from "@query-grid/core";
+} from "@laczynski/datagrid";
 
 export interface GridExportConfig {
   url: string;

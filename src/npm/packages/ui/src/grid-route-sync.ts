@@ -8,7 +8,7 @@ import {
   pickShareableGridQuery,
   serializeGridQuery,
   type GridQuery,
-} from "@query-grid/core";
+} from "@laczynski/datagrid";
 
 export interface GridRouteSyncConfig {
   param?: string;

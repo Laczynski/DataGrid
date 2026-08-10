@@ -12,13 +12,13 @@ import { ButtonComponent } from "./button.component";
 import type { MenuItem } from "./types";
 
 @Component({
-  selector: "qg-sh-menu",
+  selector: "dg-sh-menu",
   standalone: true,
   imports: [ButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="qg-sh-menu">
-      <qg-sh-btn
+    <div class="dg-sh-menu">
+      <dg-sh-btn
         appearance="outline"
         [size]="size()"
         [icon]="icon()"
@@ -27,11 +27,11 @@ import type { MenuItem } from "./types";
         (click)="toggle($event)"
       />
       @if (open()) {
-        <div class="qg-sh-menu__panel" role="menu">
+        <div class="dg-sh-menu__panel" role="menu">
           @for (item of menuItems(); track item.id) {
             <button
               type="button"
-              class="qg-sh-menu__item"
+              class="dg-sh-menu__item"
               role="menuitem"
               [disabled]="item.disabled"
               (click)="select(item)"

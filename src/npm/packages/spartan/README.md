@@ -1,11 +1,11 @@
-# @query-grid/spartan
+# @laczynski/datagrid-spartan
 
-Spartan-aligned adapter for [QueryGrid](https://github.com/laczynski/QueryGrid): `<qg-spartan-data-grid>` with column filters, search, filter chips, multi-sort, pagination, export, views, and column chooser.
+Spartan-aligned adapter for [DataGrid](https://github.com/laczynski/DataGrid): `<dg-spartan-data-grid>` with column filters, search, filter chips, multi-sort, pagination, export, views, and column chooser.
 
 ## Install
 
 ```powershell
-npm install @query-grid/core @query-grid/spartan
+npm install @laczynski/datagrid @laczynski/datagrid-spartan
 ```
 
 Peer dependencies: Angular 22+, `@angular/cdk` 22+, RxJS 7+.
@@ -16,16 +16,16 @@ Peer dependencies: Angular 22+, `@angular/cdk` 22+, RxJS 7+.
 import { Component, inject, DestroyRef } from "@angular/core";
 import {
   GridResourceFactory,
-  QgColumnDirective,
+  DgColumnDirective,
   SpartanDataGridComponent,
-} from "@query-grid/spartan";
+} from "@laczynski/datagrid-spartan";
 
 @Component({
-  imports: [SpartanDataGridComponent, QgColumnDirective],
+  imports: [SpartanDataGridComponent, DgColumnDirective],
   template: `
-    <qg-spartan-data-grid [grid]="grid" dataKey="id" searchPlaceholder="Search…">
-      <ng-template qgColumn="name" header="Name" let-row>{{ row.name }}</ng-template>
-    </qg-spartan-data-grid>
+    <dg-spartan-data-grid [grid]="grid" dataKey="id" searchPlaceholder="Search…">
+      <ng-template dgColumn="name" header="Name" let-row>{{ row.name }}</ng-template>
+    </dg-spartan-data-grid>
   `,
 })
 export class IssuesPage {
@@ -41,10 +41,10 @@ export class IssuesPage {
 ## i18n (`ngx-translate`)
 
 ```typescript
-import { provideQgI18nWithNgxTranslate } from "@query-grid/spartan/ngx-translate";
+import { provideDgI18nWithNgxTranslate } from "@laczynski/datagrid-spartan/ngx-translate";
 
 export const appConfig = {
-  providers: [provideQgI18nWithNgxTranslate({ prefix: "qg" })],
+  providers: [provideDgI18nWithNgxTranslate({ prefix: "qg" })],
 };
 ```
 
@@ -53,12 +53,12 @@ Add keys under `qg.*` in your translation files (see `samples/showcase-ui/public
 ## Customize helm (L2 / L3)
 
 ```powershell
-ng generate @query-grid/cli:spartan-grid --level=filter-editors
-ng generate @query-grid/cli:spartan-grid --level=full
+ng generate @laczynski/datagrid-cli:spartan-grid --level=filter-editors
+ng generate @laczynski/datagrid-cli:spartan-grid --level=full
 ```
 
-L3 (`full`) copies `hlm-query-grid` — see [spartan-l3-hlm.md](https://github.com/laczynski/QueryGrid/blob/main/docs/guides/spartan-l3-hlm.md).
+L3 (`full`) copies `hlm-data-grid` — see [spartan-l3-hlm.md](https://github.com/laczynski/DataGrid/blob/main/docs/guides/spartan-l3-hlm.md).
 
 ## Full guide
 
-[Getting started](https://github.com/laczynski/QueryGrid/blob/main/docs/getting-started.md)
+[Getting started](https://github.com/laczynski/DataGrid/blob/main/docs/getting-started.md)

@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>DataGrid.Core</RootNamespace>
+    <PackageId>DataGrid.Core</PackageId>
+    <Description>DataGrid engine: field discovery, filter/sort/search expression building, IQueryable shaping, and CSV/Excel export.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DataGrid.Abstractions\DataGrid.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="DataGrid.EntityFrameworkCore" />
+    <InternalsVisibleTo Include="DataGrid.IntegrationTests" />
+  </ItemGroup>
+
+</Project>

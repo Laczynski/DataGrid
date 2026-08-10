@@ -4,7 +4,7 @@
   min-width: 14rem;
   max-width: min(24rem, calc(100vw - 2rem));
   color: var(--popover-foreground, hsl(222 47% 11%));
-  @include qg-sh-elevated-surface;
+  @include dg-sh-elevated-surface;
 }
 
 .popover-panel__body {
@@ -19,11 +19,11 @@
   border-top: 1px solid var(--border, hsl(214 32% 91%));
 }
 
-.qg-sh-popover-panel {
+.dg-sh-popover-panel {
   min-width: 14rem;
   max-width: min(28rem, calc(100vw - 2rem));
 }
 
-.qg-sh-popover-panel--large {
+.dg-sh-popover-panel--large {
   min-width: 20rem;
 }

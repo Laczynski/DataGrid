@@ -1,15 +1,15 @@
 import { Injector } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import type { GridExportColumnInput, GridQuery, GridViewPreset } from '@query-grid/core';
-import { createGridResource, type GridResource } from '@query-grid/primeng';
+import type { GridExportColumnInput, GridQuery, GridViewPreset } from '@laczynski/datagrid';
+import { createGridResource, type GridResource } from '@laczynski/datagrid-primeng';
 import {
   createGridResource as createSpartanGridResource,
   type GridResource as SpartanGridResource,
-} from '@query-grid/spartan';
+} from '@laczynski/datagrid-spartan';
 import {
   createGridResource as createUiGridResource,
   type GridResource as UiGridResource,
-} from '@query-grid/ui';
+} from '@laczynski/datagrid-ui';
 import { ShowcaseRow } from './models/showcase-row.model';
 import { ShowcaseApiService } from './services/showcase-api.service';
 

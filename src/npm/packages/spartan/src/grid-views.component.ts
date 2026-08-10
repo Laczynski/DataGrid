@@ -19,7 +19,7 @@ import {
   TooltipDirective,
   type SelectItem,
 } from "./helm";
-import { QgI18nService } from "./i18n";
+import { DgI18nService } from "./i18n";
 import type { GridSize } from "./types";
 
 function asGridWithViews<T>(
@@ -29,7 +29,7 @@ function asGridWithViews<T>(
 }
 
 @Component({
-  selector: "qg-grid-views",
+  selector: "dg-grid-views",
   standalone: true,
   imports: [
     CommonModule,
@@ -43,8 +43,8 @@ function asGridWithViews<T>(
   templateUrl: "./grid-views.component.html",
   styleUrl: "./grid-views.component.scss",
 })
-export class QgGridViewsComponent<T = unknown> {
-  private readonly i18n = inject(QgI18nService);
+export class DgGridViewsComponent<T = unknown> {
+  private readonly i18n = inject(DgI18nService);
 
   readonly grid = input.required<GridResource<T>>();
   readonly size = input<GridSize>("medium");

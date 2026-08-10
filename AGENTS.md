@@ -4,8 +4,8 @@
 
 ## Repository shape
 
-- `src/dotnet/` — .NET solution (`QueryGrid.slnx`) with NuGet packages (`QueryGrid.*`) and unit tests.
-- `src/npm/` — npm workspaces with publishable packages (`@query-grid/*`).
+- `src/dotnet/` — .NET solution (`DataGrid.slnx`) with NuGet packages (`DataGrid.*`) and unit tests.
+- `src/npm/` — npm workspaces with publishable packages (`@laczynski/datagrid*`).
 - `samples/` — showcase apps that stress-test data types and grid scenarios (integration verification; not shipped).
 - `docs/` — guides and technical docs (`docs/README.md` for the full index).
 - Root `package.json` — orchestration scripts for dotnet and npm from the repository root.
@@ -34,26 +34,26 @@ From the repository root, run `npm install` once after clone or when workspace d
 - Pack NuGet packages: `npm run pack:backend` (output: `artifacts/nuget/`)
 - Run showcase (build packages + API + UI): `npm run start:all`
 - Run showcase API only: `npm run start:backend` (http://localhost:5180)
-- Run showcase UI only: `npm run start:frontend` (rebuilds `@query-grid/*`, then http://localhost:4200)
+- Run showcase UI only: `npm run start:frontend` (rebuilds `@laczynski/datagrid*`, then http://localhost:4200)
 - Develop with package watch: `npm run dev:frontend`
 
 ### .NET (in `src/dotnet`)
 
-- Restore/build solution: `dotnet build QueryGrid.slnx`
-- All tests: `dotnet test QueryGrid.slnx`
-- Pack: `dotnet pack QueryGrid.slnx -c Release -o ../../artifacts/nuget`
+- Restore/build solution: `dotnet build DataGrid.slnx`
+- All tests: `dotnet test DataGrid.slnx`
+- Pack: `dotnet pack DataGrid.slnx -c Release -o ../../artifacts/nuget`
 
 ### npm packages (`src/npm/packages/`)
 
-- Build single package: `npm run build -w @query-grid/core` | `@query-grid/primeng` | `@query-grid/ui` | `@query-grid/spartan` | `@query-grid/cli`
-- Spartan helm copy schematic: `ng generate @query-grid/cli:spartan-grid --level=filter-editors` or `--level=full` (after `npm run build:cli`; syncs from `@query-grid/spartan` on CLI prebuild)
-- Test single package: `npm run test -w @query-grid/core` | `@query-grid/primeng` | `@query-grid/ui` | `@query-grid/spartan` | `@query-grid/cli`
+- Build single package: `npm run build -w @laczynski/datagrid` | `@laczynski/datagrid-primeng` | `@laczynski/datagrid-ui` | `@laczynski/datagrid-spartan` | `@laczynski/datagrid-cli`
+- Spartan helm copy schematic: `ng generate @laczynski/datagrid-cli:spartan-grid --level=filter-editors` or `--level=full` (after `npm run build:cli`; syncs from `@laczynski/datagrid-spartan` on CLI prebuild)
+- Test single package: `npm run test -w @laczynski/datagrid` | `@laczynski/datagrid-primeng` | `@laczynski/datagrid-ui` | `@laczynski/datagrid-spartan` | `@laczynski/datagrid-cli`
 
 ## Change coupling checklist
 
-- If you change `GridQuery` / `GridResult` or filter/sort JSON shape, update **both** `QueryGrid.Abstractions` and `@query-grid/core`, plus `GridQueryContractTests`.
-- If you change `GridExportRequest` / export JSON shape, update **both** `QueryGrid.Abstractions` and `@query-grid/core` (`buildGridExportBody`), plus export tests in `QueryGrid.UnitTests` and `grid-export.spec.ts`.
-- If you add or change an operator or field-type rule, update `QueryGrid.Core` expression builders and unit tests; check whether `@query-grid/primeng`, `@query-grid/ui`, or `@query-grid/spartan` filter UI needs a matching control.
+- If you change `GridQuery` / `GridResult` or filter/sort JSON shape, update **both** `DataGrid.Abstractions` and `@laczynski/datagrid`, plus `GridQueryContractTests`.
+- If you change `GridExportRequest` / export JSON shape, update **both** `DataGrid.Abstractions` and `@laczynski/datagrid` (`buildGridExportBody`), plus export tests in `DataGrid.UnitTests` and `grid-export.spec.ts`.
+- If you add or change an operator or field-type rule, update `DataGrid.Core` expression builders and unit tests; check whether `@laczynski/datagrid-primeng`, `@laczynski/datagrid-ui`, or `@laczynski/datagrid-spartan` filter UI needs a matching control.
 - If you change Angular grid state or persistence (`persistState`), update UI adapters (`primeng`, `ui`, `spartan`) and verify in `samples/showcase-ui`.
 - Keep package versions in sync across NuGet (`Directory.Build.props`) and npm (`package.json` per package) when releasing.
 

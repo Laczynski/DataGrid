@@ -1,4 +1,4 @@
-namespace QueryGrid.Samples.ShowcaseApi.Models;
+namespace DataGrid.Samples.ShowcaseApi.Models;
 
 public enum ShowcaseCategory
 {

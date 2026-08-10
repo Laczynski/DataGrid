@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using QueryGrid.Samples.ShowcaseApi.Data;
-using QueryGrid.Samples.ShowcaseApi.Models;
+using DataGrid.Samples.ShowcaseApi.Data;
+using DataGrid.Samples.ShowcaseApi.Models;
 
-namespace QueryGrid.Samples.ShowcaseApi;
+namespace DataGrid.Samples.ShowcaseApi;
 
 internal static class ShowcaseQueries
 {

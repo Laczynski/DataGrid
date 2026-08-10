@@ -1,8 +1,8 @@
 @if (viewsEnabled()) {
-  <div class="qg-grid-views-group">
-    <div class="qg-grid-views">
+  <div class="dg-grid-views-group">
+    <div class="dg-grid-views">
       <hlm-select
-        class="qg-grid-views__select"
+        class="dg-grid-views__select"
         [value]="selectedPresetId()"
         [itemToString]="presetItemToString"
         (valueChange)="onPresetSelected($event)"
@@ -22,46 +22,46 @@
         <button
           hlmBtn
           variant="outline"
-          [size]="qgIconBtnSize(size())"
+          [size]="dgIconBtnSize(size())"
           [hlmTooltip]="updateViewLabel()"
           [attr.aria-label]="updateViewLabel()"
           (click)="updatePreset()"
         >
-          <ng-icon [name]="resolveQgGridIcon('save')" />
+          <ng-icon [name]="resolveDgGridIcon('save')" />
         </button>
       }
 
       <button
         hlmBtn
         variant="outline"
-        [size]="qgIconBtnSize(size())"
+        [size]="dgIconBtnSize(size())"
         [hlmTooltip]="saveAsViewLabel()"
         [attr.aria-label]="saveAsViewLabel()"
         (click)="openSaveDialog()"
       >
-        <ng-icon [name]="resolveQgGridIcon('add')" />
+        <ng-icon [name]="resolveDgGridIcon('add')" />
       </button>
 
       @if (canDeleteSelected()) {
         <button
           hlmBtn
           variant="destructive"
-          [size]="qgIconBtnSize(size())"
+          [size]="dgIconBtnSize(size())"
           [hlmTooltip]="deleteViewLabel()"
           [attr.aria-label]="deleteViewLabel()"
           (click)="deleteSelected()"
         >
-          <ng-icon [name]="resolveQgGridIcon('delete')" />
+          <ng-icon [name]="resolveDgGridIcon('delete')" />
         </button>
       }
     </div>
 
-    <span class="qg-grid-views__divider" aria-hidden="true"></span>
+    <span class="dg-grid-views__divider" aria-hidden="true"></span>
   </div>
 
-  <dialog #saveDialog class="qg-grid-views__dialog" (cancel)="closeSaveDialog()">
-    <form class="qg-grid-views__dialog-form" (submit)="onSaveSubmit($event)">
-      <h3 class="qg-grid-views__dialog-title">{{ saveViewTitle() }}</h3>
+  <dialog #saveDialog class="dg-grid-views__dialog" (cancel)="closeSaveDialog()">
+    <form class="dg-grid-views__dialog-form" (submit)="onSaveSubmit($event)">
+      <h3 class="dg-grid-views__dialog-title">{{ saveViewTitle() }}</h3>
       <input
         hlmInput
         [class]="qgFieldClass(size())"
@@ -70,17 +70,17 @@
         name="viewName"
         [placeholder]="viewNamePlaceholder()"
       />
-      <div class="qg-grid-views__dialog-actions">
+      <div class="dg-grid-views__dialog-actions">
         <button
           hlmBtn
           type="button"
           variant="outline"
-          [size]="qgBtnSize(size())"
+          [size]="dgBtnSize(size())"
           (click)="closeSaveDialog()"
         >
           {{ cancelLabel() }}
         </button>
-        <button hlmBtn type="submit" [size]="qgBtnSize(size())">{{ saveLabel() }}</button>
+        <button hlmBtn type="submit" [size]="dgBtnSize(size())">{{ saveLabel() }}</button>
       </div>
     </form>
   </dialog>

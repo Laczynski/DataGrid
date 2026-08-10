@@ -1,23 +1,23 @@
-.qg-sh-spinner {
+.dg-sh-spinner {
   width: 1.5rem;
   height: 1.5rem;
   border: 2px solid color-mix(in srgb, var(--muted-foreground, hsl(215 16% 47%)) 25%, transparent);
   border-top-color: var(--primary, hsl(222 47% 11%));
   border-radius: 50%;
-  animation: qg-sh-spin 0.8s linear infinite;
+  animation: dg-sh-spin 0.8s linear infinite;
 }
 
-.qg-sh-spinner--small {
+.dg-sh-spinner--small {
   width: 1.125rem;
   height: 1.125rem;
 }
 
-.qg-sh-spinner--large {
+.dg-sh-spinner--large {
   width: 2rem;
   height: 2rem;
 }
 
-@keyframes qg-sh-spin {
+@keyframes dg-sh-spin {
   to {
     transform: rotate(360deg);
   }

@@ -3,33 +3,33 @@ import { IconComponent } from "./icon.component";
 import type { HelmIconName, HelmSize } from "./types";
 
 @Component({
-  selector: "qg-sh-btn",
+  selector: "dg-sh-btn",
   standalone: true,
   imports: [IconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <button
       [attr.type]="type()"
-      class="qg-sh-btn"
-      [class.qg-sh-btn--small]="size() === 'small'"
-      [class.qg-sh-btn--large]="size() === 'large'"
-      [class.qg-sh-btn--outline]="appearance() === 'outline'"
-      [class.qg-sh-btn--subtle]="appearance() === 'subtle'"
-      [class.qg-sh-btn--transparent]="appearance() === 'transparent'"
-      [class.qg-sh-btn--primary]="variant() === 'primary'"
-      [class.qg-sh-btn--danger]="variant() === 'danger'"
-      [class.qg-sh-btn--selected]="selected()"
-      [class.qg-sh-btn--icon-only]="icon() && !text()"
-      [class.qg-sh-btn--full]="fullWidth()"
+      class="dg-sh-btn"
+      [class.dg-sh-btn--small]="size() === 'small'"
+      [class.dg-sh-btn--large]="size() === 'large'"
+      [class.dg-sh-btn--outline]="appearance() === 'outline'"
+      [class.dg-sh-btn--subtle]="appearance() === 'subtle'"
+      [class.dg-sh-btn--transparent]="appearance() === 'transparent'"
+      [class.dg-sh-btn--primary]="variant() === 'primary'"
+      [class.dg-sh-btn--danger]="variant() === 'danger'"
+      [class.dg-sh-btn--selected]="selected()"
+      [class.dg-sh-btn--icon-only]="icon() && !text()"
+      [class.dg-sh-btn--full]="fullWidth()"
       [disabled]="disabled()"
       [attr.aria-label]="ariaLabel() || null"
       (click)="onClick($event)"
     >
       @if (icon(); as iconName) {
-        <qg-sh-icon [icon]="iconName" [size]="size()" />
+        <dg-sh-icon [icon]="iconName" [size]="size()" />
       }
       @if (text(); as label) {
-        <span class="qg-sh-btn__text">{{ label }}</span>
+        <span class="dg-sh-btn__text">{{ label }}</span>
       }
     </button>
   `,

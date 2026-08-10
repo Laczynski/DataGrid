@@ -1,4 +1,4 @@
-import { removeFilterAtPath } from "@query-grid/core";
+import { removeFilterAtPath } from "@laczynski/datagrid";
 import { describe, expect, it } from "vitest";
 import { buildGridFilterFeed } from "./filter-feed.js";
 import type { GridColumn } from "./table/grid-column.js";

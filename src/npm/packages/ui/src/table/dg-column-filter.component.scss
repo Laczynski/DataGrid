@@ -1,0 +1,69 @@
+:host {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.dg-column-filter__panel {
+  min-width: 16rem;
+  max-width: min(20rem, 90vw);
+}
+
+.dg-column-filter__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dg-column-filter__control {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.dg-column-filter__boolean {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.dg-column-filter__rule {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.dg-column-filter__rule-remove,
+.dg-column-filter__add-rule {
+  display: block;
+  width: 100%;
+}
+
+:host ::ng-deep .dg-column-filter__rule-remove .button,
+:host ::ng-deep .dg-column-filter__add-rule .button {
+  width: 100%;
+  justify-content: center;
+}
+
+.dg-column-filter__footer.popover-panel__footer {
+  justify-content: space-between;
+}
+
+.dg-column-filter__trigger {
+  flex-shrink: 0;
+  color: var(--color-neutral-foreground3-rest, #616161);
+  transition:
+    color 150ms ease,
+    background-color 150ms ease;
+}
+
+.dg-column-filter__trigger--active {
+  color: var(--color-brand-foreground, #1267b4);
+}
+
+:host ::ng-deep .dg-column-filter__trigger--active.button--selected ui-icon,
+:host ::ng-deep .dg-column-filter__trigger--active .button--selected ui-icon,
+:host ::ng-deep .dg-column-filter__trigger--active ui-icon {
+  color: var(--color-brand-primary, #1267b4) !important;
+}

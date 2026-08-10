@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component, computed, inject, input } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { isColumnHideable } from "@query-grid/core";
+import { isColumnHideable } from "@laczynski/datagrid";
 import { Button } from "primeng/button";
 import { Checkbox } from "primeng/checkbox";
 import { Popover } from "primeng/popover";
@@ -12,7 +12,7 @@ import {
   hasColumnChooser,
   type GridResourceWithColumnChooser,
 } from "./grid-column-visibility-controls";
-import { QgI18nService } from "./i18n";
+import { DgI18nService } from "./i18n";
 import type { GridColumn } from "./table/grid-column";
 
 function asGridWithColumnChooser<T>(
@@ -22,7 +22,7 @@ function asGridWithColumnChooser<T>(
 }
 
 @Component({
-  selector: "qg-grid-column-chooser",
+  selector: "dg-grid-column-chooser",
   standalone: true,
   imports: [CommonModule, FormsModule, Button, Checkbox, Popover, Tooltip],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,7 +32,7 @@ function asGridWithColumnChooser<T>(
       display: contents;
     }
 
-    .qg-grid-column-chooser__panel {
+    .dg-grid-column-chooser__panel {
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
@@ -41,7 +41,7 @@ function asGridWithColumnChooser<T>(
       padding: 0.25rem 0;
     }
 
-    .qg-grid-column-chooser__list {
+    .dg-grid-column-chooser__list {
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
@@ -49,13 +49,13 @@ function asGridWithColumnChooser<T>(
       padding-inline: 0.25rem;
     }
 
-    .qg-grid-column-chooser__item {
+    .dg-grid-column-chooser__item {
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
 
-    .qg-grid-column-chooser__footer {
+    .dg-grid-column-chooser__footer {
       display: flex;
       justify-content: flex-end;
       gap: 0.5rem;
@@ -64,8 +64,8 @@ function asGridWithColumnChooser<T>(
     }
   `,
 })
-export class QgGridColumnChooserComponent<T = unknown> {
-  private readonly i18n = inject(QgI18nService);
+export class DgGridColumnChooserComponent<T = unknown> {
+  private readonly i18n = inject(DgI18nService);
 
   readonly grid = input.required<GridResource<T>>();
   readonly columns = input.required<GridColumn<T>[]>();

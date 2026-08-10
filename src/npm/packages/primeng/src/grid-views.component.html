@@ -1,8 +1,8 @@
 @if (viewsEnabled()) {
-  <div class="qg-grid-views-group">
-    <div class="qg-grid-views">
+  <div class="dg-grid-views-group">
+    <div class="dg-grid-views">
       <p-select
-        class="qg-grid-views__select"
+        class="dg-grid-views__select"
         [options]="presetOptions()"
         optionLabel="label"
         optionValue="value"
@@ -54,7 +54,7 @@
       }
     </div>
 
-    <span class="qg-grid-views__divider" aria-hidden="true"></span>
+    <span class="dg-grid-views__divider" aria-hidden="true"></span>
   </div>
 
   <p-dialog
@@ -65,7 +65,7 @@
     [visible]="showSaveDialog()"
     (visibleChange)="showSaveDialog.set($event)"
   >
-    <div class="qg-grid-views__save-field">
+    <div class="dg-grid-views__save-field">
       <input
         pInputText
         type="text"
@@ -76,7 +76,7 @@
       />
     </div>
     <ng-template #footer>
-      <div class="qg-grid-views__dialog-footer">
+      <div class="dg-grid-views__dialog-footer">
         <p-button
           type="button"
           [label]="cancelLabel()"

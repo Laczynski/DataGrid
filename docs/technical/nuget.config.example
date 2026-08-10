@@ -2,8 +2,8 @@
 <!--
   Consumer example — copy to your app as nuget.config (do not commit tokens).
 
-  Replace OWNER with the GitHub user or org that publishes QueryGrid
-  (repository owner — e.g. laczynski or query-grid).
+  Replace OWNER with the GitHub user or org that publishes DataGrid
+  (repository owner — e.g. laczynski).
 
   Authenticate locally:
     dotnet nuget add source --username YOUR_GITHUB_USERNAME --password YOUR_PAT --store-password-in-clear-text --name github "https://nuget.pkg.github.com/OWNER/index.json"
@@ -20,7 +20,7 @@
       <package pattern="*" />
     </packageSource>
     <packageSource key="github">
-      <package pattern="QueryGrid.*" />
+      <package pattern="DataGrid.*" />
     </packageSource>
   </packageSourceMapping>
 </configuration>

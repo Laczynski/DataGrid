@@ -6,7 +6,7 @@
 
 - Root `package.json` defines the npm workspace and orchestration scripts (`build:all`, `test:all`, `start:all`, `lint:frontend`, `pack:backend`) so you can run common dotnet and npm tasks from the repository root.
 - `src/dotnet/` contains the .NET solution and publishable NuGet packages.
-- `src/npm/` contains the npm workspace and publishable `@query-grid/*` packages.
+- `src/npm/` contains the npm workspace and publishable `@laczynski/datagrid*` packages.
 - `samples/` contains runnable demo applications that reference the library packages (local path or published versions).
 - `docs/` contains implementation guides and technical documentation.
 - `artifacts/` is the default output folder for packed NuGet packages (gitignored).
@@ -15,28 +15,28 @@
 
 ### Solution shape
 
-- `src/dotnet/QueryGrid.slnx` is the solution entry point.
+- `src/dotnet/DataGrid.slnx` is the solution entry point.
 - `Directory.Packages.props` manages NuGet package versions centrally.
 - `Directory.Build.props` applies shared metadata and version to packable projects.
 
 ### Package responsibilities
 
-| Package                         | Owns                                                                                                                                                                                                      |
-| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `QueryGrid.Abstractions`        | `GridQuery`, `GridResult`, filter/sort types, `GridExportRequest` / `GridExportResult`, `GridExportFormats`, `GridExportContentTypes.GetFilename`, attributes, `GridQueryJson`, `FilterNodeJsonConverter` |
-| `QueryGrid.Core`                | Schema discovery, expression builders, `IQueryable` extensions, `GridOptions`, CSV/Excel export, `IGridExportWriter`, `GridExportWriterRegistry`, `GridExportPipeline`, `GridExportWriterRegistration`    |
-| `QueryGrid.EntityFrameworkCore` | `ToGridResultAsync`, `ExportAsync`, `ExportToCsvAsync`, `ExportToXlsxAsync`                                                                                                                               |
+| Package                        | Owns                                                                                                                                                                                                      |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `DataGrid.Abstractions`        | `GridQuery`, `GridResult`, filter/sort types, `GridExportRequest` / `GridExportResult`, `GridExportFormats`, `GridExportContentTypes.GetFilename`, attributes, `GridQueryJson`, `FilterNodeJsonConverter` |
+| `DataGrid.Core`                | Schema discovery, expression builders, `IQueryable` extensions, `GridOptions`, CSV/Excel export, `IGridExportWriter`, `GridExportWriterRegistry`, `GridExportPipeline`, `GridExportWriterRegistration`    |
+| `DataGrid.EntityFrameworkCore` | `ToGridResultAsync`, `ExportAsync`, `ExportToCsvAsync`, `ExportToXlsxAsync`                                                                                                                               |
 
 ### Export layout
 
-Shared export planning (`GridExportExecutor`) lives in `QueryGrid.Core`. Built-in writers: CSV (BCL) and Excel (ClosedXML).
+Shared export planning (`GridExportExecutor`) lives in `DataGrid.Core`. Built-in writers: CSV (BCL) and Excel (ClosedXML).
 
-| Format | Package                         | Entry point                                                                                                                      |
-| ------ | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| Any    | `QueryGrid.EntityFrameworkCore` | `ExportAsync`                                                                                                                    |
-| CSV    | `QueryGrid.Core` / EF           | `ExportToCsv` / `ExportToCsvAsync`                                                                                               |
-| Excel  | `QueryGrid.Core` / EF           | `ExportToXlsx` / `ExportToXlsxAsync`                                                                                             |
-| Custom | consumer                        | `IGridExportWriter` + `GridExportPipeline`, register via `GridExportWriterRegistration.Configure` or `GridExportOptions.Writers` |
+| Format | Package                        | Entry point                                                                                                                      |
+| ------ | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| Any    | `DataGrid.EntityFrameworkCore` | `ExportAsync`                                                                                                                    |
+| CSV    | `DataGrid.Core` / EF           | `ExportToCsv` / `ExportToCsvAsync`                                                                                               |
+| Excel  | `DataGrid.Core` / EF           | `ExportToXlsx` / `ExportToXlsxAsync`                                                                                             |
+| Custom | consumer                       | `IGridExportWriter` + `GridExportPipeline`, register via `GridExportWriterRegistration.Configure` or `GridExportOptions.Writers` |
 
 The npm grid shows **Export** and **Export selected** dropdowns (CSV and Excel) when `export` is configured.
 
@@ -47,7 +47,7 @@ The npm grid shows **Export** and **Export selected** dropdowns (CSV and Excel) 
 
 ### Tests
 
-- `src/dotnet/tests/QueryGrid.UnitTests/` — xUnit tests colocated by concern (`FilterTests`, `SortAndPagingTests`, `GridQueryContractTests`, etc.)
+- `src/dotnet/tests/DataGrid.UnitTests/` — xUnit tests colocated by concern (`FilterTests`, `SortAndPagingTests`, `GridQueryContractTests`, etc.)
 - Uses EF Core InMemory for integration-style tests without a real database.
 
 ## npm map
@@ -59,26 +59,26 @@ The npm grid shows **Export** and **Export selected** dropdowns (CSV and Excel) 
 
 ### Package responsibilities
 
-| Package               | Owns                                                                                                                                                        |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `@query-grid/core`    | TypeScript models mirroring `GridQuery` / `GridResult`, `formatGridError`, `formatLocalDateTime`, `buildGridExportBody`, `downloadGridExport`               |
-| `@query-grid/primeng` | `createGridResource()`, `GridResourceFactory`, `<qg-prime-data-grid>`, `qgColumn` / `qgEmpty` directives, filter feed                                       |
-| `@query-grid/ui`      | `createGridResource()`, `GridResourceFactory`, `<qg-ui-data-grid>`, `qgColumn` / `qgEmpty` directives, filter feed (`@laczynski/ui`)                        |
-| `@query-grid/spartan` | `createGridResource()`, `GridResourceFactory`, `<qg-spartan-data-grid>`, column filters, export, views — [spartan-ui-alignment.md](spartan-ui-alignment.md) |
-| `@query-grid/cli`     | Angular schematics — `spartan-grid` (`filter-editors` L2 / `full` L3); see [spartan-l3-hlm.md](spartan-l3-hlm.md)                                           |
+| Package                       | Owns                                                                                                                                                        |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@laczynski/datagrid`         | TypeScript models mirroring `GridQuery` / `GridResult`, `formatGridError`, `formatLocalDateTime`, `buildGridExportBody`, `downloadGridExport`               |
+| `@laczynski/datagrid-primeng` | `createGridResource()`, `GridResourceFactory`, `<dg-prime-data-grid>`, `dgColumn` / `dgEmpty` directives, filter feed                                       |
+| `@laczynski/datagrid-ui`      | `createGridResource()`, `GridResourceFactory`, `<dg-ui-data-grid>`, `dgColumn` / `dgEmpty` directives, filter feed (`@laczynski/ui`)                        |
+| `@laczynski/datagrid-spartan` | `createGridResource()`, `GridResourceFactory`, `<dg-spartan-data-grid>`, column filters, export, views — [spartan-ui-alignment.md](spartan-ui-alignment.md) |
+| `@laczynski/datagrid-cli`     | Angular schematics — `spartan-grid` (`filter-editors` L2 / `full` L3); see [spartan-l3-hlm.md](spartan-l3-hlm.md)                                           |
 
 ### PrimeNG package layout
 
 - `create-grid-resource.ts`, `grid-resource-factory.ts` — signal-based grid state store
 - `grid-state-storage.ts` — optional session / local persistence (`persistState`)
-- `table/` — `qgColumn`, `qgEmpty`, column filter component, column resolution
+- `table/` — `dgColumn`, `dgEmpty`, column filter component, column resolution
 - `sort-mapper.ts`, `filter-mapper.ts`, `match-mode-options.ts`, `lazy-load-mapper.ts` — PrimeNG lazy-load bridge (barrel re-exports from the first three)
 - `filter-feed.ts` — interactive filter query feed UX
 
 ### Tests
 
-- `@query-grid/core` — Vitest (`models.spec.ts`, `grid-error-codes.spec.ts`, `format-local-datetime.spec.ts`).
-- `@query-grid/primeng` — Vitest (`lazy-load-mapper.spec.ts`, `filter-feed.spec.ts`); integration via `samples/showcase-ui`.
+- `@laczynski/datagrid` — Vitest (`models.spec.ts`, `grid-error-codes.spec.ts`, `format-local-datetime.spec.ts`).
+- `@laczynski/datagrid-primeng` — Vitest (`lazy-load-mapper.spec.ts`, `filter-feed.spec.ts`); integration via `samples/showcase-ui`.
 
 ## Samples map
 
@@ -89,17 +89,17 @@ The npm grid shows **Export** and **Export selected** dropdowns (CSV and Excel) 
 ## Dependency graph
 
 ```
-QueryGrid.Abstractions
+DataGrid.Abstractions
         │
-        ├── QueryGrid.Core
-        │         └── QueryGrid.EntityFrameworkCore
+        ├── DataGrid.Core
+        │         └── DataGrid.EntityFrameworkCore
         │
-@query-grid/core
+@laczynski/datagrid
         │
-        ├── @query-grid/primeng
-        ├── @query-grid/ui
-        ├── @query-grid/spartan
-        └── @query-grid/cli (schematics; devDependency in consumer apps)
+        ├── @laczynski/datagrid-primeng
+        ├── @laczynski/datagrid-ui
+        ├── @laczynski/datagrid-spartan
+        └── @laczynski/datagrid-cli (schematics; devDependency in consumer apps)
 ```
 
-Transport contracts must stay aligned between `QueryGrid.Abstractions` and `@query-grid/core`.
+Transport contracts must stay aligned between `DataGrid.Abstractions` and `@laczynski/datagrid`.

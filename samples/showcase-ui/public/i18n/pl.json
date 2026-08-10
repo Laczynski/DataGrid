@@ -119,7 +119,7 @@
   },
   "showcase": {
     "shell": {
-      "title": "QueryGrid Showcase",
+      "title": "DataGrid Showcase",
       "subtitle": "Macierz kompatybilności adapterów siatki",
       "navAria": "Adaptery showcase",
       "uiAdapter": "laczynski/ui",

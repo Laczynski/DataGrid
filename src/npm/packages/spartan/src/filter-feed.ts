@@ -5,8 +5,8 @@ import {
   type FilterCondition,
   type FilterNode,
   type GridQuery,
-  type QgMessageTranslateFn,
-} from "@query-grid/core";
+  type DgMessageTranslateFn,
+} from "@laczynski/datagrid";
 import type { GridColumn } from "./table/grid-column";
 
 export type FilterFeedSegmentKind = "search" | "condition" | "logic" | "paren" | "extra";
@@ -22,7 +22,7 @@ export type FilterFeedSegment = {
 };
 
 export type BuildGridFilterFeedOptions = {
-  translate?: QgMessageTranslateFn;
+  translate?: DgMessageTranslateFn;
   extras?: ReadonlyArray<{ id: string; label: string }>;
 };
 
@@ -33,7 +33,7 @@ function formatValue(column: GridColumn | undefined, value: unknown): string {
 function describeCondition(
   column: GridColumn | undefined,
   condition: FilterCondition,
-  t: QgMessageTranslateFn,
+  t: DgMessageTranslateFn,
 ): string {
   const header = column?.header ?? condition.field;
   const value = condition.value;
@@ -118,7 +118,7 @@ function describeCondition(
 function pushSeparator(
   segments: FilterFeedSegment[],
   nextId: () => string,
-  t: QgMessageTranslateFn,
+  t: DgMessageTranslateFn,
 ): void {
   segments.push({
     id: nextId(),
@@ -134,7 +134,7 @@ function appendFilterNode(
   path: number[],
   wrapGroup: boolean,
   columnByField: Map<string, GridColumn>,
-  t: QgMessageTranslateFn,
+  t: DgMessageTranslateFn,
   nextId: () => string,
 ): void {
   if (isFilterCondition(node)) {
@@ -191,7 +191,7 @@ export function buildGridFilterFeed(
   columns: ReadonlyArray<GridColumn<any>>,
   options?: BuildGridFilterFeedOptions,
 ): FilterFeedSegment[] {
-  const t: QgMessageTranslateFn = options?.translate ?? ((_key, fallback) => fallback);
+  const t: DgMessageTranslateFn = options?.translate ?? ((_key, fallback) => fallback);
   const columnByField = new Map<string, GridColumn>(
     columns.map((column) => [column.field, column]),
   );

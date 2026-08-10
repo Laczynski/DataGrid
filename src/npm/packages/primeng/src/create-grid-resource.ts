@@ -23,7 +23,7 @@ import {
   type GridResult,
   type GridViewsConfig,
   type SortDescriptor,
-} from "@query-grid/core";
+} from "@laczynski/datagrid";
 import { catchError, finalize, Observable, of, switchMap, tap } from "rxjs";
 import { createGridColumnLayoutControls } from "./grid-column-layout-controls";
 import { createGridColumnVisibilityControls } from "./grid-column-visibility-controls";
@@ -51,7 +51,7 @@ import {
 } from "./grid-state-storage";
 import { createGridViewsControls, type GridViewsControls } from "./grid-views-controls";
 
-export type { GridViewPreset, GridViewsConfig } from "@query-grid/core";
+export type { GridViewPreset, GridViewsConfig } from "@laczynski/datagrid";
 export type { GridResourceWithColumnLayout } from "./grid-column-layout-controls";
 export type { GridResourceWithColumnChooser } from "./grid-column-visibility-controls";
 export type { GridResourceWithExport } from "./grid-export-controls";

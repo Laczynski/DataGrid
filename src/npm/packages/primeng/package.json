@@ -1,7 +1,7 @@
 {
-  "name": "@query-grid/primeng",
-  "version": "0.1.0-preview.13",
-  "description": "PrimeNG lazy data grid with column filters, search and clear for QueryGrid.",
+  "name": "@laczynski/datagrid-primeng",
+  "version": "0.1.0-preview.14",
+  "description": "PrimeNG lazy data grid with column filters, search and clear for DataGrid.",
   "license": "MIT",
   "type": "module",
   "peerDependencies": {
@@ -9,7 +9,7 @@
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0",
     "@angular/forms": "^22.0.0",
-    "@query-grid/core": "0.1.0-preview.13",
+    "@laczynski/datagrid": "0.1.0-preview.14",
     "primeng": "^22.0.0",
     "rxjs": "^7.8.0"
   },
@@ -19,14 +19,14 @@
   "sideEffects": false,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/laczynski/QueryGrid.git"
+    "url": "git+https://github.com/laczynski/DataGrid.git"
   },
-  "homepage": "https://github.com/laczynski/QueryGrid#readme",
+  "homepage": "https://github.com/laczynski/DataGrid#readme",
   "bugs": {
-    "url": "https://github.com/laczynski/QueryGrid/issues"
+    "url": "https://github.com/laczynski/DataGrid/issues"
   },
   "keywords": [
-    "querygrid",
+    "datagrid",
     "angular",
     "primeng",
     "datagrid",
@@ -38,7 +38,7 @@
     "access": "public"
   },
   "scripts": {
-    "prebuild": "npm run build -w @query-grid/core",
+    "prebuild": "npm run build -w @laczynski/datagrid",
     "build": "node ../../../../scripts/build-ng-package.mjs .",
     "test": "vitest run"
   },
@@ -50,23 +50,23 @@
     "@angular/core": "^22.0.0",
     "@angular/forms": "^22.0.0",
     "@ngx-translate/core": "^17.0.0",
-    "@query-grid/core": "file:../core",
+    "@laczynski/datagrid": "file:../core",
     "ng-packagr": "^22.0.0",
     "primeng": "^22.0.0",
     "rxjs": "~7.8.0",
     "typescript": "~6.0.0",
     "vitest": "^3.2.4"
   },
-  "main": "./dist/fesm2022/query-grid-primeng.mjs",
-  "types": "./dist/types/query-grid-primeng.d.ts",
+  "main": "./dist/fesm2022/laczynski-datagrid-primeng.mjs",
+  "types": "./dist/types/laczynski-datagrid-primeng.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/query-grid-primeng.d.ts",
-      "default": "./dist/fesm2022/query-grid-primeng.mjs"
+      "types": "./dist/types/laczynski-datagrid-primeng.d.ts",
+      "default": "./dist/fesm2022/laczynski-datagrid-primeng.mjs"
     },
     "./ngx-translate": {
-      "types": "./dist/types/query-grid-primeng-ngx-translate.d.ts",
-      "default": "./dist/fesm2022/query-grid-primeng-ngx-translate.mjs"
+      "types": "./dist/types/laczynski-datagrid-primeng-ngx-translate.d.ts",
+      "default": "./dist/fesm2022/laczynski-datagrid-primeng-ngx-translate.mjs"
     }
   }
 }

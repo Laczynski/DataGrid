@@ -1,4 +1,4 @@
-import type { GridQuery } from "@query-grid/core";
+import type { GridQuery } from "@laczynski/datagrid";
 import { describe, expect, it, vi } from "vitest";
 import { loadPersistedGridState, savePersistedGridState } from "./grid-state-storage.js";
 

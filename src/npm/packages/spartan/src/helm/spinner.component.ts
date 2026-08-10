@@ -2,14 +2,14 @@ import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 import type { HelmSize } from "./types";
 
 @Component({
-  selector: "qg-sh-spinner",
+  selector: "dg-sh-spinner",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
-      class="qg-sh-spinner"
-      [class.qg-sh-spinner--small]="size() === 'small'"
-      [class.qg-sh-spinner--large]="size() === 'large'"
+      class="dg-sh-spinner"
+      [class.dg-sh-spinner--small]="size() === 'small'"
+      [class.dg-sh-spinner--large]="size() === 'large'"
       role="status"
       [attr.aria-label]="ariaLabel() ?? 'Loading'"
     ></div>

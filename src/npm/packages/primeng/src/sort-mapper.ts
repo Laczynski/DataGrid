@@ -1,4 +1,4 @@
-import { DEFAULT_GRID_OPTIONS, type SortDescriptor } from "@query-grid/core";
+import { DEFAULT_GRID_OPTIONS, type SortDescriptor } from "@laczynski/datagrid";
 import type { SortMeta } from "primeng/api";
 import type { Table, TableLazyLoadEvent } from "primeng/table";
 
@@ -44,7 +44,7 @@ export function toggleSortField(
   return [{ field, desc: false }];
 }
 
-/** Maps PrimeNG sort metadata to QueryGrid sort descriptors. */
+/** Maps PrimeNG sort metadata to DataGrid sort descriptors. */
 export function mapPrimeSortMetaToDescriptors(
   meta: SortMeta[] | null | undefined,
 ): SortDescriptor[] {
@@ -59,7 +59,7 @@ export function mapPrimeSortMetaToDescriptors(
     }));
 }
 
-/** Maps PrimeNG lazy-load sort metadata to QueryGrid sort descriptors. */
+/** Maps PrimeNG lazy-load sort metadata to DataGrid sort descriptors. */
 export function mapLazyLoadSort(
   event: TableLazyLoadEvent,
   table?: Pick<Table, "multiSortMeta">,
@@ -79,7 +79,7 @@ export function mapLazyLoadSort(
   return [];
 }
 
-/** Maps QueryGrid sort descriptors to PrimeNG multi-sort metadata. */
+/** Maps DataGrid sort descriptors to PrimeNG multi-sort metadata. */
 export function mapSortToPrimeMeta(sort: SortDescriptor[] | null | undefined): SortMeta[] {
   return (sort ?? []).map((descriptor) => ({
     field: descriptor.field,

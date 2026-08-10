@@ -9,19 +9,19 @@
 **Default: add tests at the lowest layer that can prove the behavior.**
 
 - Pure logic and JSON contract → unit tests in the owning package.
-- Cross-package contract → tests on both sides (dotnet + `@query-grid/core`).
+- Cross-package contract → tests on both sides (dotnet + `@laczynski/datagrid`).
 - UI integration and real HTTP round-trip → `samples/` (not unit tests in library packages).
 
 ## Layer ownership
 
 | Layer                                               | Owns                                                                                                                    | Does not own                                       |
 | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
-| .NET unit (`QueryGrid.UnitTests`)                   | Expression building, schema discovery, operator validation, JSON contract (`GridQueryContractTests`)                    | Browser, Angular, real HTTP servers                |
-| .NET integration (`QueryGrid.IntegrationTests`)     | SQLite (in-memory), PostgreSQL, SQL Server via Testcontainers — shared `GridBehaviorScenarios` for provider-agnostic UX | Browser, Angular, real HTTP servers                |
-| npm unit (`@query-grid/core` Vitest)                | Model helpers, error codes, formatting                                                                                  | DOM, Angular change detection, JSON transport      |
-| npm unit (`@query-grid/primeng`)                    | Lazy-load mapping, filter feed                                                                                          | Full browser E2E                                   |
-| npm unit (`@query-grid/ui` / `@query-grid/spartan`) | Filter feed, sort mapper, grid controls (views, scroll, selection)                                                      | Full browser E2E                                   |
-| npm (`@query-grid/cli`)                             | `spartan-grid` schematic (file copy, rewrites)                                                                          | Angular CLI integration in consumer apps           |
+| .NET unit (`DataGrid.UnitTests`)                   | Expression building, schema discovery, operator validation, JSON contract (`GridQueryContractTests`)                    | Browser, Angular, real HTTP servers                |
+| .NET integration (`DataGrid.IntegrationTests`)     | SQLite (in-memory), PostgreSQL, SQL Server via Testcontainers — shared `GridBehaviorScenarios` for provider-agnostic UX | Browser, Angular, real HTTP servers                |
+| npm unit (`@laczynski/datagrid` Vitest)                | Model helpers, error codes, formatting                                                                                  | DOM, Angular change detection, JSON transport      |
+| npm unit (`@laczynski/datagrid-primeng`)                    | Lazy-load mapping, filter feed                                                                                          | Full browser E2E                                   |
+| npm unit (`@laczynski/datagrid-ui` / `@laczynski/datagrid-spartan`) | Filter feed, sort mapper, grid controls (views, scroll, selection)                                                      | Full browser E2E                                   |
+| npm (`@laczynski/datagrid-cli`)                             | `spartan-grid` schematic (file copy, rewrites)                                                                          | Angular CLI integration in consumer apps           |
 | Samples                                             | Full stack: API + grid UI + real lazy load                                                                              | Exhaustive operator matrix (covered by unit tests) |
 
 ## Anti-patterns
@@ -39,7 +39,7 @@
 - Adding a filter operator or changing operator/type rules
 - Changing `GridQuery` / `GridResult` JSON shape (`GridQueryContractTests`)
 - Changing sort tie-breaker or paging edge cases
-- Changing PrimeNG ↔ QueryGrid lazy-load mapping (`lazy-load-mapper.spec.ts`, `filter-mapper-ux.spec.ts`)
+- Changing PrimeNG ↔ DataGrid lazy-load mapping (`lazy-load-mapper.spec.ts`, `filter-mapper-ux.spec.ts`)
 - User-visible grid behavior that must work the same on every relational provider (`GridBehaviorScenarios` + per-provider test classes)
 
 ## What to run
@@ -48,20 +48,20 @@ Prefer the smallest relevant check. Command details: [`AGENTS.md`](../../AGENTS.
 
 | Change                                   | Run                                                                  |
 | ---------------------------------------- | -------------------------------------------------------------------- |
-| `QueryGrid.Core` only                    | `npm run test:backend` (or `dotnet test` filtered if fast iteration) |
-| `QueryGrid.Abstractions` JSON contract   | `dotnet test`                                                        |
-| `@query-grid/core`                       | `npm run test:npm` (or test core workspace only from `src/npm`)      |
-| `@query-grid/primeng`                    | `npm run test:npm` + `samples/showcase-ui` smoke (`/primeng`)        |
-| `@query-grid/ui` / `@query-grid/spartan` | `npm run test:npm` + showcase smoke (`/ui`, `/spartan`)              |
-| `@query-grid/cli`                        | `npm run test -w @query-grid/cli`                                    |
+| `DataGrid.Core` only                    | `npm run test:backend` (or `dotnet test` filtered if fast iteration) |
+| `DataGrid.Abstractions` JSON contract   | `dotnet test`                                                        |
+| `@laczynski/datagrid`                       | `npm run test:npm` (or test core workspace only from `src/npm`)      |
+| `@laczynski/datagrid-primeng`                    | `npm run test:npm` + `samples/showcase-ui` smoke (`/primeng`)        |
+| `@laczynski/datagrid-ui` / `@laczynski/datagrid-spartan` | `npm run test:npm` + showcase smoke (`/ui`, `/spartan`)              |
+| `@laczynski/datagrid-cli`                        | `npm run test -w @laczynski/datagrid-cli`                                    |
 | Before PR                                | `npm run test:all`, `npm run build:all`, `npm run lint:frontend`     |
 
 CI runs the equivalent on every push — see [ci.md](../technical/ci.md). ESLint is local/PR checklist only (not in CI yet).
 
 ## Test file locations
 
-- .NET: `src/dotnet/tests/QueryGrid.UnitTests/*.cs`
-- .NET integration (SQLite + Docker PostgreSQL/SQL Server): `src/dotnet/tests/QueryGrid.IntegrationTests/*.cs`
+- .NET: `src/dotnet/tests/DataGrid.UnitTests/*.cs`
+- .NET integration (SQLite + Docker PostgreSQL/SQL Server): `src/dotnet/tests/DataGrid.IntegrationTests/*.cs`
   - Shared scenarios: `GridBehaviorScenarios.cs`
   - Provider runners: `SqliteGridBehaviorTests`, `PostgreSqlGridBehaviorTests`, `SqlServerGridBehaviorTests`
 - npm core: `src/npm/packages/core/src/*.spec.ts`

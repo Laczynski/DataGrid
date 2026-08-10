@@ -1,20 +1,20 @@
 import {
   getAllowedOperatorsForColumnType,
   type FilterOperator,
-  type QgMessageTranslateFn,
-} from "@query-grid/core";
+  type DgMessageTranslateFn,
+} from "@laczynski/datagrid";
 import type { SelectItem } from "primeng/api";
 import { FilterMatchMode } from "primeng/api";
 import type { GridColumnFilterType } from "./table/grid-column";
 
-function resolveTranslate(translate?: QgMessageTranslateFn): QgMessageTranslateFn {
+function resolveTranslate(translate?: DgMessageTranslateFn): DgMessageTranslateFn {
   return translate ?? ((_key, fallback) => fallback);
 }
 
 function operatorLabel(
   operator: FilterOperator,
   columnType: GridColumnFilterType | undefined,
-  t: QgMessageTranslateFn,
+  t: DgMessageTranslateFn,
 ): string {
   switch (operator) {
     case "contains":
@@ -106,7 +106,7 @@ function operatorToMatchMode(
 export function buildMatchModeOptions(
   columnType: GridColumnFilterType | undefined,
   nullable = false,
-  translate?: QgMessageTranslateFn,
+  translate?: DgMessageTranslateFn,
 ): SelectItem[] | undefined {
   if (columnType === "enum") {
     return buildEnumMatchModeOptions(translate, nullable);
@@ -126,7 +126,7 @@ export function buildMatchModeOptions(
 
 /** Match modes for enum columns (`in` / `notIn`, plus null checks when nullable). */
 export function buildEnumMatchModeOptions(
-  translate?: QgMessageTranslateFn,
+  translate?: DgMessageTranslateFn,
   nullable = false,
 ): SelectItem[] {
   const t = resolveTranslate(translate);
@@ -150,7 +150,7 @@ export function buildEnumMatchModeOptions(
 /** Match modes for nullable columns, including PrimeNG `is` / `isNot` (empty / not empty). */
 export function buildNullableMatchModeOptions(
   columnType: GridColumnFilterType | undefined,
-  translate?: QgMessageTranslateFn,
+  translate?: DgMessageTranslateFn,
 ): SelectItem[] | undefined {
   const t = resolveTranslate(translate);
 

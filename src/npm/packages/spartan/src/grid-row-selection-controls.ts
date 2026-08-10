@@ -6,7 +6,7 @@ import {
   togglePageRowSelection,
   toggleRowSelection,
   type RowSelectionMode,
-} from "@query-grid/core";
+} from "@laczynski/datagrid";
 
 export interface GridRowSelectionConfig {
   mode?: RowSelectionMode;

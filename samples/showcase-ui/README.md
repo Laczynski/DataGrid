@@ -1,6 +1,6 @@
-# QueryGrid Showcase UI
+# DataGrid Showcase UI
 
-Angular sample that exercises `@query-grid/primeng` and `@query-grid/ui` against `showcase-api`.
+Angular sample that exercises `@laczynski/datagrid-primeng` and `@laczynski/datagrid-ui` against `showcase-api`.
 
 From the repository root:
 
@@ -13,7 +13,7 @@ Or separately:
 
 ```powershell
 npm run start:backend    # http://localhost:5180
-npm run start:frontend   # rebuilds @query-grid/*, then http://localhost:4200
+npm run start:frontend   # rebuilds @laczynski/datagrid*, then http://localhost:4200
 ```
 
 For library development with live rebuild: `npm run dev:frontend`.

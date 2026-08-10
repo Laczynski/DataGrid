@@ -1,6 +1,6 @@
-using QueryGrid.Abstractions;
+using DataGrid.Abstractions;
 
-namespace QueryGrid.Samples.ShowcaseApi.Models;
+namespace DataGrid.Samples.ShowcaseApi.Models;
 
 public sealed class ShowcaseRowDto
 {

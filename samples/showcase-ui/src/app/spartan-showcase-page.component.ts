@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, Injector, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { formatGridError } from '@query-grid/core';
-import { QgColumnDirective, QgEmptyDirective } from '@query-grid/spartan';
+import { formatGridError } from '@laczynski/datagrid';
+import { DgColumnDirective, DgEmptyDirective } from '@laczynski/datagrid-spartan';
 import { ShowcaseRow } from './models/showcase-row.model';
 import { ShowcaseApiService } from './services/showcase-api.service';
 import { ShowcaseLocaleService } from './services/showcase-locale.service';
-import { HlmQueryGridComponent } from './shared/query-grid/grid-shell/hlm-query-grid.component';
+import { HlmDataGridComponent } from './shared/datagrid/grid-shell/hlm-data-grid.component';
 import { createSpartanShowcaseGrid } from './showcase-grid.factory';
 import { getShowcaseCategoryLabel, showcaseCategories } from './utils/showcase.utils';
 
@@ -14,9 +14,9 @@ import { getShowcaseCategoryLabel, showcaseCategories } from './utils/showcase.u
   selector: 'app-spartan-showcase-page',
   imports: [
     CommonModule,
-    HlmQueryGridComponent,
-    QgColumnDirective,
-    QgEmptyDirective,
+    HlmDataGridComponent,
+    DgColumnDirective,
+    DgEmptyDirective,
     TranslatePipe,
   ],
   templateUrl: './spartan-showcase-page.component.html',

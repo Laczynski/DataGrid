@@ -1,0 +1,21 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Folder Name="/packages/">
+    <Project Path="DataGrid.Abstractions/DataGrid.Abstractions.csproj" />
+    <Project Path="DataGrid.Core/DataGrid.Core.csproj" />
+    <Project Path="DataGrid.EntityFrameworkCore/DataGrid.EntityFrameworkCore.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/DataGrid.IntegrationTests/DataGrid.IntegrationTests.csproj" />
+    <Project Path="tests/DataGrid.UnitTests/DataGrid.UnitTests.csproj" />
+  </Folder>
+</Solution>

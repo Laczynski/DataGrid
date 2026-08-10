@@ -1,5 +1,5 @@
 import { Directive, inject, input, TemplateRef } from "@angular/core";
-import type { QgColumnContext } from "./column-context";
+import type { DgColumnContext } from "./column-context";
 import type { GridCellAlign, GridColumn, GridColumnFilter } from "./grid-column";
 
 /**
@@ -7,10 +7,10 @@ import type { GridCellAlign, GridColumn, GridColumnFilter } from "./grid-column"
  *
  * ```html
  * <ng-template
- *   qgColumn="status"
+ *   dgColumn="status"
  *   header="Status"
  *   [filter]="{ type: 'enum', options: statusOptions }"
- *   [qgColumnOf]="rowType"
+ *   [dgColumnOf]="rowType"
  *   let-row
  * >
  *   <p-tag [value]="row.status" />
@@ -18,18 +18,18 @@ import type { GridCellAlign, GridColumn, GridColumnFilter } from "./grid-column"
  * ```
  *
  * When the host grid has no `[columns]` input, column metadata is derived from
- * projected `qgColumn` templates in DOM order.
+ * projected `dgColumn` templates in DOM order.
  */
-@Directive({ selector: "[qgColumn]", standalone: true })
-export class QgColumnDirective<T = unknown> {
+@Directive({ selector: "[dgColumn]", standalone: true })
+export class DgColumnDirective<T = unknown> {
   /** Server field name; must match a sortable/filterable DTO property. */
-  readonly field = input.required<string>({ alias: "qgColumn" });
+  readonly field = input.required<string>({ alias: "dgColumn" });
   /**
-   * Type-only anchor for `let-row` (e.g. `[qgColumnOf]="rowType"` where `rowType!: MyRow`).
+   * Type-only anchor for `let-row` (e.g. `[dgColumnOf]="rowType"` where `rowType!: MyRow`).
    * Not used at runtime.
    */
   readonly rowTypeAnchor = input<T | undefined>(undefined, {
-    alias: "qgColumnOf",
+    alias: "dgColumnOf",
   });
   /** Header label shown in the table. */
   readonly header = input.required<string>();
@@ -46,7 +46,7 @@ export class QgColumnDirective<T = unknown> {
   readonly filter = input<GridColumnFilter | undefined>(undefined);
   readonly align = input<GridCellAlign | undefined>(undefined);
   readonly width = input<string | undefined>(undefined);
-  readonly template = inject<TemplateRef<QgColumnContext<T>>>(TemplateRef);
+  readonly template = inject<TemplateRef<DgColumnContext<T>>>(TemplateRef);
 
   toGridColumn(): GridColumn<T> {
     const column: GridColumn<T> = {
@@ -108,9 +108,9 @@ export class QgColumnDirective<T = unknown> {
   }
 
   static ngTemplateContextGuard<T>(
-    _directive: QgColumnDirective<T>,
+    _directive: DgColumnDirective<T>,
     _context: unknown,
-  ): _context is QgColumnContext<T> {
+  ): _context is DgColumnContext<T> {
     return true;
   }
 }

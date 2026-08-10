@@ -4,14 +4,14 @@ import type {
   FilterNode,
   FilterOperator,
   GridQuery,
-} from "@query-grid/core";
+} from "@laczynski/datagrid";
 import {
   areSortDescriptorsEqual,
   coerceOperatorForColumnType,
   isFilterCondition,
   isFilterGroup,
   sameFilterNode,
-} from "@query-grid/core";
+} from "@laczynski/datagrid";
 import type { FilterMetadata } from "primeng/api";
 import { FilterOperator as PrimeFilterOperator } from "primeng/api";
 import type { Table } from "primeng/table";
@@ -225,7 +225,7 @@ function readFilterEntries(
   return entries;
 }
 
-/** Maps PrimeNG lazy-load filter metadata to a QueryGrid filter tree. */
+/** Maps PrimeNG lazy-load filter metadata to a DataGrid filter tree. */
 export function mapPrimeFiltersToGridFilter(
   filters: Record<string, FilterMetadata | FilterMetadata[]> | undefined,
   columns: ReadonlyArray<GridColumn<any>>,

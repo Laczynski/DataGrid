@@ -19,14 +19,14 @@
   [dataKey]="dataKey()"
   [scrollable]="!!scrollHeight() || hasPinnedColumns()"
   [scrollHeight]="scrollHeight() ?? undefined"
-  [tableStyleClass]="appearance() === 'plain' ? 'qg-plain-table' : undefined"
+  [tableStyleClass]="appearance() === 'plain' ? 'dg-plain-table' : undefined"
   [tableStyle]="hasPinnedColumns() ? { 'min-width': 'max-content' } : undefined"
 >
   <ng-template #caption>
-    <div class="qg-caption" [class.qg-plain-caption]="appearance() === 'plain'">
-      <div class="qg-caption-toolbar">
+    <div class="dg-caption" [class.dg-plain-caption]="appearance() === 'plain'">
+      <div class="dg-caption-toolbar">
         @if (searchable()) {
-          <p-iconfield iconPosition="left" class="qg-caption-search">
+          <p-iconfield iconPosition="left" class="dg-caption-search">
             <p-inputicon>
               <i class="pi pi-search"></i>
             </p-inputicon>
@@ -40,9 +40,9 @@
           </p-iconfield>
         }
 
-        <div class="qg-caption-actions">
-          <qg-grid-column-chooser [grid]="grid()" [columns]="resolvedColumns()" />
-          <qg-grid-views [grid]="grid()" />
+        <div class="dg-caption-actions">
+          <dg-grid-column-chooser [grid]="grid()" [columns]="resolvedColumns()" />
+          <dg-grid-views [grid]="grid()" />
 
           @if (toolbarTemplate(); as toolbar) {
             <p-button
@@ -80,9 +80,9 @@
       </div>
 
       @if (showBulkToolbar()) {
-        <div class="qg-caption-bulk-toolbar">
-          <span class="qg-caption-bulk-toolbar-count">{{ selectedCountText() }}</span>
-          <div class="qg-caption-bulk-toolbar-actions">
+        <div class="dg-caption-bulk-toolbar">
+          <span class="dg-caption-bulk-toolbar-count">{{ selectedCountText() }}</span>
+          <div class="dg-caption-bulk-toolbar-actions">
             @if (exportSelectedEnabled()) {
               <p-splitbutton
                 [model]="exportSelectedMenuItems()"
@@ -114,20 +114,20 @@
       }
 
       @if (filtersExpanded() && toolbarTemplate(); as toolbar) {
-        <div class="qg-caption-filters">
+        <div class="dg-caption-filters">
           <ng-container [ngTemplateOutlet]="toolbar" />
         </div>
       }
 
       @if (filterFeed().length > 0) {
-        <div class="qg-caption-feed" role="list" [attr.aria-label]="activeFiltersLabel()">
+        <div class="dg-caption-feed" role="list" [attr.aria-label]="activeFiltersLabel()">
           @for (segment of filterFeed(); track segment.id) {
             @if (segment.removable) {
-              <span class="qg-caption-feed__token" role="listitem">
-                <span class="qg-caption-feed__token-text">{{ segment.text }}</span>
+              <span class="dg-caption-feed__token" role="listitem">
+                <span class="dg-caption-feed__token-text">{{ segment.text }}</span>
                 <button
                   type="button"
-                  class="qg-caption-feed__remove"
+                  class="dg-caption-feed__remove"
                   [attr.aria-label]="removeFeedLabel(segment)"
                   (click)="removeFeedSegment(segment, table)"
                 >
@@ -135,7 +135,7 @@
                 </button>
               </span>
             } @else {
-              <span class="qg-caption-feed__logic">{{ segment.text }}</span>
+              <span class="dg-caption-feed__logic">{{ segment.text }}</span>
             }
           }
         </div>
@@ -147,20 +147,20 @@
     <tr
       cdkDropList
       cdkDropListOrientation="horizontal"
-      [class.qg-header-row--dragging]="columnDragActive()"
+      [class.dg-header-row--dragging]="columnDragActive()"
       (cdkDropListDropped)="onColumnDropped($event)"
     >
       @if (rowSelectionEnabled()) {
         <th
           scope="col"
-          class="qg-header-cell qg-header-cell--selection"
-          [class.qg-header-cell--selection-edge]="isSelectionColumnFrozenEdge()"
-          [class.qg-header-cell--selection-separator]="isSelectionColumnSeparator()"
+          class="dg-header-cell dg-header-cell--selection"
+          [class.dg-header-cell--selection-edge]="isSelectionColumnFrozenEdge()"
+          [class.dg-header-cell--selection-separator]="isSelectionColumnSeparator()"
           [attr.aria-label]="isMultipleSelection() ? selectPageLabel() : selectRowLabel()"
           [style.z-index]="selectionHeaderZIndex()"
         >
           @if (isMultipleSelection()) {
-            <div class="qg-selection-cell">
+            <div class="dg-selection-cell">
               <p-checkbox
                 [binary]="true"
                 [ngModel]="isPageSelectionChecked()"
@@ -176,17 +176,17 @@
           scope="col"
           cdkDrag
           cdkDragLockAxis="x"
-          cdkDragPreviewClass="qg-column-drag-preview"
+          cdkDragPreviewClass="dg-column-drag-preview"
           [cdkDragDisabled]="!isReorderable(column)"
-          class="qg-header-cell"
-          [class.qg-header-cell--reorderable]="isReorderable(column)"
+          class="dg-header-cell"
+          [class.dg-header-cell--reorderable]="isReorderable(column)"
           [attr.data-field]="column.field"
-          [class.qg-pinned-left]="pinnedOffset(column.field)?.pin === 'left'"
-          [class.qg-pinned-right]="pinnedOffset(column.field)?.pin === 'right'"
-          [class.qg-pinned-left-separator]="isLeftPinnedSeparator(column.field)"
-          [class.qg-pinned-left-edge]="isLeftPinnedEdge(column.field)"
-          [class.qg-pinned-right-separator]="isRightPinnedSeparator(column.field)"
-          [class.qg-pinned-right-edge]="isRightPinnedEdge(column.field)"
+          [class.dg-pinned-left]="pinnedOffset(column.field)?.pin === 'left'"
+          [class.dg-pinned-right]="pinnedOffset(column.field)?.pin === 'right'"
+          [class.dg-pinned-left-separator]="isLeftPinnedSeparator(column.field)"
+          [class.dg-pinned-left-edge]="isLeftPinnedEdge(column.field)"
+          [class.dg-pinned-right-separator]="isRightPinnedSeparator(column.field)"
+          [class.dg-pinned-right-edge]="isRightPinnedEdge(column.field)"
           [style.minWidth]="columnWidth(column)"
           [style.width]="columnWidth(column)"
           [style.left.px]="pinnedLeftPx(column.field)"
@@ -195,10 +195,10 @@
           [style.textAlign]="column.align"
           [pSortableColumn]="isSortable(column) ? column.field : undefined"
         >
-          <div class="qg-column-header">
+          <div class="dg-column-header">
             @if (isReorderable(column)) {
               <span
-                class="qg-column-drag-handle"
+                class="dg-column-drag-handle"
                 cdkDragHandle
                 [attr.aria-label]="reorderHandleLabel(column)"
                 (mousedown)="onColumnDragStarted()"
@@ -207,7 +207,7 @@
                 <i class="pi pi-bars" aria-hidden="true"></i>
               </span>
             }
-            <div class="qg-column-title">
+            <div class="dg-column-title">
               <span>{{ column.header }}</span>
               @if (isSortable(column)) {
                 @for (version of [sortIconVersion()]; track version) {
@@ -215,12 +215,12 @@
                 }
               }
             </div>
-            <div class="qg-column-header-actions">
+            <div class="dg-column-header-actions">
               @if (isPinnable(column)) {
                 <button
                   type="button"
-                  class="qg-column-pin-button"
-                  [class.qg-column-pin-button--active]="!!currentPin(column)"
+                  class="dg-column-pin-button"
+                  [class.dg-column-pin-button--active]="!!currentPin(column)"
                   [attr.aria-label]="pinAriaLabel(column)"
                   (click)="cycleColumnPin(column, $event)"
                 >
@@ -229,20 +229,20 @@
               }
               @if (column.filter) {
                 @for (version of [filterPanelVersion()]; track version) {
-                  <qg-column-filter [column]="column" [filterLocale]="resolvedFilterLocale()" />
+                  <dg-column-filter [column]="column" [filterLocale]="resolvedFilterLocale()" />
                 }
               }
             </div>
           </div>
           @if (isResizable(column)) {
             <span
-              qgColumnResize
+              dgColumnResize
               [minWidth]="column.minWidth ?? 48"
               (resized)="onColumnResized(column, $event)"
             ></span>
           }
           <ng-template cdkDragPreview>
-            <div class="qg-column-drag-preview" [style.minWidth]="columnWidth(column)">
+            <div class="dg-column-drag-preview" [style.minWidth]="columnWidth(column)">
               {{ column.header }}
             </div>
           </ng-template>
@@ -252,15 +252,15 @@
   </ng-template>
 
   <ng-template #body let-row>
-    <tr [class.qg-row--selected]="isRowSelected(row)">
+    <tr [class.dg-row--selected]="isRowSelected(row)">
       @if (rowSelectionEnabled()) {
         <td
-          class="qg-body-cell qg-body-cell--selection"
-          [class.qg-body-cell--selection-edge]="isSelectionColumnFrozenEdge()"
-          [class.qg-body-cell--selection-separator]="isSelectionColumnSeparator()"
+          class="dg-body-cell dg-body-cell--selection"
+          [class.dg-body-cell--selection-edge]="isSelectionColumnFrozenEdge()"
+          [class.dg-body-cell--selection-separator]="isSelectionColumnSeparator()"
           [style.z-index]="selectionBodyZIndex()"
         >
-          <div class="qg-selection-cell">
+          <div class="dg-selection-cell">
             <p-checkbox
               [binary]="true"
               [ngModel]="isRowSelected(row)"
@@ -271,13 +271,13 @@
       }
       @for (column of displayedColumns(); track column.field) {
         <td
-          class="qg-body-cell"
-          [class.qg-pinned-left]="pinnedOffset(column.field)?.pin === 'left'"
-          [class.qg-pinned-right]="pinnedOffset(column.field)?.pin === 'right'"
-          [class.qg-pinned-left-separator]="isLeftPinnedSeparator(column.field)"
-          [class.qg-pinned-left-edge]="isLeftPinnedEdge(column.field)"
-          [class.qg-pinned-right-separator]="isRightPinnedSeparator(column.field)"
-          [class.qg-pinned-right-edge]="isRightPinnedEdge(column.field)"
+          class="dg-body-cell"
+          [class.dg-pinned-left]="pinnedOffset(column.field)?.pin === 'left'"
+          [class.dg-pinned-right]="pinnedOffset(column.field)?.pin === 'right'"
+          [class.dg-pinned-left-separator]="isLeftPinnedSeparator(column.field)"
+          [class.dg-pinned-left-edge]="isLeftPinnedEdge(column.field)"
+          [class.dg-pinned-right-separator]="isRightPinnedSeparator(column.field)"
+          [class.dg-pinned-right-edge]="isRightPinnedEdge(column.field)"
           [style.minWidth]="columnWidth(column)"
           [style.width]="columnWidth(column)"
           [style.left.px]="pinnedLeftPx(column.field)"

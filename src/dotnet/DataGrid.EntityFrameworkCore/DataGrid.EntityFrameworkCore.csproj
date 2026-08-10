@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>DataGrid.EntityFrameworkCore</RootNamespace>
+    <PackageId>DataGrid.EntityFrameworkCore</PackageId>
+    <Description>Entity Framework Core integration for DataGrid: ApplyGridAsync executes filtering, multi-sort, total count and paging asynchronously and returns a GridResult.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DataGrid.Core\DataGrid.Core.csproj" />
+  </ItemGroup>
+
+</Project>

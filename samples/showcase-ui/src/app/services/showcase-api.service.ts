@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { GridQuery, GridResult } from '@query-grid/core';
+import { GridQuery, GridResult } from '@laczynski/datagrid';
 import { Observable } from 'rxjs';
 import { ShowcaseRow } from '../models/showcase-row.model';
 import { SHOWCASE_GRID_QUERY_PARAM } from '../showcase-grid.config';

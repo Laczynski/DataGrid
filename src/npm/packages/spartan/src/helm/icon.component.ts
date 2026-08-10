@@ -23,7 +23,7 @@ const ICON_PATHS: Record<string, string> = {
 };
 
 @Component({
-  selector: "qg-sh-icon",
+  selector: "dg-sh-icon",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

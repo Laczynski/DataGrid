@@ -1,6 +1,6 @@
-using QueryGrid.Samples.ShowcaseApi.Models;
+using DataGrid.Samples.ShowcaseApi.Models;
 
-namespace QueryGrid.Samples.ShowcaseApi.Data;
+namespace DataGrid.Samples.ShowcaseApi.Data;
 
 public sealed class ShowcaseRow
 {

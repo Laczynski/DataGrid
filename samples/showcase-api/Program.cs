@@ -1,15 +1,15 @@
 using Microsoft.EntityFrameworkCore;
-using QueryGrid.Abstractions;
-using QueryGrid.Core;
-using QueryGrid.EntityFrameworkCore;
-using QueryGrid.Samples.ShowcaseApi;
-using QueryGrid.Samples.ShowcaseApi.Data;
-using QueryGrid.Samples.ShowcaseApi.Models;
+using DataGrid.Abstractions;
+using DataGrid.Core;
+using DataGrid.EntityFrameworkCore;
+using DataGrid.Samples.ShowcaseApi;
+using DataGrid.Samples.ShowcaseApi.Data;
+using DataGrid.Samples.ShowcaseApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ShowcaseDbContext>(options =>
-  options.UseInMemoryDatabase("QueryGridShowcase"));
+  options.UseInMemoryDatabase("DataGridShowcase"));
 
 builder.Services.AddCors(options =>
 {

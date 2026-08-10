@@ -15,7 +15,7 @@ const schematicFiles = join(
   'spartan-grid',
   'files',
 );
-const destination = join(showcaseRoot, 'src', 'app', 'shared', 'query-grid');
+const destination = join(showcaseRoot, 'src', 'app', 'shared', 'datagrid');
 
 execSync('node scripts/sync-spartan-schematic-files.mjs', {
   cwd: repoRoot,

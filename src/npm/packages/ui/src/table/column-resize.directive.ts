@@ -1,14 +1,14 @@
 import { Directive, ElementRef, inject, input, output } from "@angular/core";
 
 @Directive({
-  selector: "[qgColumnResize]",
+  selector: "[dgColumnResize]",
   standalone: true,
   host: {
-    class: "qg-column-resize-handle",
+    class: "dg-column-resize-handle",
     "(mousedown)": "onMouseDown($event)",
   },
 })
-export class QgColumnResizeDirective {
+export class DgColumnResizeDirective {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
 
   readonly minWidth = input(48);

@@ -1,6 +1,6 @@
 # .NET Guidelines
 
-> Scope: conventions for implementing work in the `QueryGrid.*` NuGet packages.
+> Scope: conventions for implementing work in the `DataGrid.*` NuGet packages.
 >
 > Package ownership and folder layout: [repo-map.md](repo-map.md).
 
@@ -12,11 +12,11 @@ For build, test, and pack commands, see [`AGENTS.md`](../../AGENTS.md).
 
 ## Standard path for a new capability
 
-1. Add or extend types in `QueryGrid.Abstractions` if the transport contract changes.
-2. Implement behavior in `QueryGrid.Core` (expression builder, schema rule, or option).
+1. Add or extend types in `DataGrid.Abstractions` if the transport contract changes.
+2. Implement behavior in `DataGrid.Core` (expression builder, schema rule, or option).
 3. Add EF integration only when the feature is host-specific.
-4. Add unit tests in `QueryGrid.UnitTests` — name tests by behavior, not by class name alone.
-5. If JSON shape changes, update `@query-grid/core` types and `GridQueryContractTests` (see [Change coupling checklist](../../AGENTS.md#change-coupling-checklist)).
+4. Add unit tests in `DataGrid.UnitTests` — name tests by behavior, not by class name alone.
+5. If JSON shape changes, update `@laczynski/datagrid` types and `GridQueryContractTests` (see [Change coupling checklist](../../AGENTS.md#change-coupling-checklist)).
 6. Verify in `samples/` when a runnable scenario exists.
 
 ## Expression and schema conventions
@@ -36,14 +36,14 @@ For build, test, and pack commands, see [`AGENTS.md`](../../AGENTS.md).
 
 ## Public API conventions
 
-- Keep namespaces `QueryGrid.*` matching package names.
+- Keep namespaces `DataGrid.*` matching package names.
 - Document public members with XML comments — they appear in NuGet package docs.
 - Internal helpers live under `Internal/` folders and use `internal` visibility.
 
 ## Export conventions
 
-- Shared contract: `GridExportRequest`, `GridExportResult`, `GridExportFormats`, `GridExportContentTypes.GetFilename` in `QueryGrid.Abstractions`.
-- Shared planning (`GridExportExecutor`, `ApplyGridExport`) in `QueryGrid.Core` — filter, search, sort, scope, and row cap are format-agnostic.
+- Shared contract: `GridExportRequest`, `GridExportResult`, `GridExportFormats`, `GridExportContentTypes.GetFilename` in `DataGrid.Abstractions`.
+- Shared planning (`GridExportExecutor`, `ApplyGridExport`) in `DataGrid.Core` — filter, search, sort, scope, and row cap are format-agnostic.
 - **Facade** — `ExportAsync` (EF) and `Export` (Core sync, in-memory) dispatch through `IGridExportWriter`.
 - **Built-in writers** — CSV and Excel registered on `GridExportWriterRegistry.Default` via `BuiltInGridExportWriters`.
 - **Custom writers** — implement `IGridExportWriter`, delegate row writing to `GridExportPipeline.RunAsync`, register with `GridExportWriterRegistration.Configure` or `GridExportOptions.Writers`.
@@ -55,4 +55,4 @@ For build, test, and pack commands, see [`AGENTS.md`](../../AGENTS.md).
 ## What does not belong here
 
 - Application endpoints, DbContext, or domain entities — those live in `samples/` or consumer apps.
-- FastEndpoints-specific binders — optional future package (`QueryGrid.FastEndpoints`), not in Core.
+- FastEndpoints-specific binders — optional future package (`DataGrid.FastEndpoints`), not in Core.

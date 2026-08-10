@@ -1,4 +1,4 @@
-# QueryGrid
+# DataGrid
 
 Server-driven pagination, filtering, and sorting for .NET and Angular — as a standalone, reusable library.
 
@@ -6,18 +6,18 @@ Server-driven pagination, filtering, and sorting for .NET and Angular — as a s
 
 ### NuGet (.NET 10)
 
-| Package                         | Description                                                                    |
-| ------------------------------- | ------------------------------------------------------------------------------ |
-| `QueryGrid.Abstractions`        | Transport contracts (`GridQuery`, `GridResult`, filter/sort types, attributes) |
-| `QueryGrid.Core`                | Engine: auto field discovery, expression building, `IQueryable` extensions     |
-| `QueryGrid.EntityFrameworkCore` | `ToGridResultAsync` for EF Core                                                |
+| Package                        | Description                                                                    |
+| ------------------------------ | ------------------------------------------------------------------------------ |
+| `DataGrid.Abstractions`        | Transport contracts (`GridQuery`, `GridResult`, filter/sort types, attributes) |
+| `DataGrid.Core`                | Engine: auto field discovery, expression building, `IQueryable` extensions     |
+| `DataGrid.EntityFrameworkCore` | `ToGridResultAsync` for EF Core                                                |
 
 ### npm
 
-| Package               | Description                                                                |
-| --------------------- | -------------------------------------------------------------------------- |
-| `@query-grid/core`    | TypeScript models, helpers (`formatGridError`, `formatLocalDateTime`)      |
-| `@query-grid/primeng` | `<qg-prime-data-grid>` PrimeNG table with column filters, search and Clear |
+| Package                       | Description                                                                |
+| ----------------------------- | -------------------------------------------------------------------------- |
+| `@laczynski/datagrid`         | TypeScript models, helpers (`formatGridError`, `formatLocalDateTime`)      |
+| `@laczynski/datagrid-primeng` | `<dg-prime-data-grid>` PrimeNG table with column filters, search and Clear |
 
 ## Quick start
 
@@ -26,8 +26,8 @@ See [docs/getting-started.md](docs/getting-started.md) for install steps and cod
 ## Repository layout
 
 ```
-src/dotnet/          .NET solution (QueryGrid.* NuGet packages)
-src/npm/             npm workspaces (@query-grid/*)
+src/dotnet/          .NET solution (DataGrid.* NuGet packages)
+src/npm/             npm workspaces (@laczynski/datagrid*)
 samples/             showcase apps — data types & scenario matrix (integration verification)
 docs/                guides and technical docs (start at docs/README.md)
 AGENTS.md            contributor fast-start (commands, task routing)

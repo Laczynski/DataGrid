@@ -7,7 +7,7 @@ import {
   readColumnLayoutExtra,
   type ColumnPin,
   type GridColumnLayoutState,
-} from "@query-grid/core";
+} from "@laczynski/datagrid";
 
 export interface GridColumnLayoutControls {
   columnOrder: ReturnType<typeof signal<readonly string[]>>;

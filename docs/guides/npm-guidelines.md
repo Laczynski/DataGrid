@@ -1,21 +1,21 @@
 # npm Guidelines
 
-> Scope: conventions for implementing work in the `@query-grid/*` npm packages.
+> Scope: conventions for implementing work in the `@laczynski/datagrid*` npm packages.
 >
 > Package ownership and folder layout: [repo-map.md](repo-map.md). JSON wire format: [getting-started.md](../getting-started.md).
 
 ## Stack summary
 
-TypeScript libraries published via npm workspaces. `@query-grid/core` is framework-agnostic (Vitest). `@query-grid/primeng` is an Angular library built with `ng-packagr`. ESLint and Prettier apply under `src/npm/`.
+TypeScript libraries published via npm workspaces. `@laczynski/datagrid` is framework-agnostic (Vitest). `@laczynski/datagrid-primeng` is an Angular library built with `ng-packagr`. ESLint and Prettier apply under `src/npm/`.
 
 For build, test, and lint commands, see [`AGENTS.md`](../../AGENTS.md).
 
 ## Standard path for a new capability
 
-1. If shared contract changes, update `@query-grid/core` types first.
-2. Implement Angular state or PrimeNG UI in `@query-grid/primeng`.
-3. Implement laczynski/ui UI in `@query-grid/ui`.
-4. Implement Spartan UI in `@query-grid/spartan` (L1) — follow [spartan-ui-alignment.md](spartan-ui-alignment.md). For L3 consumer copies, update the CLI schematic and run `scripts/sync-spartan-schematic-files.mjs`.
+1. If shared contract changes, update `@laczynski/datagrid` types first.
+2. Implement Angular state or PrimeNG UI in `@laczynski/datagrid-primeng`.
+3. Implement laczynski/ui UI in `@laczynski/datagrid-ui`.
+4. Implement Spartan UI in `@laczynski/datagrid-spartan` (L1) — follow [spartan-ui-alignment.md](spartan-ui-alignment.md). For L3 consumer copies, update the CLI schematic and run `scripts/sync-spartan-schematic-files.mjs`.
 5. Add Vitest tests in the owning package; use `samples/showcase-ui` for component integration.
 6. Bump package version in `package.json` when releasing (keep aligned with NuGet preview version).
 
@@ -24,8 +24,8 @@ For build, test, and lint commands, see [`AGENTS.md`](../../AGENTS.md).
 - Standalone components and directives.
 - Use signals for grid resource state — avoid mutable class fields for load state.
 - Create grids via `inject(GridResourceFactory)` or `createGridResource({ injector, load, … })`.
-- Column + cell templates: `qgColumn` only (declares field, header, filter, and cell body in one template).
-- Optional empty state: `qgEmpty` projected into `<qg-prime-data-grid>`.
+- Column + cell templates: `dgColumn` only (declares field, header, filter, and cell body in one template).
+- Optional empty state: `dgEmpty` projected into `<dg-prime-data-grid>`.
 - Do not embed app-specific routes, auth, or API base URLs — consumers pass a `load` function.
 
 ## What does not belong here

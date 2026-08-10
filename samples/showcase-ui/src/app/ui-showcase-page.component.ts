@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, Injector, signal } from '@angular/core';
 import { CardComponent, MessageBarComponent, TagComponent } from '@laczynski/ui';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { buildGridQueryUrl, formatGridError } from '@query-grid/core';
-import { QgColumnDirective, QgEmptyDirective, UiDataGridComponent } from '@query-grid/ui';
+import { buildGridQueryUrl, formatGridError } from '@laczynski/datagrid';
+import { DgColumnDirective, DgEmptyDirective, UiDataGridComponent } from '@laczynski/datagrid-ui';
 import { ShowcaseRow } from './models/showcase-row.model';
 import { ShowcaseApiService } from './services/showcase-api.service';
 import { ShowcaseLocaleService } from './services/showcase-locale.service';
@@ -18,8 +18,8 @@ import { getShowcaseCategoryLabel, showcaseCategories } from './utils/showcase.u
     MessageBarComponent,
     TagComponent,
     UiDataGridComponent,
-    QgColumnDirective,
-    QgEmptyDirective,
+    DgColumnDirective,
+    DgEmptyDirective,
     TranslatePipe,
   ],
   templateUrl: './ui-showcase-page.component.html',

@@ -1,5 +1,5 @@
 import { signal } from "@angular/core";
-import { createEmptyGridQuery } from "@query-grid/core";
+import { createEmptyGridQuery } from "@laczynski/datagrid";
 import { describe, expect, it, vi } from "vitest";
 import { createGridViewsControls } from "./grid-views-controls.js";
 

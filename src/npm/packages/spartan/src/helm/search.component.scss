@@ -1,22 +1,22 @@
 @use "./tokens" as *;
 
-.qg-sh-search {
+.dg-sh-search {
   position: relative;
   display: flex;
   align-items: center;
   width: 100%;
 }
 
-.qg-sh-search__icon {
+.dg-sh-search__icon {
   position: absolute;
   left: 0.75rem;
   color: var(--muted-foreground, hsl(215 16% 47%));
   pointer-events: none;
 }
 
-.qg-sh-search__input {
-  @include qg-sh-input-surface;
+.dg-sh-search__input {
+  @include dg-sh-input-surface;
   padding-left: 2.25rem;
 }
 
-@include qg-sh-control-size(".qg-sh-search__input");
+@include dg-sh-control-size(".dg-sh-search__input");

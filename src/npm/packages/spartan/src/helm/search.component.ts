@@ -11,7 +11,7 @@ import { noop } from "./control-value-accessor.util";
 import type { HelmSize } from "./types";
 
 @Component({
-  selector: "qg-sh-search",
+  selector: "dg-sh-search",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
@@ -22,9 +22,9 @@ import type { HelmSize } from "./types";
     },
   ],
   template: `
-    <div class="qg-sh-search">
+    <div class="dg-sh-search">
       <svg
-        class="qg-sh-search__icon"
+        class="dg-sh-search__icon"
         width="16"
         height="16"
         viewBox="0 0 24 24"
@@ -37,9 +37,9 @@ import type { HelmSize } from "./types";
         <path d="M20 20l-3-3" />
       </svg>
       <input
-        class="qg-sh-search__input"
-        [class.qg-sh-search__input--small]="size() === 'small'"
-        [class.qg-sh-search__input--large]="size() === 'large'"
+        class="dg-sh-search__input"
+        [class.dg-sh-search__input--small]="size() === 'small'"
+        [class.dg-sh-search__input--large]="size() === 'large'"
         type="search"
         [placeholder]="placeholder() ?? ''"
         [value]="value"

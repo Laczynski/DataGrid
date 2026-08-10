@@ -1,19 +1,19 @@
 {
-  "name": "@query-grid/cli",
-  "version": "0.1.0-preview.13",
-  "description": "Angular schematics for QueryGrid Spartan helm customization.",
+  "name": "@laczynski/datagrid-cli",
+  "version": "0.1.0-preview.14",
+  "description": "Angular schematics for DataGrid Spartan helm customization.",
   "license": "MIT",
   "type": "commonjs",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/laczynski/QueryGrid.git"
+    "url": "git+https://github.com/laczynski/DataGrid.git"
   },
-  "homepage": "https://github.com/laczynski/QueryGrid#readme",
+  "homepage": "https://github.com/laczynski/DataGrid#readme",
   "bugs": {
-    "url": "https://github.com/laczynski/QueryGrid/issues"
+    "url": "https://github.com/laczynski/DataGrid/issues"
   },
   "keywords": [
-    "querygrid",
+    "datagrid",
     "angular",
     "schematics",
     "spartan"

@@ -1,10 +1,10 @@
-import type { QgColumnDirective } from "./column.directive";
+import type { DgColumnDirective } from "./column.directive";
 import type { GridColumn } from "./grid-column";
 
-/** Uses `[columns]` when provided; otherwise derives metadata from `qgColumn` templates. */
+/** Uses `[columns]` when provided; otherwise derives metadata from `dgColumn` templates. */
 export function resolveGridColumns<T>(
   inputColumns: GridColumn<T>[] | undefined,
-  columnDirectives: readonly QgColumnDirective<T>[],
+  columnDirectives: readonly DgColumnDirective<T>[],
 ): GridColumn<T>[] {
   if (inputColumns?.length) {
     return inputColumns;

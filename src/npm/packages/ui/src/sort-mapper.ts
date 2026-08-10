@@ -1,4 +1,4 @@
-import { DEFAULT_GRID_OPTIONS, type SortDescriptor } from "@query-grid/core";
+import { DEFAULT_GRID_OPTIONS, type SortDescriptor } from "@laczynski/datagrid";
 
 export type ToggleSortOptions = {
   maxDescriptors?: number;

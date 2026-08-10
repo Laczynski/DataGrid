@@ -8,7 +8,7 @@ import { Select } from "primeng/select";
 import { Tooltip } from "primeng/tooltip";
 import type { GridResource } from "./create-grid-resource";
 import { hasGridViews, type GridResourceWithViews } from "./grid-views-controls";
-import { QgI18nService } from "./i18n";
+import { DgI18nService } from "./i18n";
 
 function asGridWithViews<T>(
   grid: GridResource<T>,
@@ -17,7 +17,7 @@ function asGridWithViews<T>(
 }
 
 @Component({
-  selector: "qg-grid-views",
+  selector: "dg-grid-views",
   standalone: true,
   imports: [CommonModule, FormsModule, Select, Button, Dialog, InputText, Tooltip],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,20 +27,20 @@ function asGridWithViews<T>(
       display: contents;
     }
 
-    .qg-grid-views-group {
+    .dg-grid-views-group {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
     }
 
-    .qg-grid-views {
+    .dg-grid-views {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
       flex-wrap: wrap;
     }
 
-    .qg-grid-views__divider {
+    .dg-grid-views__divider {
       width: 1px;
       align-self: stretch;
       min-height: 1.5rem;
@@ -48,18 +48,18 @@ function asGridWithViews<T>(
       background: var(--p-content-border-color, #e2e8f0);
     }
 
-    .qg-grid-views__select {
+    .dg-grid-views__select {
       min-width: 12rem;
     }
 
-    .qg-grid-views__save-field {
+    .dg-grid-views__save-field {
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
       width: 100%;
     }
 
-    .qg-grid-views__dialog-footer {
+    .dg-grid-views__dialog-footer {
       display: flex;
       justify-content: flex-end;
       gap: 0.5rem;
@@ -67,8 +67,8 @@ function asGridWithViews<T>(
     }
   `,
 })
-export class QgGridViewsComponent<T = unknown> {
-  private readonly i18n = inject(QgI18nService);
+export class DgGridViewsComponent<T = unknown> {
+  private readonly i18n = inject(DgI18nService);
 
   readonly grid = input.required<GridResource<T>>();
 

@@ -2,20 +2,20 @@
   display: contents;
 }
 
-.qg-grid-views-group {
+.dg-grid-views-group {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-.qg-grid-views {
+.dg-grid-views {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   flex-wrap: wrap;
 }
 
-.qg-grid-views__divider {
+.dg-grid-views__divider {
   width: 1px;
   align-self: stretch;
   min-height: 1.5rem;
@@ -23,11 +23,11 @@
   background: var(--color-neutral-stroke-rest, #d1d1d1);
 }
 
-.qg-grid-views__select {
+.dg-grid-views__select {
   min-width: 12rem;
 }
 
-.qg-grid-views__dialog {
+.dg-grid-views__dialog {
   border: none;
   border-radius: 0.5rem;
   padding: 0;
@@ -35,11 +35,11 @@
   box-shadow: 0 12px 32px rgb(0 0 0 / 18%);
 }
 
-.qg-grid-views__dialog::backdrop {
+.dg-grid-views__dialog::backdrop {
   background: rgb(0 0 0 / 35%);
 }
 
-.qg-grid-views__dialog-form {
+.dg-grid-views__dialog-form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -47,13 +47,13 @@
   padding: 1.25rem;
 }
 
-.qg-grid-views__dialog-title {
+.dg-grid-views__dialog-title {
   margin: 0;
   font-size: 1rem;
   font-weight: 600;
 }
 
-.qg-grid-views__dialog-actions {
+.dg-grid-views__dialog-actions {
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;

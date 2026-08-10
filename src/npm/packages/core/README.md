@@ -1,18 +1,18 @@
-# @query-grid/core
+# @laczynski/datagrid
 
-Framework-agnostic TypeScript types for [QueryGrid](https://github.com/laczynski/QueryGrid) — `GridQuery`, `GridResult`, filter/sort nodes, and display helpers.
+Framework-agnostic TypeScript types for [DataGrid](https://github.com/laczynski/DataGrid) — `GridQuery`, `GridResult`, filter/sort nodes, and display helpers.
 
 ## Install
 
 ```powershell
-npm install @query-grid/core
+npm install @laczynski/datagrid
 ```
 
 ## Example
 
 ```typescript
-import type { GridQuery, GridResult } from "@query-grid/core";
-import { formatGridError } from "@query-grid/core";
+import type { GridQuery, GridResult } from "@laczynski/datagrid";
+import { formatGridError } from "@laczynski/datagrid";
 
 const query: GridQuery = { take: 20, sort: [{ field: "LastActivityAt", desc: true }] };
 ```
@@ -21,4 +21,4 @@ Serialize with `JSON.stringify` in your HTTP layer. This package does not ship t
 
 ## Full guide
 
-[Getting started](https://github.com/laczynski/QueryGrid/blob/main/docs/getting-started.md) — install, JSON shape, field naming, and Angular integration via `@query-grid/primeng`.
+[Getting started](https://github.com/laczynski/DataGrid/blob/main/docs/getting-started.md) — install, JSON shape, field naming, and Angular integration via `@laczynski/datagrid-primeng`.

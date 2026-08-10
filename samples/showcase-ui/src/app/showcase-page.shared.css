@@ -80,7 +80,7 @@
   overflow: hidden;
 }
 
-.showcase-panel--primeng qg-prime-data-grid {
+.showcase-panel--primeng dg-prime-data-grid {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
@@ -96,7 +96,7 @@
   overflow: hidden;
 }
 
-.showcase-panel--ui qg-ui-data-grid {
+.showcase-panel--ui dg-ui-data-grid {
   flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
@@ -114,7 +114,7 @@
   background: var(--card, #fff);
 }
 
-.showcase-panel--spartan qg-hlm-query-grid {
+.showcase-panel--spartan dg-hlm-data-grid {
   flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;

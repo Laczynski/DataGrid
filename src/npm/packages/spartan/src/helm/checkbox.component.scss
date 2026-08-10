@@ -1,6 +1,6 @@
 @use "./tokens" as *;
 
-.qg-sh-checkbox {
+.dg-sh-checkbox {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -11,12 +11,12 @@
   user-select: none;
 }
 
-.qg-sh-checkbox--after {
+.dg-sh-checkbox--after {
   flex-direction: row-reverse;
   justify-content: flex-end;
 }
 
-.qg-sh-checkbox__input {
+.dg-sh-checkbox__input {
   appearance: none;
   flex-shrink: 0;
   width: 1rem;
@@ -25,7 +25,7 @@
   border: 1px solid var(--primary, hsl(222 47% 11%));
   border-radius: calc(var(--radius, 0.5rem) - 4px);
   background: var(--background, #fff);
-  @include qg-sh-transition;
+  @include dg-sh-transition;
 
   &:hover:not(:disabled) {
     border-color: var(--primary, hsl(222 47% 11%));
@@ -33,7 +33,7 @@
   }
 
   &:focus-visible {
-    @include qg-sh-focus-ring;
+    @include dg-sh-focus-ring;
   }
 
   &:checked {
@@ -60,6 +60,6 @@
   }
 }
 
-.qg-sh-checkbox__label {
+.dg-sh-checkbox__label {
   min-width: 0;
 }

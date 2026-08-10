@@ -11,7 +11,7 @@ const SEGMENTS_BY_LEVEL = {
  * @param {import('./schema').Schema} options
  */
 function spartanGrid(options) {
-  const targetPath = normalizePath(options.path || "src/app/shared/query-grid");
+  const targetPath = normalizePath(options.path || "src/app/shared/datagrid");
   const level = options.level || "filter-editors";
   const segments = SEGMENTS_BY_LEVEL[level] ?? SEGMENTS_BY_LEVEL["filter-editors"];
 
@@ -80,15 +80,15 @@ function writeReadme(tree, targetPath, level) {
   }
 
   const lines = [
-    "# QueryGrid Spartan L3",
+    "# DataGrid Spartan L3",
     "",
-    "Copied by `@query-grid/cli:spartan-grid`.",
+    "Copied by `@laczynski/datagrid-cli:spartan-grid`.",
     "",
     `- Level: \`${level}\``,
     "",
     "## Layout",
     "",
-    "- Brain (`createGridResource`, `QgColumnDirective`, …) stays in `@query-grid/spartan`.",
+    "- Brain (`createGridResource`, `DgColumnDirective`, …) stays in `@laczynski/datagrid-spartan`.",
     "- L3 grid shell uses Spartan `hlm*` directly (`@spartan-ng/helm/*` path aliases).",
   ];
 
@@ -98,7 +98,7 @@ function writeReadme(tree, targetPath, level) {
 
   if (level === "full") {
     lines.push(
-      "- `grid-shell/hlm-query-grid.*` — full grid; use `<qg-hlm-query-grid>`.",
+      "- `grid-shell/hlm-data-grid.*` — full grid; use `<dg-hlm-data-grid>`.",
       "- `HLM-MIGRATION.md` — Spartan setup notes.",
     );
   }

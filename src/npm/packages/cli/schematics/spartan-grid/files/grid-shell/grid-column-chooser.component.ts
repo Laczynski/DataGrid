@@ -1,23 +1,23 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component, computed, inject, input } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { isColumnHideable } from "@query-grid/core";
-import type { GridResource } from "@query-grid/spartan";
-import { hasColumnLayout } from "@query-grid/spartan";
+import { isColumnHideable } from "@laczynski/datagrid";
+import type { GridResource } from "@laczynski/datagrid-spartan";
+import { hasColumnLayout } from "@laczynski/datagrid-spartan";
 import {
   hasColumnChooser,
   type GridResourceWithColumnChooser,
-} from "@query-grid/spartan";
-import { QgI18nService } from "@query-grid/spartan";
-import type { GridColumn } from "@query-grid/spartan";
-import type { GridSize } from "@query-grid/spartan";
+} from "@laczynski/datagrid-spartan";
+import { DgI18nService } from "@laczynski/datagrid-spartan";
+import type { GridColumn } from "@laczynski/datagrid-spartan";
+import type { GridSize } from "@laczynski/datagrid-spartan";
 import {
-  QG_GRID_HELM_IMPORTS,
-  provideQgGridHelmIcons,
-  qgBtnSize,
-  qgIconBtnSize,
-} from "./qg-helm-utils";
-import { resolveQgGridIcon } from "./qg-icon-map";
+  DG_GRID_HELM_IMPORTS,
+  provideDgGridHelmIcons,
+  dgBtnSize,
+  dgIconBtnSize,
+} from "./dg-helm-utils";
+import { resolveDgGridIcon } from "./dg-icon-map";
 
 function asGridWithColumnChooser<T>(
   grid: GridResource<T>,
@@ -26,24 +26,24 @@ function asGridWithColumnChooser<T>(
 }
 
 @Component({
-  selector: "qg-grid-column-chooser",
+  selector: "dg-grid-column-chooser",
   standalone: true,
-  imports: [CommonModule, FormsModule, ...QG_GRID_HELM_IMPORTS],
-  providers: [provideQgGridHelmIcons()],
+  imports: [CommonModule, FormsModule, ...DG_GRID_HELM_IMPORTS],
+  providers: [provideDgGridHelmIcons()],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./grid-column-chooser.component.html",
   styleUrl: "./grid-column-chooser.component.scss",
 })
-export class QgGridColumnChooserComponent<T = unknown> {
-  private readonly i18n = inject(QgI18nService);
+export class DgGridColumnChooserComponent<T = unknown> {
+  private readonly i18n = inject(DgI18nService);
 
   readonly grid = input.required<GridResource<T>>();
   readonly columns = input.required<GridColumn<T>[]>();
   readonly size = input<GridSize>("medium");
 
-  protected readonly resolveQgGridIcon = resolveQgGridIcon;
-  protected readonly qgBtnSize = qgBtnSize;
-  protected readonly qgIconBtnSize = qgIconBtnSize;
+  protected readonly resolveDgGridIcon = resolveDgGridIcon;
+  protected readonly dgBtnSize = dgBtnSize;
+  protected readonly dgIconBtnSize = dgIconBtnSize;
 
   protected readonly layoutEnabled = computed(() => hasColumnLayout(this.grid()));
 

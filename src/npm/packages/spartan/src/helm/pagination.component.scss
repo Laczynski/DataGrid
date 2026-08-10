@@ -1,6 +1,6 @@
 @use "./tokens" as *;
 
-.qg-sh-pagination {
+.dg-sh-pagination {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -9,20 +9,20 @@
   width: 100%;
 }
 
-.qg-sh-pagination__info {
+.dg-sh-pagination__info {
   font-size: 0.875rem;
   color: var(--muted-foreground, hsl(215 16% 47%));
   white-space: nowrap;
 }
 
-.qg-sh-pagination__controls {
+.dg-sh-pagination__controls {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
   flex-wrap: wrap;
 }
 
-.qg-sh-pagination__btn {
+.dg-sh-pagination__btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -36,29 +36,29 @@
   font: inherit;
   font-size: 0.875rem;
   cursor: pointer;
-  @include qg-sh-transition;
+  @include dg-sh-transition;
 }
 
-.qg-sh-pagination__btn:hover:not(:disabled) {
+.dg-sh-pagination__btn:hover:not(:disabled) {
   background: var(--accent, hsl(210 40% 96%));
 }
 
-.qg-sh-pagination__btn:focus-visible {
-  @include qg-sh-focus-ring;
+.dg-sh-pagination__btn:focus-visible {
+  @include dg-sh-focus-ring;
 }
 
-.qg-sh-pagination__btn:disabled {
+.dg-sh-pagination__btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
 
-.qg-sh-pagination__btn--active {
+.dg-sh-pagination__btn--active {
   border-color: var(--primary, hsl(222 47% 11%));
   background: var(--primary, hsl(222 47% 11%));
   color: var(--primary-foreground, #fff);
 }
 
-.qg-sh-pagination__ellipsis {
+.dg-sh-pagination__ellipsis {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -67,7 +67,7 @@
   color: var(--muted-foreground, hsl(215 16% 47%));
 }
 
-.qg-sh-pagination__size {
+.dg-sh-pagination__size {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -75,8 +75,8 @@
   color: var(--muted-foreground, hsl(215 16% 47%));
 }
 
-.qg-sh-pagination__size-select {
-  @include qg-sh-input-surface;
+.dg-sh-pagination__size-select {
+  @include dg-sh-input-surface;
   width: auto;
   min-height: 2rem;
   padding: 0 0.5rem;

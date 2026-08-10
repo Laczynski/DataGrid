@@ -9,16 +9,16 @@
 
   <!-- Shared NuGet package metadata, applied only to publishable projects -->
   <PropertyGroup Condition="'$(IsPackable)' != 'false'">
-    <Version>0.1.0-preview.13</Version>
+    <Version>0.1.0-preview.14</Version>
     <Authors>Damian Łączyński</Authors>
-    <Product>QueryGrid</Product>
+    <Product>DataGrid</Product>
     <Copyright>Copyright (c) 2026 Damian Łączyński</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/laczynski/QueryGrid</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/laczynski/QueryGrid</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/laczynski/DataGrid</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/laczynski/DataGrid</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <PackageTags>querygrid;pagination;sorting;filtering;linq;datagrid;loadoptions</PackageTags>
+    <PackageTags>datagrid;pagination;sorting;filtering;linq;loadoptions</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IncludeSymbols>true</IncludeSymbols>

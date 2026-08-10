@@ -20,7 +20,7 @@ const schematicFiles = join(
   "files",
 );
 
-const BRAIN = "@query-grid/spartan";
+const BRAIN = "@laczynski/datagrid-spartan";
 
 const BRAIN_IMPORT_REWRITES = [
   ['from "./create-grid-resource"', `from "${BRAIN}"`],

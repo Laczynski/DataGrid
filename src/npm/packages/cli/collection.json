@@ -2,7 +2,7 @@
   "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
     "spartan-grid": {
-      "description": "Copy QueryGrid Spartan helm (and optional filter editors) into your app for L2 customization.",
+      "description": "Copy DataGrid Spartan helm (and optional filter editors) into your app for L2 customization.",
       "factory": "./schematics/spartan-grid/index",
       "schema": "./schematics/spartan-grid/schema.json"
     }

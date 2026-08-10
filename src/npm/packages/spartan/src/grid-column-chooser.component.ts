@@ -7,14 +7,14 @@ import {
   PopoverDirective,
   TooltipDirective,
 } from "./helm";
-import { isColumnHideable } from "@query-grid/core";
+import { isColumnHideable } from "@laczynski/datagrid";
 import type { GridResource } from "./create-grid-resource";
 import { hasColumnLayout } from "./grid-column-layout-controls";
 import {
   hasColumnChooser,
   type GridResourceWithColumnChooser,
 } from "./grid-column-visibility-controls";
-import { QgI18nService } from "./i18n";
+import { DgI18nService } from "./i18n";
 import type { GridColumn } from "./table/grid-column";
 import type { GridSize } from "./types";
 
@@ -25,7 +25,7 @@ function asGridWithColumnChooser<T>(
 }
 
 @Component({
-  selector: "qg-grid-column-chooser",
+  selector: "dg-grid-column-chooser",
   standalone: true,
   imports: [
     CommonModule,
@@ -39,8 +39,8 @@ function asGridWithColumnChooser<T>(
   templateUrl: "./grid-column-chooser.component.html",
   styleUrl: "./grid-column-chooser.component.scss",
 })
-export class QgGridColumnChooserComponent<T = unknown> {
-  private readonly i18n = inject(QgI18nService);
+export class DgGridColumnChooserComponent<T = unknown> {
+  private readonly i18n = inject(DgI18nService);
 
   readonly grid = input.required<GridResource<T>>();
   readonly columns = input.required<GridColumn<T>[]>();

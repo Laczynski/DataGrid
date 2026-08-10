@@ -37,7 +37,7 @@ import {
   resolveRowKey,
   type GridExportFormat,
   type SortDescriptor,
-} from "@query-grid/core";
+} from "@laczynski/datagrid";
 import type { MenuItem, SortMeta } from "primeng/api";
 import { Button } from "primeng/button";
 import { Checkbox } from "primeng/checkbox";
@@ -47,17 +47,17 @@ import { InputText } from "primeng/inputtext";
 import { SplitButton } from "primeng/splitbutton";
 import { SortableColumn, SortIcon, Table, type TableLazyLoadEvent } from "primeng/table";
 import { Tooltip } from "primeng/tooltip";
-import { QgBulkToolbarDirective } from "./bulk-toolbar.directive";
+import { DgBulkToolbarDirective } from "./bulk-toolbar.directive";
 import type { GridResource } from "./create-grid-resource";
 import { buildGridFilterFeed, type FilterFeedSegment } from "./filter-feed";
-import { QgGridColumnChooserComponent } from "./grid-column-chooser.component";
+import { DgGridColumnChooserComponent } from "./grid-column-chooser.component";
 import { hasColumnLayout } from "./grid-column-layout-controls";
 import { hasColumnChooser } from "./grid-column-visibility-controls";
 import { hasExport } from "./grid-export-controls";
 import { hasRowSelection } from "./grid-row-selection-controls";
 import { bindHorizontalScrollPersistence, hasScrollPersistence } from "./grid-scroll-controls";
-import { QgGridViewsComponent } from "./grid-views.component";
-import { QgI18nService } from "./i18n";
+import { DgGridViewsComponent } from "./grid-views.component";
+import { DgI18nService } from "./i18n";
 import {
   applyGridQueryToPrimeTable,
   isSameGridPatch,
@@ -68,14 +68,14 @@ import {
 } from "./lazy-load-mapper";
 import { GRID_TABLE_STYLES } from "./prime-data-grid.styles";
 import { mapPrimeSortMetaToDescriptors, syncPrimeTableSort, toggleSortField } from "./sort-mapper";
-import type { QgColumnContext } from "./table/column-context";
-import { QgColumnResizeDirective } from "./table/column-resize.directive";
-import { QgColumnDirective } from "./table/column.directive";
-import { QgEmptyDirective } from "./table/empty.directive";
+import type { DgColumnContext } from "./table/column-context";
+import { DgColumnResizeDirective } from "./table/column-resize.directive";
+import { DgColumnDirective } from "./table/column.directive";
+import { DgEmptyDirective } from "./table/empty.directive";
 import type { GridColumn } from "./table/grid-column";
-import { QgColumnFilterComponent } from "./table/qg-column-filter.component";
+import { DgColumnFilterComponent } from "./table/dg-column-filter.component";
 import { resolveGridColumns } from "./table/resolve-grid-columns";
-import { QgToolbarDirective } from "./toolbar.directive";
+import { DgToolbarDirective } from "./toolbar.directive";
 import type { GridAppearance } from "./types";
 
 export type GridExtraChip = {
@@ -100,19 +100,19 @@ const GRID_TABLE_IMPORTS = [
   InputText,
   IconField,
   InputIcon,
-  QgColumnFilterComponent,
-  QgColumnResizeDirective,
-  QgGridColumnChooserComponent,
-  QgGridViewsComponent,
+  DgColumnFilterComponent,
+  DgColumnResizeDirective,
+  DgGridColumnChooserComponent,
+  DgGridViewsComponent,
   SplitButton,
-  QgBulkToolbarDirective,
+  DgBulkToolbarDirective,
   Tooltip,
 ];
 
 const GRID_TABLE_HOST = {
-  "[class.qg-appearance-plain]": 'appearance() === "plain"',
-  "[class.qg-appearance-prime]": 'appearance() === "prime"',
-  "[class.qg-scrollable]": "!!scrollHeight()",
+  "[class.dg-appearance-plain]": 'appearance() === "plain"',
+  "[class.dg-appearance-prime]": 'appearance() === "prime"',
+  "[class.dg-scrollable]": "!!scrollHeight()",
 };
 
 /**
@@ -122,7 +122,7 @@ const GRID_TABLE_HOST = {
  * (right). Applied filters render as an interactive query feed below the toolbar.
  */
 @Component({
-  selector: "qg-prime-data-grid",
+  selector: "dg-prime-data-grid",
   standalone: true,
   imports: GRID_TABLE_IMPORTS,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -133,12 +133,12 @@ const GRID_TABLE_HOST = {
 export class PrimeDataGridComponent<T = unknown> {
   private readonly localeId = inject(LOCALE_ID);
   private readonly injector = inject(Injector);
-  private readonly i18n = inject(QgI18nService);
+  private readonly i18n = inject(DgI18nService);
 
   readonly grid = input.required<GridResource<T>>();
   /** `plain` = minimal table chrome; `prime` = default PrimeNG styling. */
   readonly appearance = input<GridAppearance>("prime");
-  /** Omit when columns are declared with projected `qgColumn` templates. */
+  /** Omit when columns are declared with projected `dgColumn` templates. */
   readonly columns = input<GridColumn<T>[]>();
   readonly pageSizeOptions = input<number[]>([10, 20, 50]);
   readonly searchable = input(true);
@@ -157,20 +157,20 @@ export class PrimeDataGridComponent<T = unknown> {
   readonly cleared = output<void>();
   readonly exportError = output<string>();
 
-  private readonly columnDirectives = contentChildren(QgColumnDirective);
-  private readonly emptyDirective = contentChildren(QgEmptyDirective);
-  private readonly toolbar = contentChildren(QgToolbarDirective);
-  private readonly bulkToolbar = contentChildren(QgBulkToolbarDirective);
+  private readonly columnDirectives = contentChildren(DgColumnDirective);
+  private readonly emptyDirective = contentChildren(DgEmptyDirective);
+  private readonly toolbar = contentChildren(DgToolbarDirective);
+  private readonly bulkToolbar = contentChildren(DgBulkToolbarDirective);
 
-  protected columnDirectiveQueries(): readonly QgColumnDirective<T>[] {
-    return this.columnDirectives() as QgColumnDirective<T>[];
+  protected columnDirectiveQueries(): readonly DgColumnDirective<T>[] {
+    return this.columnDirectives() as DgColumnDirective<T>[];
   }
 
-  protected emptyDirectiveQueries(): readonly QgEmptyDirective[] {
+  protected emptyDirectiveQueries(): readonly DgEmptyDirective[] {
     return this.emptyDirective();
   }
 
-  protected toolbarDirectiveQueries(): readonly QgToolbarDirective[] {
+  protected toolbarDirectiveQueries(): readonly DgToolbarDirective[] {
     return this.toolbar();
   }
 
@@ -415,7 +415,7 @@ export class PrimeDataGridComponent<T = unknown> {
 
         const measured: Record<string, number> = {};
         for (const header of Array.from(
-          host.querySelectorAll<HTMLElement>(".qg-header-cell[data-field]"),
+          host.querySelectorAll<HTMLElement>(".dg-header-cell[data-field]"),
         )) {
           const field = header.dataset["field"];
           if (field && header.offsetWidth > 0) {
@@ -437,7 +437,7 @@ export class PrimeDataGridComponent<T = unknown> {
   }
 
   private readonly cellMap = computed(() => {
-    const map = new Map<string, TemplateRef<QgColumnContext<T>>>();
+    const map = new Map<string, TemplateRef<DgColumnContext<T>>>();
     for (const column of this.columnDirectiveQueries()) {
       map.set(column.field(), column.template);
     }
@@ -491,7 +491,7 @@ export class PrimeDataGridComponent<T = unknown> {
     return this.bulkToolbarDirectiveQueries()[0]?.template;
   }
 
-  protected bulkToolbarDirectiveQueries(): readonly QgBulkToolbarDirective[] {
+  protected bulkToolbarDirectiveQueries(): readonly DgBulkToolbarDirective[] {
     return this.bulkToolbar();
   }
 
@@ -627,7 +627,7 @@ export class PrimeDataGridComponent<T = unknown> {
     });
   }
 
-  protected cellTemplate(field: string): TemplateRef<QgColumnContext<T>> | undefined {
+  protected cellTemplate(field: string): TemplateRef<DgColumnContext<T>> | undefined {
     return this.cellMap().get(field);
   }
 
@@ -635,7 +635,7 @@ export class PrimeDataGridComponent<T = unknown> {
     return this.emptyDirectiveQueries()[0]?.template;
   }
 
-  protected cellContext(row: T, column: string): QgColumnContext<T> {
+  protected cellContext(row: T, column: string): DgColumnContext<T> {
     return { $implicit: row, row, column };
   }
 

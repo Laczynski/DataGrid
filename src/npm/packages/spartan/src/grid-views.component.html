@@ -1,8 +1,8 @@
 @if (viewsEnabled()) {
-  <div class="qg-grid-views-group">
-    <div class="qg-grid-views">
-      <qg-sh-select
-        class="qg-grid-views__select"
+  <div class="dg-grid-views-group">
+    <div class="dg-grid-views">
+      <dg-sh-select
+        class="dg-grid-views__select"
         [items]="presetItems()"
         [size]="size()"
         [ngModel]="selectedPresetId()"
@@ -11,7 +11,7 @@
       />
 
       @if (canUpdateSelected()) {
-        <qg-sh-btn
+        <dg-sh-btn
           appearance="outline"
           [size]="size()"
           icon="save"
@@ -23,7 +23,7 @@
         />
       }
 
-      <qg-sh-btn
+      <dg-sh-btn
         appearance="outline"
         [size]="size()"
         icon="add"
@@ -35,7 +35,7 @@
       />
 
       @if (canDeleteSelected()) {
-        <qg-sh-btn
+        <dg-sh-btn
           appearance="outline"
           [size]="size()"
           icon="delete"
@@ -48,21 +48,21 @@
       }
     </div>
 
-    <span class="qg-grid-views__divider" aria-hidden="true"></span>
+    <span class="dg-grid-views__divider" aria-hidden="true"></span>
   </div>
 
-  <dialog #saveDialog class="qg-grid-views__dialog" (cancel)="closeSaveDialog()">
-    <form class="qg-grid-views__dialog-form" (submit)="onSaveSubmit($event)">
-      <h3 class="qg-grid-views__dialog-title">{{ saveViewTitle() }}</h3>
-      <qg-sh-text
+  <dialog #saveDialog class="dg-grid-views__dialog" (cancel)="closeSaveDialog()">
+    <form class="dg-grid-views__dialog-form" (submit)="onSaveSubmit($event)">
+      <h3 class="dg-grid-views__dialog-title">{{ saveViewTitle() }}</h3>
+      <dg-sh-text
         [size]="size()"
         [ngModel]="newPresetName()"
         (ngModelChange)="newPresetName.set($event)"
         name="viewName"
         [placeholder]="viewNamePlaceholder()"
       />
-      <div class="qg-grid-views__dialog-actions">
-        <qg-sh-btn
+      <div class="dg-grid-views__dialog-actions">
+        <dg-sh-btn
           type="button"
           [size]="size()"
           [text]="cancelLabel()"
@@ -70,7 +70,7 @@
           variant="secondary"
           (click)="closeSaveDialog()"
         />
-        <qg-sh-btn type="submit" [size]="size()" [text]="saveLabel()" variant="primary" />
+        <dg-sh-btn type="submit" [size]="size()" [text]="saveLabel()" variant="primary" />
       </div>
     </form>
   </dialog>

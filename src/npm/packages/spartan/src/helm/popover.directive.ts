@@ -16,7 +16,7 @@ import {
   standalone: true,
   host: {
     "(click)": "onTriggerClick($event)",
-    class: "qg-sh-popover-trigger",
+    class: "dg-sh-popover-trigger",
   },
 })
 export class PopoverDirective implements OnDestroy {
@@ -64,7 +64,7 @@ export class PopoverDirective implements OnDestroy {
     this.close();
     this.viewRef = this.viewContainer.createEmbeddedView(template);
     this.panel = document.createElement("div");
-    this.panel.className = `qg-sh-popover-panel qg-sh-popover-panel--${this.qgShPopoverSize()}`;
+    this.panel.className = `dg-sh-popover-panel dg-sh-popover-panel--${this.qgShPopoverSize()}`;
     for (const node of this.viewRef.rootNodes) {
       this.panel.appendChild(node);
     }

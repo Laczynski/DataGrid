@@ -1,5 +1,5 @@
-import type { FilterOperator, QgMessageTranslateFn } from "@query-grid/core";
-import { getAllowedOperatorsForColumnType } from "@query-grid/core";
+import type { FilterOperator, DgMessageTranslateFn } from "@laczynski/datagrid";
+import { getAllowedOperatorsForColumnType } from "@laczynski/datagrid";
 import type { GridColumnFilterType } from "./table/grid-column";
 
 export interface MatchModeOption {
@@ -7,13 +7,13 @@ export interface MatchModeOption {
   value: FilterOperator;
 }
 
-function resolveTranslate(translate?: QgMessageTranslateFn): QgMessageTranslateFn {
+function resolveTranslate(translate?: DgMessageTranslateFn): DgMessageTranslateFn {
   return translate ?? ((_key, fallback) => fallback);
 }
 
 export function buildEnumMatchModeOptions(
   nullable = false,
-  translate?: QgMessageTranslateFn,
+  translate?: DgMessageTranslateFn,
 ): MatchModeOption[] {
   const t = resolveTranslate(translate);
   const modes: MatchModeOption[] = [
@@ -33,7 +33,7 @@ export function buildEnumMatchModeOptions(
   return modes;
 }
 
-function operatorLabel(operator: FilterOperator, t: QgMessageTranslateFn): string {
+function operatorLabel(operator: FilterOperator, t: DgMessageTranslateFn): string {
   switch (operator) {
     case "contains":
       return t("filter.operator.contains", "Contains");
@@ -73,7 +73,7 @@ function operatorLabel(operator: FilterOperator, t: QgMessageTranslateFn): strin
 export function buildMatchModeOptions(
   columnType: GridColumnFilterType | undefined,
   nullable?: boolean,
-  translate?: QgMessageTranslateFn,
+  translate?: DgMessageTranslateFn,
 ): MatchModeOption[] | undefined {
   const t = resolveTranslate(translate);
 

@@ -19,14 +19,14 @@ Concurrent runs for the same branch are cancelled when a newer commit is pushed.
 ### dotnet
 
 - .NET **10**
-- Solution: `src/dotnet/QueryGrid.slnx`
+- Solution: `src/dotnet/DataGrid.slnx`
 - Release configuration
 
 ### npm
 
 - Node.js **24**
 - npm cache keyed on `package-lock.json`
-- Builds `@query-grid/core`, `@query-grid/primeng`, `@query-grid/ui`, `@query-grid/spartan`, and `@query-grid/cli`
+- Builds `@laczynski/datagrid`, `@laczynski/datagrid-primeng`, `@laczynski/datagrid-ui`, `@laczynski/datagrid-spartan`, and `@laczynski/datagrid-cli`
 - Runs Vitest in **core**, **primeng**, **ui**, **spartan**, and schematic tests in **cli**
 
 ## Reproduce locally
@@ -44,7 +44,7 @@ CI-specific differences:
 | -------------------------------- | -------------------------------------------------------------------- |
 | Sample apps                      | `npm run start:all`                                                  |
 | ESLint (`src/npm`)               | `npm run lint:frontend` from repository root                         |
-| dotnet format                    | `dotnet format src/dotnet/QueryGrid.slnx`                            |
+| dotnet format                    | `dotnet format src/dotnet/DataGrid.slnx`                            |
 | Cross-repo consumer verification | Use `samples/` or published packages                                 |
 | **Publishing**                   | Push a `v*` tag → [publish.yml](../../.github/workflows/publish.yml) |
 

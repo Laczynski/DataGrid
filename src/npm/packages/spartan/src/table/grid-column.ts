@@ -46,6 +46,6 @@ export interface GridColumn<T = unknown> {
   align?: GridCellAlign;
   /** Optional fixed width (any CSS width, e.g. `"160px"`). */
   width?: string;
-  /** Fallback text renderer used when no `qgColumn` cell template is supplied. */
+  /** Fallback text renderer used when no `dgColumn` cell template is supplied. */
   format?: (value: unknown, row: T) => string;
 }

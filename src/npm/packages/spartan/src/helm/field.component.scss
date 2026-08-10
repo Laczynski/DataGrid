@@ -1,14 +1,14 @@
 @use "./tokens" as *;
 
-.qg-sh-select,
-.qg-sh-field {
-  @include qg-sh-input-surface;
+.dg-sh-select,
+.dg-sh-field {
+  @include dg-sh-input-surface;
 }
 
-@include qg-sh-control-size(".qg-sh-select");
-@include qg-sh-control-size(".qg-sh-field");
+@include dg-sh-control-size(".dg-sh-select");
+@include dg-sh-control-size(".dg-sh-field");
 
-.qg-sh-select[multiple] {
+.dg-sh-select[multiple] {
   min-height: 6rem;
   padding-block: 0.375rem;
 }

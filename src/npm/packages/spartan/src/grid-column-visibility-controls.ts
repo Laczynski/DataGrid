@@ -3,7 +3,7 @@ import {
   normalizeHiddenFields,
   pickColumnVisibilityExtra,
   readColumnVisibilityExtra,
-} from "@query-grid/core";
+} from "@laczynski/datagrid";
 
 export interface GridColumnVisibilityControls {
   hiddenColumnFields: ReturnType<typeof signal<readonly string[]>>;

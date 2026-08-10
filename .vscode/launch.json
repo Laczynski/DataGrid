@@ -6,7 +6,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "querygrid: build showcase-api",
-      "program": "${workspaceFolder}/samples/showcase-api/bin/Debug/net10.0/QueryGrid.Samples.ShowcaseApi.dll",
+      "program": "${workspaceFolder}/samples/showcase-api/bin/Debug/net10.0/DataGrid.Samples.ShowcaseApi.dll",
       "cwd": "${workspaceFolder}/samples/showcase-api",
       "stopAtEntry": false,
       "env": {

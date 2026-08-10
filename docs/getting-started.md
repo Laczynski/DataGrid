@@ -5,13 +5,13 @@
 ### .NET
 
 ```powershell
-dotnet add package QueryGrid.EntityFrameworkCore
+dotnet add package DataGrid.EntityFrameworkCore
 ```
 
 ### npm
 
 ```powershell
-npm install @query-grid/core @query-grid/primeng primeng
+npm install @laczynski/datagrid @laczynski/datagrid-primeng primeng
 ```
 
 ## Backend
@@ -53,10 +53,10 @@ return await projected.ToGridResultAsync(grid.WithoutSearch(), cancellationToken
 
 ### JSON binding (your code)
 
-QueryGrid ships transport **types** and `FilterNodeJsonConverter` — not HTTP helpers. Use `GridQueryJson.CreateOptions()` from `QueryGrid.Abstractions.Serialization` (see `samples/showcase-api/GridQueryBinding.cs`):
+DataGrid ships transport **types** and `FilterNodeJsonConverter` — not HTTP helpers. Use `GridQueryJson.CreateOptions()` from `DataGrid.Abstractions.Serialization` (see `samples/showcase-api/GridQueryBinding.cs`):
 
 ```csharp
-using QueryGrid.Abstractions.Serialization;
+using DataGrid.Abstractions.Serialization;
 
 var jsonOptions = GridQueryJson.CreateOptions();
 var grid = JsonSerializer.Deserialize<GridQuery>(json, jsonOptions);
@@ -80,7 +80,7 @@ Create a grid resource with `GridResourceFactory` (DI-friendly) or `createGridRe
 
 ```typescript
 import { Component, DestroyRef, inject } from "@angular/core";
-import { GridResourceFactory } from "@query-grid/primeng";
+import { GridResourceFactory } from "@laczynski/datagrid-primeng";
 
 @Component({/* … */})
 export class IssuesComponent {
@@ -113,10 +113,10 @@ readonly grid = this.gridFactory.create<IssueDto>({
 
 Priority on load: **URL → `persistState` → defaults**. When the grid returns to its default sort/filter/search, the `grid` param is removed from the URL.
 
-Build a shareable link manually with `@query-grid/core`:
+Build a shareable link manually with `@laczynski/datagrid`:
 
 ```typescript
-import { buildGridQueryUrl } from "@query-grid/core";
+import { buildGridQueryUrl } from "@laczynski/datagrid";
 
 const url = buildGridQueryUrl(location.href, grid.query());
 ```
@@ -145,7 +145,7 @@ readonly grid = this.gridFactory.create<IssueDto>({
 });
 ```
 
-Use `<qg-grid-views [grid]="grid" />` for a preset picker with **Save as**, **Update view** (when modified), and **Delete** actions. When `views` is configured, the picker is also rendered automatically in `<qg-prime-data-grid>` / `<qg-ui-data-grid>` toolbars.
+Use `<dg-grid-views [grid]="grid" />` for a preset picker with **Save as**, **Update view** (when modified), and **Delete** actions. When `views` is configured, the picker is also rendered automatically in `<dg-prime-data-grid>` / `<dg-ui-data-grid>` toolbars.
 
 ### Column chooser
 
@@ -160,11 +160,11 @@ readonly grid = this.gridFactory.create<IssueDto>({
 });
 ```
 
-The column picker appears in the grid toolbar when `columnChooser` is enabled. Use `[hideable]="false"` on a `qgColumn` (or `hideable: false` in `[columns]`) to keep fixed columns such as actions out of the picker.
+The column picker appears in the grid toolbar when `columnChooser` is enabled. Use `[hideable]="false"` on a `dgColumn` (or `hideable: false` in `[columns]`) to keep fixed columns such as actions out of the picker.
 
 ```html
 <ng-template
-  qgColumn="actions"
+  dgColumn="actions"
   header=""
   [hideable]="false"
   [sortable]="false"
@@ -174,7 +174,7 @@ The column picker appears in the grid toolbar when `columnChooser` is enabled. U
 </ng-template>
 ```
 
-Use `<qg-grid-column-chooser [grid]="grid" [columns]="columns" />` if you build a custom toolbar.
+Use `<dg-grid-column-chooser [grid]="grid" [columns]="columns" />` if you build a custom toolbar.
 
 ### Column layout (resize, reorder, pin)
 
@@ -207,15 +207,15 @@ readonly grid = this.gridFactory.create<IssueDto>({
 ```
 
 ```html
-<qg-prime-data-grid [grid]="grid" dataKey="id">
+<dg-prime-data-grid [grid]="grid" dataKey="id">
   <ng-template qgBulkToolbar>
     <p-button label="Delete selected" (onClick)="deleteSelected()" />
   </ng-template>
-  <!-- qgColumn templates … -->
-</qg-prime-data-grid>
+  <!-- dgColumn templates … -->
+</dg-prime-data-grid>
 ```
 
-`qg-ui-data-grid` uses the same `qgBulkToolbar` slot and `dataKey` input.
+`dg-ui-data-grid` uses the same `qgBulkToolbar` slot and `dataKey` input.
 
 **Behavior:**
 
@@ -228,7 +228,7 @@ readonly grid = this.gridFactory.create<IssueDto>({
 Wire bulk actions in your component:
 
 ```typescript
-import { hasRowSelection } from "@query-grid/primeng";
+import { hasRowSelection } from "@laczynski/datagrid-primeng";
 
 deleteSelected(): void {
   if (!hasRowSelection(this.grid)) {
@@ -261,10 +261,10 @@ readonly grid = this.gridFactory.create<IssueDto>({
 });
 ```
 
-When `export` is set, the PrimeNG toolbar shows an **Export** split button: its main action exports CSV and its arrow opens CSV and Excel choices. With `rowSelection`, the bulk toolbar adds an **Export selected** split button with the same format choices. The `@query-grid/ui` adapter shows an export dropdown with CSV and Excel choices.
+When `export` is set, the PrimeNG toolbar shows an **Export** split button: its main action exports CSV and its arrow opens CSV and Excel choices. With `rowSelection`, the bulk toolbar adds an **Export selected** split button with the same format choices. The `@laczynski/datagrid-ui` adapter shows an export dropdown with CSV and Excel choices.
 
 ```typescript
-import { hasExport } from "@query-grid/primeng";
+import { hasExport } from "@laczynski/datagrid-primeng";
 
 if (hasExport(this.grid)) {
   await this.grid.exportAllMatching({ format: "xlsx" });
@@ -275,8 +275,8 @@ if (hasExport(this.grid)) {
 **.NET** — one endpoint, format in `GridExportRequest.Format`:
 
 ```csharp
-using QueryGrid.Abstractions;
-using QueryGrid.EntityFrameworkCore;
+using DataGrid.Abstractions;
+using DataGrid.EntityFrameworkCore;
 
 await db.Issues.ProjectToDto().ExportAsync(request, stream, cancellationToken: ct);
 
@@ -286,7 +286,7 @@ return Results.Stream(
   fileDownloadName: GridExportWriterRegistry.Default.GetFilename("issues", request.Format));
 ```
 
-CSV and Excel export ship in `QueryGrid.Core` / `QueryGrid.EntityFrameworkCore` (Excel via ClosedXML). Use `ExportAsync` for database-backed sources or sync `Export` for in-memory `IQueryable`.
+CSV and Excel export ship in `DataGrid.Core` / `DataGrid.EntityFrameworkCore` (Excel via ClosedXML). Use `ExportAsync` for database-backed sources or sync `Export` for in-memory `IQueryable`.
 
 **Performance** — CSV export streams rows from the provider; Excel loads the capped result set into memory before writing the workbook. Respect `GridExportOptions.MaxExportRows` and check `GridExportResult.Truncated`.
 
@@ -351,30 +351,30 @@ Requires horizontal overflow (wide columns, many visible columns, or pinned layo
 | Horizontal scroll | session extra | no             | no             |
 | Row selection     | memory only   | no             | no             |
 
-Declare columns with `qgColumn` — each template defines header, filters, and cell content:
+Declare columns with `dgColumn` — each template defines header, filters, and cell content:
 
 ```html
-<qg-prime-data-grid [grid]="grid" dataKey="id" searchPlaceholder="Search…">
+<dg-prime-data-grid [grid]="grid" dataKey="id" searchPlaceholder="Search…">
   <ng-template
-    qgColumn="Title"
+    dgColumn="Title"
     header="Title"
     [filter]="{ type: 'text', placeholder: 'Contains…' }"
-    [qgColumnOf]="rowType"
+    [dgColumnOf]="rowType"
     let-row
   >
     {{ row.title }}
   </ng-template>
-</qg-prime-data-grid>
+</dg-prime-data-grid>
 ```
 
 ```typescript
-/** Type anchor for strict `let-row` typing — `[qgColumnOf]="rowType"`. */
+/** Type anchor for strict `let-row` typing — `[dgColumnOf]="rowType"`. */
 protected readonly rowType!: IssueDto;
 ```
 
 ### Multi-sort
 
-`qg-prime-data-grid` and `qg-ui-data-grid` use the same multi-sort UX: a plain header click sorts a single column (replaces previous sorts); **Ctrl/Cmd + click** adds or toggles a column within multi-sort. Clear via **Clear**.
+`dg-prime-data-grid` and `dg-ui-data-grid` use the same multi-sort UX: a plain header click sorts a single column (replaces previous sorts); **Ctrl/Cmd + click** adds or toggles a column within multi-sort. Clear via **Clear**.
 
 ### Field naming
 
@@ -384,7 +384,7 @@ protected readonly rowType!: IssueDto;
 | JSON property names on the wire              | camelCase (`PropertyNamingPolicy.CamelCase`)                | `"lastActivityAt"` in serialized DTO rows |
 | Row properties in Angular templates          | Usually camelCase (API JSON)                                | `row.title` for `Title`                   |
 
-Use PascalCase in `qgColumn="Title"` and `defaultSort` field names; use camelCase when reading row values from JSON responses.
+Use PascalCase in `dgColumn="Title"` and `defaultSort` field names; use camelCase when reading row values from JSON responses.
 
 ## JSON shape
 

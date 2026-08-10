@@ -10,19 +10,19 @@ import {
   viewChild,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import type { GridResource, GridSize } from "@query-grid/spartan";
-import { hasGridViews, QgI18nService, type GridResourceWithViews } from "@query-grid/spartan";
+import type { GridResource, GridSize } from "@laczynski/datagrid-spartan";
+import { hasGridViews, DgI18nService, type GridResourceWithViews } from "@laczynski/datagrid-spartan";
 import {
-  isQgSelectEmptyValue,
-  provideQgGridHelmIcons,
-  QG_GRID_HELM_IMPORTS,
-  QG_SELECT_EMPTY_VALUE,
-  qgBtnSize,
+  isDgSelectEmptyValue,
+  provideDgGridHelmIcons,
+  DG_GRID_HELM_IMPORTS,
+  DG_SELECT_EMPTY_VALUE,
+  dgBtnSize,
   qgFieldClass,
-  qgIconBtnSize,
+  dgIconBtnSize,
   qgSelectTriggerClass,
-} from "./qg-helm-utils";
-import { resolveQgGridIcon } from "./qg-icon-map";
+} from "./dg-helm-utils";
+import { resolveDgGridIcon } from "./dg-icon-map";
 
 function asGridWithViews<T>(
   grid: GridResource<T>,
@@ -31,16 +31,16 @@ function asGridWithViews<T>(
 }
 
 @Component({
-  selector: "qg-grid-views",
+  selector: "dg-grid-views",
   standalone: true,
-  imports: [CommonModule, FormsModule, ...QG_GRID_HELM_IMPORTS],
-  providers: [provideQgGridHelmIcons()],
+  imports: [CommonModule, FormsModule, ...DG_GRID_HELM_IMPORTS],
+  providers: [provideDgGridHelmIcons()],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./grid-views.component.html",
   styleUrl: "./grid-views.component.scss",
 })
-export class QgGridViewsComponent<T = unknown> {
-  private readonly i18n = inject(QgI18nService);
+export class DgGridViewsComponent<T = unknown> {
+  private readonly i18n = inject(DgI18nService);
 
   readonly grid = input.required<GridResource<T>>();
   readonly size = input<GridSize>("medium");
@@ -49,9 +49,9 @@ export class QgGridViewsComponent<T = unknown> {
 
   protected readonly newPresetName = signal("");
 
-  protected readonly resolveQgGridIcon = resolveQgGridIcon;
-  protected readonly qgBtnSize = qgBtnSize;
-  protected readonly qgIconBtnSize = qgIconBtnSize;
+  protected readonly resolveDgGridIcon = resolveDgGridIcon;
+  protected readonly dgBtnSize = dgBtnSize;
+  protected readonly dgIconBtnSize = dgIconBtnSize;
   protected readonly qgFieldClass = qgFieldClass;
   protected readonly qgSelectTriggerClass = qgSelectTriggerClass;
 
@@ -78,10 +78,10 @@ export class QgGridViewsComponent<T = unknown> {
     }));
   });
 
-  protected readonly nonePresetValue = QG_SELECT_EMPTY_VALUE;
+  protected readonly nonePresetValue = DG_SELECT_EMPTY_VALUE;
 
   protected readonly presetItemToString = (value: string | null | undefined): string => {
-    if (isQgSelectEmptyValue(value)) {
+    if (isDgSelectEmptyValue(value)) {
       return this.viewsPlaceholder();
     }
 
@@ -90,7 +90,7 @@ export class QgGridViewsComponent<T = unknown> {
 
   protected readonly selectedPresetId = computed(() => {
     const id = asGridWithViews(this.grid())?.activePresetId();
-    return id ? id : QG_SELECT_EMPTY_VALUE;
+    return id ? id : DG_SELECT_EMPTY_VALUE;
   });
 
   protected readonly isPresetDirty = computed(
@@ -128,7 +128,7 @@ export class QgGridViewsComponent<T = unknown> {
   });
 
   protected onPresetSelected(id: unknown): void {
-    const presetId = isQgSelectEmptyValue(id) ? null : String(id);
+    const presetId = isDgSelectEmptyValue(id) ? null : String(id);
     const grid = asGridWithViews(this.grid());
     if (!grid) {
       return;
