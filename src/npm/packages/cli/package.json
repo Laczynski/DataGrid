@@ -6,11 +6,11 @@
   "type": "commonjs",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/laczynski/DataGrid.git"
+    "url": "git+https://github.com/Laczynski/DataGrid.git"
   },
-  "homepage": "https://github.com/laczynski/DataGrid#readme",
+  "homepage": "https://github.com/Laczynski/DataGrid#readme",
   "bugs": {
-    "url": "https://github.com/laczynski/DataGrid/issues"
+    "url": "https://github.com/Laczynski/DataGrid/issues"
   },
   "keywords": [
     "datagrid",
