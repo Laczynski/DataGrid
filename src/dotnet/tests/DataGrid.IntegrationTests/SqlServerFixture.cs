@@ -10,8 +10,7 @@ public sealed class SqlServerFixture : IAsyncLifetime
 {
   private const string DatabaseName = "DataGridTests";
 
-  private readonly MsSqlContainer _container = new MsSqlBuilder()
-    .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
+  private readonly MsSqlContainer _container = new MsSqlBuilder("mcr.microsoft.com/mssql/server:2022-latest")
     .Build();
 
   public string ConnectionString { get; private set; } = string.Empty;
